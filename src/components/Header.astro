@@ -1,0 +1,641 @@
+---
+import { defaultSiteData } from '../data/siteData';
+const { business, announcement } = defaultSiteData;
+---
+
+<header class="site-header" id="site-header">
+  <!-- Top Announcement Bar -->
+  {announcement.enabled && (
+    <div class="announcement-bar" id="announcement-bar">
+      <div class="container announcement-content">
+        <div class="announcement-left">
+          <span class="announcement-badge">{announcement.badge}</span>
+          <span class="announcement-text" data-admin-bind="announcementText">{announcement.text}</span>
+        </div>
+        <div class="announcement-right">
+          <a href={`tel:${business.phone}`} class="announcement-phone">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span data-admin-bind="phoneFormatted">{business.phoneFormatted}</span>
+          </a>
+          <a href="/admin" class="admin-gear-btn" title="Accéder à la console d'administration" aria-label="Console d'administration">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  )}
+
+  <!-- Main Navigation Bar -->
+  <div class="main-navbar">
+    <div class="container nav-content">
+      <!-- Brand Logo -->
+      <a href="/" class="brand-logo" aria-label="Accueil Business Center Prestige Services">
+        <div class="logo-crest">
+          <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="44" rx="12" fill="url(#navyGrad)"/>
+            <rect x="1.5" y="1.5" width="41" height="41" rx="10.5" stroke="url(#goldGrad)" stroke-width="1.5"/>
+            <!-- Crown / Diamond Accent -->
+            <path d="M15 13L22 9L29 13L26 17H18L15 13Z" fill="url(#goldGrad)"/>
+            <!-- Monogram Letters BCPS -->
+            <text x="22" y="32" font-family="'Playfair Display', serif" font-weight="800" font-size="14" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="0.5">BCPS</text>
+            <defs>
+              <linearGradient id="navyGrad" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0E223F"/>
+                <stop offset="1" stop-color="#050D1A"/>
+              </linearGradient>
+              <linearGradient id="goldGrad" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#FFE082"/>
+                <stop offset="0.5" stop-color="#D4AF37"/>
+                <stop offset="1" stop-color="#996515"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name font-serif" data-admin-bind="name">{business.name}</span>
+          <span class="brand-sub">
+            <span class="location-dot"></span>
+            <span data-admin-bind="shortAddress">{business.shortAddress}</span>
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav class="desktop-nav" aria-label="Navigation principale">
+        <a href="#services" class="nav-link">Nos 5 Pôles</a>
+        <a href="#saison" class="nav-link">Vitrine Saison</a>
+        <a href="#tarifs" class="nav-link">Tarifs & Devis</a>
+        <a href="#super-u" class="nav-link">Localisation</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="nav-actions">
+        <!-- Live Open Status -->
+        <div class="live-status-pill status-open">
+          <span class="status-dot open"></span>
+          <span>Ouvert • Super U</span>
+        </div>
+
+        <!-- Wave Payment Button (Audio requirement) -->
+        <button 
+          type="button" 
+          class="btn-header-wave open-wave-modal-trigger"
+          aria-label="Paiement Wave"
+        >
+          <svg class="header-wave-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+          <span class="wave-btn-text">Paiement Wave</span>
+        </button>
+
+        <!-- WhatsApp Header CTA -->
+        <a 
+          href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent(business.whatsappPreFilled)}`}
+          class="btn-header-whatsapp"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span>WhatsApp</span>
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Ouvrir le menu">
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+          <span class="hamburger-bar"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-backdrop" id="drawer-backdrop"></div>
+    <div class="mobile-drawer-content">
+      <div class="mobile-drawer-header">
+        <div class="brand-text">
+          <span class="brand-name font-serif">{business.shortName}</span>
+          <span class="brand-sub">{business.shortAddress}</span>
+        </div>
+        <button type="button" class="mobile-drawer-close" id="drawer-close" aria-label="Fermer le menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <nav class="mobile-nav-links">
+        <a href="#services" class="mobile-nav-link">
+          <span class="link-number">01</span>
+          <span>Nos 5 Pôles de Services</span>
+        </a>
+        <a href="#saison" class="mobile-nav-link">
+          <span class="link-number">02</span>
+          <span>Vitrine Saisonnière</span>
+        </a>
+        <a href="#tarifs" class="mobile-nav-link">
+          <span class="link-number">03</span>
+          <span>Tarifs & Devis Express</span>
+        </a>
+        <a href="#super-u" class="mobile-nav-link">
+          <span class="link-number">04</span>
+          <span>Localisation Super U Deux Plateaux</span>
+        </a>
+        <a href="#contact" class="mobile-nav-link">
+          <span class="link-number">05</span>
+          <span>Contact & Horaires</span>
+        </a>
+      </nav>
+
+      <div class="mobile-drawer-footer">
+        <!-- Wave Pay Mobile CTA -->
+        <button type="button" class="btn btn-wave w-100 open-wave-modal-trigger">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+          Payer par Wave
+        </button>
+
+        <a 
+          href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent(business.whatsappPreFilled)}`}
+          class="btn btn-whatsapp w-100"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Discuter sur WhatsApp
+        </a>
+
+        <a href="/admin" class="btn btn-navy-outline w-100">
+          ⚙️ Espace Paramètres Admin
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background: rgba(6, 14, 26, 0.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.18);
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .site-header.scrolled {
+    background: rgba(5, 13, 26, 0.96);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 1px 0 rgba(212, 175, 55, 0.2);
+  }
+
+  /* Announcement Bar */
+  .announcement-bar {
+    background: linear-gradient(90deg, #071529 0%, #0d223f 50%, #071529 100%);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    font-size: 0.78rem;
+    padding: 0.4rem 0;
+    color: var(--ivory-muted);
+  }
+
+  .announcement-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .announcement-left {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .announcement-badge {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    font-weight: 800;
+    font-size: 0.68rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  .announcement-text {
+    font-weight: 500;
+  }
+
+  .announcement-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+
+  .announcement-phone {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--gold-400);
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .announcement-phone:hover {
+    color: #ffffff;
+  }
+
+  .admin-gear-btn {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    cursor: pointer;
+    gap: 0.35rem;
+    background: rgba(212, 175, 55, 0.12);
+    color: var(--gold-400);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+
+  .admin-gear-btn:hover {
+    background: var(--gold-500);
+    color: var(--navy-950);
+  }
+
+  @media (max-width: 768px) {
+    .announcement-left {
+      max-width: 100%;
+    }
+    .announcement-right {
+      display: none;
+    }
+  }
+
+  /* Main Navbar */
+  .main-navbar {
+    padding: 0.75rem 0;
+  }
+
+  .nav-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  /* Brand */
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    text-decoration: none;
+  }
+
+  .logo-crest {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  .crest-svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .brand-sub {
+    font-size: 0.74rem;
+    color: var(--gold-400);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 500;
+  }
+
+  .location-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--gold-500);
+  }
+
+  /* Nav Links */
+  .desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+  }
+
+  .nav-link {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ivory-muted);
+    transition: all 0.2s ease;
+    position: relative;
+    padding: 0.25rem 0;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: var(--gold-gradient);
+    transition: width 0.25s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--gold-300);
+  }
+
+  .nav-link:hover::after {
+    width: 100%;
+  }
+
+  /* Actions */
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .btn-header-wave {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #0086e5;
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 0.55rem 1rem;
+    border-radius: var(--radius-full);
+    box-shadow: 0 4px 14px rgba(0, 134, 229, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    transition: all 0.2s ease;
+  }
+
+  .btn-header-wave:hover {
+    background: #0077cc;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0, 134, 229, 0.5);
+  }
+
+  .header-wave-icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .btn-header-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(37, 211, 102, 0.15);
+    border: 1px solid rgba(37, 211, 102, 0.4);
+    color: #4ade80;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 0.55rem 1rem;
+    border-radius: var(--radius-full);
+    transition: all 0.2s ease;
+  }
+
+  .btn-header-whatsapp:hover {
+    background: #25d366;
+    color: #ffffff;
+    border-color: #25d366;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.4);
+  }
+
+  .mobile-menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 8px;
+  }
+
+  .hamburger-bar {
+    width: 100%;
+    height: 2px;
+    background: var(--ivory);
+    border-radius: 2px;
+    transition: all 0.2s ease;
+  }
+
+  @media (max-width: 1024px) {
+    .desktop-nav {
+      display: none;
+    }
+    .mobile-menu-toggle {
+      display: flex;
+    }
+    .live-status-pill {
+      display: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .brand-name {
+      font-size: 0.92rem;
+    }
+    .brand-sub {
+      font-size: 0.68rem;
+    }
+    .btn-header-whatsapp {
+      display: none;
+    }
+    .wave-btn-text {
+      display: none;
+    }
+    .btn-header-wave {
+      padding: 0.55rem;
+      border-radius: 50%;
+    }
+  }
+
+  /* Mobile Drawer */
+  .mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 99999;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .mobile-drawer.open {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .mobile-drawer-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(4, 11, 22, 0.8);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .mobile-drawer.open .mobile-drawer-backdrop {
+    opacity: 1;
+  }
+
+  .mobile-drawer-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 82%;
+    max-width: 360px;
+    height: 100%;
+    background: var(--navy-900);
+    border-left: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 1.8rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.7);
+  }
+
+  .mobile-drawer.open .mobile-drawer-content {
+    transform: translateX(0);
+  }
+
+  .mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .mobile-drawer-close {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ivory);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem 0;
+  }
+
+  .mobile-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ivory);
+    padding: 0.6rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .link-number {
+    font-size: 0.75rem;
+    font-family: var(--font-serif);
+    color: var(--gold-400);
+    font-weight: 700;
+  }
+
+  .mobile-drawer-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .w-100 {
+    width: 100%;
+  }
+</style>
+
+<script>
+  function setupHeader() {
+    const header = document.getElementById('site-header');
+    const menuToggle = document.getElementById('mobile-menu-toggle');
+    const drawer = document.getElementById('mobile-drawer');
+    const drawerClose = document.getElementById('drawer-close');
+    const backdrop = document.getElementById('drawer-backdrop');
+    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+    // Scroll shadow effect
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 30) {
+        header?.classList.add('scrolled');
+      } else {
+        header?.classList.remove('scrolled');
+      }
+    });
+
+    // Mobile drawer toggle
+    function openMenu() {
+      drawer?.classList.add('open');
+      drawer?.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+      drawer?.classList.remove('open');
+      drawer?.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    menuToggle?.addEventListener('click', openMenu);
+    drawerClose?.addEventListener('click', closeMenu);
+    backdrop?.addEventListener('click', closeMenu);
+
+    mobileLinks.forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupHeader);
+</script>

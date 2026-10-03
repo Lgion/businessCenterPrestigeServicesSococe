@@ -1,0 +1,1017 @@
+---
+import { defaultSiteData } from '../data/siteData';
+const { business } = defaultSiteData;
+const isFullAdmin = Astro.url.pathname.startsWith('/admin');
+---
+
+<!-- ================= FLOATING SERVICES DOCK (BOTTOM-LEFT) ================= -->
+{!isFullAdmin && (
+  <div class="floating-services-dock" id="floating-services-dock" aria-label="Accès rapides aux 5 services">
+    <!-- 1. Studio Photo Button -->
+    <button 
+      type="button" 
+      class="quick-fab fab-pole open-photo-trigger" 
+      title="Studio Photo Professionnel & Identité"
+      aria-label="Ouvrir le Studio Photo"
+    >
+      <div class="fab-inner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+          <circle cx="12" cy="13" r="4"></circle>
+        </svg>
+        <span class="fab-tooltip">1. Studio Photo & Identité</span>
+      </div>
+    </button>
+
+    <!-- 2. Réparation Express Button -->
+    <button 
+      type="button" 
+      class="quick-fab fab-pole open-reparation-trigger" 
+      title="Réparation Express Smartphones & PC"
+      aria-label="Ouvrir la Réparation Express"
+    >
+      <div class="fab-inner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+          <line x1="12" y1="18" x2="12.01" y2="18"></line>
+          <path d="M9 6h6"></path>
+          <path d="M12 9v5"></path>
+          <path d="M9.5 11.5l5 0"></path>
+        </svg>
+        <span class="fab-tooltip">2. Réparation Smartphones (30 min)</span>
+      </div>
+    </button>
+
+    <!-- 3. Gaming & Tech Button -->
+    <button 
+      type="button" 
+      class="quick-fab fab-pole open-gaming-trigger" 
+      title="Gaming, Manettes PS4/PS5 & High-Tech"
+      aria-label="Ouvrir Gaming et Tech"
+    >
+      <div class="fab-inner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="6" width="20" height="12" rx="6"></rect>
+          <path d="M6 12h4"></path>
+          <path d="M8 10v4"></path>
+          <circle cx="15" cy="13" r="1"></circle>
+          <circle cx="18" cy="11" r="1"></circle>
+        </svg>
+        <span class="fab-tooltip">3. Manettes PS4/PS5 & Gaming</span>
+      </div>
+    </button>
+
+    <!-- 4. Boutique & Maroquinerie Button -->
+    <button 
+      type="button" 
+      class="quick-fab fab-pole open-boutique-trigger" 
+      title="Boutique Cadeaux, Montres & Sacs"
+      aria-label="Ouvrir la Boutique"
+    >
+      <div class="fab-inner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="fab-tooltip">4. Boutique Cadeaux & Maroquinerie</span>
+      </div>
+    </button>
+
+    <!-- 5. Bureautique & Mobile Money Button -->
+    <button 
+      type="button" 
+      class="quick-fab fab-pole open-bureautique-trigger" 
+      title="Bureautique, Démarches & Mobile Money"
+      aria-label="Ouvrir Bureautique et Mobile Money"
+    >
+      <div class="fab-inner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span class="fab-tooltip">5. Bureautique & Wave / Mobile Money</span>
+      </div>
+    </button>
+  </div>
+)}
+
+<!-- ================= MODAL 1: STUDIO PHOTO & VIDÉO ================= -->
+<dialog id="modal-service-photo" class="service-dialog" aria-labelledby="photo-modal-title">
+  <div class="service-modal-wrap">
+    <div class="service-modal-header">
+      <div class="modal-brand-head">
+        <span class="modal-head-icon">📸</span>
+        <div>
+          <h3 id="photo-modal-title" class="modal-head-title font-serif">Studio Photo & Vidéo Professionnel</h3>
+          <p class="modal-head-sub">Super U Deux Plateaux • Éclairage de maître, portraits d'art & tirages certifiés</p>
+        </div>
+      </div>
+      <button type="button" class="service-modal-close close-photo-btn" aria-label="Fermer la fenêtre">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="service-modal-body">
+      <!-- Notice Banner -->
+      <div class="service-banner-box">
+        <span class="banner-icon">⚡</span>
+        <div>
+          <strong>Photos d'identité express en 5 minutes sans rendez-vous au Super U !</strong>
+          <p>Pour les shootings portraits artistiques et reportages mariages, réservation conseillée sur WhatsApp pour réserver votre créneau.</p>
+        </div>
+      </div>
+
+      <!-- Prestations Cards Grid -->
+      <div class="service-features-grid">
+        <!-- Feature 1 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Prêt en 5 min</span>
+            <span class="feat-price font-serif">2 500 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Photos d'Identité Certifiées (Planche de 8)</h4>
+          <p class="feat-card-desc">Conformes aux normes biométriques strictes : passeport ivoirien et international, visa Schengen / USA, permis de conduire, dossiers scolaires et concours administratifs.</p>
+          <ul class="feat-bullets">
+            <li>Prise de vue immédiate en cabine professionnelle</li>
+            <li>Retouche éclat du teint et anti-brillance incluse</li>
+            <li>Envoi numérique haute résolution par WhatsApp offert</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite faire des photos d\'identité express au studio du Super U.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Faire mes photos d'identité
+          </a>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="modal-feature-card prestige-card highlight-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill gold">Formule Star</span>
+            <span class="feat-price font-serif">15 000 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Shooting Studio Portrait d'Art (Solo / Corporate)</h4>
+          <p class="feat-card-desc">Sublimez votre image personnelle ou professionnelle. Éclairage cinéma sculptant les ombres, fond de décor au choix et coaching en poses.</p>
+          <ul class="feat-bullets">
+            <li>5 photos retouchées de qualité magazine en HD</li>
+            <li>Changement de tenue possible durant la séance</li>
+            <li>1 tirage photo grand format A4 offert sur papier d'art</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite réserver une séance shooting studio portrait à 15 000 FCFA.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm w-100">
+            Réserver mon shooting portrait
+          </a>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Famille & Couple</span>
+            <span class="feat-price font-serif">25 000 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Shooting Famille, Grossesse & Bébé</h4>
+          <p class="feat-card-desc">Immortalisez les liens précieux avec vos proches dans un espace privatisé, climatisé et confortable au sein du Super U.</p>
+          <ul class="feat-bullets">
+            <li>10 photos retouchées haute définition remises</li>
+            <li>Photos individuelles et photos de groupe incluses</li>
+            <li>Mini-album souvenir ou cadre photo offert</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite réserver une séance photo famille / couple au studio.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Réserver la formule famille
+          </a>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Savoir-faire Rare</span>
+            <span class="feat-price font-serif">Dès 5 000 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Restauration de Photos Anciennes & Agrandissements</h4>
+          <p class="feat-card-desc">Donnez une seconde jeunesse aux souvenirs abîmés par le temps : déchirures, décoloration, humidité ou photos anciennes en noir et blanc.</p>
+          <ul class="feat-bullets">
+            <li>Numérisation ultra-haute résolution du document</li>
+            <li>Retouche minutieuse pixel par pixel & colorisation</li>
+            <li>Réimpression d'art et cadrage sur mesure en boutique</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, j\'ai une ancienne photo à faire restaurer / agrandir. Voici la photo :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Envoyer ma photo à restaurer
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="service-modal-footer">
+      <button type="button" class="btn btn-wave open-wave-modal-trigger" data-amount="15000">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+        </svg>
+        Régler un acompte Wave
+      </button>
+
+      <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite un devis personnalisé pour une prestation photo / reportage.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+        Échanger directement sur WhatsApp
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<!-- ================= MODAL 2: RÉPARATION EXPRESS SMARTPHONES ================= -->
+<dialog id="modal-service-reparation" class="service-dialog" aria-labelledby="reparation-modal-title">
+  <div class="service-modal-wrap">
+    <div class="service-modal-header">
+      <div class="modal-brand-head">
+        <span class="modal-head-icon">⚡</span>
+        <div>
+          <h3 id="reparation-modal-title" class="modal-head-title font-serif">Atelier Réparation Express Smartphones</h3>
+          <p class="modal-head-sub">Super U Deux Plateaux • Écrans, batteries, connecteurs en 30 min & garantie 3 mois</p>
+        </div>
+      </div>
+      <button type="button" class="service-modal-close close-reparation-btn" aria-label="Fermer la fenêtre">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="service-modal-body">
+      <!-- Notice Banner -->
+      <div class="service-banner-box">
+        <span class="banner-icon">🛡️</span>
+        <div>
+          <strong>Diagnostic transparent gratuit & réparation sans rendez-vous au Super U</strong>
+          <p>Intervention rapide pendant que vous faites vos courses. Pièces de qualité d'origine certifiées et garantie 3 mois.</p>
+        </div>
+      </div>
+
+      <!-- Prestations Cards Grid -->
+      <div class="service-features-grid">
+        <!-- Repair 1 -->
+        <div class="modal-feature-card prestige-card highlight-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill gold">Prêt en 30 min</span>
+            <span class="feat-price font-serif">Sur Devis</span>
+          </div>
+          <h4 class="feat-card-title">Remplacement d'Écran Fissuré (OLED / LCD)</h4>
+          <p class="feat-card-desc">iPhone, Samsung Galaxy, Xiaomi, Tecno, Infinix, Huawei, etc. Récupérez un affichage éclatant et une réactivité tactile d'origine.</p>
+          <ul class="feat-bullets">
+            <li>Pièces d'origine testées avant montage</li>
+            <li>Pose offerte d'un verre trempé 9D haute protection</li>
+            <li>Garantie 3 mois sur l'écran remplacé</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, quel est le prix pour changer l\'écran de mon smartphone : (indiquer la marque et le modèle)')}`} target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm w-100">
+            Demander le tarif de mon écran
+          </a>
+        </div>
+
+        <!-- Repair 2 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Autonomie 100%</span>
+            <span class="feat-price font-serif">Dès 8 000 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Changement de Batterie Haute Capacité</h4>
+          <p class="feat-card-desc">Votre téléphone se décharge vite ou s'éteint subitement ? Retrouvez une autonomie complète avec une batterie neuve 0 cycle.</p>
+          <ul class="feat-bullets">
+            <li>Batterie certifiée conforme aux normes constructeur</li>
+            <li>Test de cycle et calibration de charge inclus</li>
+            <li>Intervention express en 20 minutes</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite faire changer la batterie de mon téléphone :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Remplacer ma batterie
+          </a>
+        </div>
+
+        <!-- Repair 3 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Charge & Son</span>
+            <span class="feat-price font-serif">Dès 6 000 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Connecteur de Charge, Micro & Haut-Parleur</h4>
+          <p class="feat-card-desc">Faux contact lors de la charge, charge lente, interlocuteur qui ne vous entend pas ou grésillement du haut-parleur.</p>
+          <ul class="feat-bullets">
+            <li>Désoxydation minutieuse des ports</li>
+            <li>Remplacement des nappes de charge et micros</li>
+            <li>Test audio et charge rapide validé</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, j\'ai un problème de charge / micro sur mon téléphone :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Réparer la charge / le son
+          </a>
+        </div>
+
+        <!-- Repair 4 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Logiciel & Données</span>
+            <span class="feat-price font-serif">Dès 5 000 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Déblocage, Réinstallation & Sauvegarde</h4>
+          <p class="feat-card-desc">Schéma ou code oublié, blocage sur logo, lenteurs système, récupération de photos ou transfert de données vers un nouvel appareil.</p>
+          <ul class="feat-bullets">
+            <li>Mise à jour logicielle sécurisée (iOS & Android)</li>
+            <li>Sauvegarde et migration de vos contacts et photos</li>
+            <li>Confidentialité absolue de vos données</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, j\'ai besoin d\'un déblocage ou d\'une réinstallation logicielle pour mon appareil :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Débloquer mon appareil
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="service-modal-footer">
+      <button type="button" class="btn btn-wave open-wave-modal-trigger">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+        </svg>
+        Régler ma réparation par Wave
+      </button>
+
+      <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, voici la panne de mon téléphone pour devis immédiat :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+        Devis gratuit immédiat sur WhatsApp
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<!-- ================= MODAL 3: GAMING & HIGH-TECH ================= -->
+<dialog id="modal-service-gaming" class="service-dialog" aria-labelledby="gaming-modal-title">
+  <div class="service-modal-wrap">
+    <div class="service-modal-header">
+      <div class="modal-brand-head">
+        <span class="modal-head-icon">🎮</span>
+        <div>
+          <h3 id="gaming-modal-title" class="modal-head-title font-serif">Univers Gaming & Accessoires High-Tech</h3>
+          <p class="modal-head-sub">Super U Deux Plateaux • Manettes PS4/PS5, câbles blindés, chargeurs rapides & gaming</p>
+        </div>
+      </div>
+      <button type="button" class="service-modal-close close-gaming-btn" aria-label="Fermer la fenêtre">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="service-modal-body">
+      <!-- Notice Banner -->
+      <div class="service-banner-box">
+        <span class="banner-icon">🎯</span>
+        <div>
+          <strong>Toutes nos manettes et accessoires sont testés sur place avant l'achat !</strong>
+          <p>Disponibles immédiatement au Super U Deux Plateaux ou en livraison sécurisée le jour même partout à Abidjan.</p>
+        </div>
+      </div>
+
+      <!-- Prestations Cards Grid -->
+      <div class="service-features-grid">
+        <!-- Item 1 -->
+        <div class="modal-feature-card prestige-card highlight-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill gold">Top Gaming</span>
+            <span class="feat-price font-serif">22 000 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Manette Sans Fil PS4 DualShock v2</h4>
+          <p class="feat-card-desc">Manette sans fil officielle, double moteur de vibration immersif, pavé tactile réactif et batterie haute autonomie. Compatible PS4, PS3 et PC.</p>
+          <ul class="feat-bullets">
+            <li>Coloris disponibles : Noir, Blanc, Bleu, Rouge, Camo</li>
+            <li>Câble de charge renforcé offert</li>
+            <li>Garantie échange testée en boutique</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite commander la Manette PS4 DualShock v2 à 22 000 FCFA.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm w-100">
+            Commander la Manette PS4
+          </a>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Next-Gen</span>
+            <span class="feat-price font-serif">45 000 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Manette Sans Fil PS5 DualSense Pro</h4>
+          <p class="feat-card-desc">Vivez le gaming de nouvelle génération : gâchettes adaptatives dynamiques, retour haptique bluffant et microphone avec touche mute intégrée.</p>
+          <ul class="feat-bullets">
+            <li>Produit 100% officiel Sony PlayStation</li>
+            <li>Précision chirurgicale pour FIFA, Call of Duty, etc.</li>
+            <li>En stock au Super U Deux Plateaux</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite réserver / acheter la Manette PS5 DualSense à 45 000 FCFA.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Commander la Manette PS5
+          </a>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Charge Ultra-Rapide</span>
+            <span class="feat-price font-serif">4 500 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Câble Blindé Tressé Anti-Casse (Type-C / Lightning)</h4>
+          <p class="feat-card-desc">Fini les câbles qui se déchirent au bout d'un mois ! Gaine nylon tressée renforcée avec embouts métalliques blindés.</p>
+          <ul class="feat-bullets">
+            <li>Supporte la charge rapide jusqu'à 65W</li>
+            <li>Transfert de données haut débit 480 Mbps</li>
+            <li>Longueur 1m ou 2m ultra-confortable</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite acheter un câble blindé de charge rapide à 4 500 FCFA.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Acheter un Câble Blindé
+          </a>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Haute Autonomie</span>
+            <span class="feat-price font-serif">16 000 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Power Bank Fast Charge 20 000 mAh avec Écran LED</h4>
+          <p class="feat-card-desc">Ne tombez plus jamais à court de batterie en déplacement. Rechargement express simultané de plusieurs smartphones.</p>
+          <ul class="feat-bullets">
+            <li>Écran digital affichant le pourcentage exact</li>
+            <li>Multiples sorties USB et Type-C Power Delivery</li>
+            <li>Sécurité anti-surchauffe certifiée</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite commander la Power Bank 20 000 mAh à 16 000 FCFA.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Commander la Power Bank
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="service-modal-footer">
+      <button type="button" class="btn btn-wave open-wave-modal-trigger" data-amount="22000">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+        </svg>
+        Payer par Wave
+      </button>
+
+      <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je recherche un accessoire de jeu / high-tech particulier :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+        Demander la disponibilité sur WhatsApp
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<!-- ================= MODAL 4: BUREAUTIQUE, DÉMARCHES & MOBILE MONEY ================= -->
+<dialog id="modal-service-bureautique" class="service-dialog" aria-labelledby="bureautique-modal-title">
+  <div class="service-modal-wrap">
+    <div class="service-modal-header">
+      <div class="modal-brand-head">
+        <span class="modal-head-icon">📱</span>
+        <div>
+          <h3 id="bureautique-modal-title" class="modal-head-title font-serif">Bureautique, Démarches & Guichet Mobile Money</h3>
+          <p class="modal-head-sub">Super U Deux Plateaux • Impressions laser, saisie de documents & transferts Wave, Orange, MTN</p>
+        </div>
+      </div>
+      <button type="button" class="service-modal-close close-bureautique-btn" aria-label="Fermer la fenêtre">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="service-modal-body">
+      <!-- Notice Banner -->
+      <div class="service-banner-box">
+        <span class="banner-icon">💼</span>
+        <div>
+          <strong>Comptoir bureautique & agence financière agréée au sein du Super U</strong>
+          <p>Un guichet climatisé, confidentiel et sécurisé avec parking surveillé. Zéro rupture de liquidité pour vos dépôts et retraits.</p>
+        </div>
+      </div>
+
+      <!-- Prestations Cards Grid -->
+      <div class="service-features-grid">
+        <!-- Bureau 1 -->
+        <div class="modal-feature-card prestige-card highlight-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill gold">Impression Laser HD</span>
+            <span class="feat-price font-serif">Dès 50 FCFA</span>
+          </div>
+          <h4 class="feat-card-title">Impressions, Photocopies & Reliures de Documents</h4>
+          <p class="feat-card-desc">Impression couleur et noir et blanc haute fidélité. Reliure spirale plastique et métal pour mémoires, thèses, rapports et contrats.</p>
+          <ul class="feat-bullets">
+            <li>Formats A4 et A3 sur papier standard ou couché</li>
+            <li>Plastification de documents et diplômes officiels</li>
+            <li>Tarifs dégressifs pour mémoires et gros volumes</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, j\'ai des documents PDF à faire imprimer / relier au Super U.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-gold btn-sm w-100">
+            Envoyer mes fichiers à imprimer
+          </a>
+        </div>
+
+        <!-- Bureau 2 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Aide Administrative</span>
+            <span class="feat-price font-serif">Service Rapide</span>
+          </div>
+          <h4 class="feat-card-title">Inscriptions aux Concours & Saisie de CV Pro</h4>
+          <p class="feat-card-desc">Assistance complète pour la constitution et le dépôt de vos dossiers administratifs officiels en ligne sans stress.</p>
+          <ul class="feat-bullets">
+            <li>Inscriptions concours ENA, CAFOP, Police, Douanes</li>
+            <li>Rédaction et mise en page percutante de CV modernes</li>
+            <li>Numérisation et compression conforme des pièces jointes</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, j\'ai besoin d\'aide pour une inscription à un concours / rédaction de CV.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Demander une assistance démarche
+          </a>
+        </div>
+
+        <!-- Bureau 3 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Agence Agréée</span>
+            <span class="feat-price font-serif">Sans Rupture</span>
+          </div>
+          <h4 class="feat-card-title">Guichet Dépôts & Retraits : Wave, Orange & MTN</h4>
+          <p class="feat-card-desc">Effectuez toutes vos transactions Mobile Money en toute sécurité au cœur du centre commercial Super U Deux Plateaux.</p>
+          <ul class="feat-bullets">
+            <li>Wave : Dépôts et retraits rapides au QR Code</li>
+            <li>Orange Money & MTN MoMo : Dépôts et transferts</li>
+            <li>Push & Recharges de crédit de communication</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite me renseigner sur une opération de transfert Mobile Money / Wave.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Contacter le guichet Mobile Money
+          </a>
+        </div>
+
+        <!-- Bureau 4 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Scan Haute Définition</span>
+            <span class="feat-price font-serif">Immédiat</span>
+          </div>
+          <h4 class="feat-card-title">Numérisation (Scan vers WhatsApp / E-mail)</h4>
+          <p class="feat-card-desc">Numérisez vos passeports, pièces d'identité, actes de naissance et diplômes en haute qualité avec transmission directe sur votre téléphone.</p>
+          <ul class="feat-bullets">
+            <li>Résolution 600 DPI pour les démarches de visas</li>
+            <li>Génération de PDF multipages légers</li>
+            <li>Envoi immédiat sur votre WhatsApp ou clé USB</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite faire numériser des documents au comptoir du Super U.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Numériser mes documents
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="service-modal-footer">
+      <button type="button" class="btn btn-wave open-wave-modal-trigger">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+        </svg>
+        Paiement Wave
+      </button>
+
+      <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, j\'ai une question concernant vos services d\'impression / Mobile Money :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+        Échanger sur WhatsApp
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* ================= FLOATING SERVICES DOCK (BOTTOM-LEFT) ================= */
+  .floating-services-dock {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 9990;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 640px) {
+    .floating-services-dock {
+      bottom: 1rem;
+      left: 1rem;
+      gap: 0.45rem;
+    }
+  }
+
+  .quick-fab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    padding: 0;
+  }
+
+  .fab-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Exact style matching fab-call and fab-wave on the right */
+  .fab-pole {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--navy-surface-gradient);
+    color: var(--gold-400);
+    border: 1.5px solid var(--gold-500);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  @media (max-width: 480px) {
+    .fab-pole {
+      width: 42px;
+      height: 42px;
+    }
+    .fab-pole svg {
+      width: 19px;
+      height: 19px;
+    }
+  }
+
+  .fab-pole:hover {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    transform: translateY(-3px) scale(1.08);
+    border-color: #ffffff;
+    box-shadow: 0 10px 25px rgba(212, 175, 55, 0.45);
+  }
+
+  /* Tooltip styled exactly like fab-tooltip */
+  .fab-pole .fab-tooltip {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    background: var(--navy-900);
+    color: #ffffff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease;
+    z-index: 10000;
+  }
+
+  .fab-pole:hover .fab-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ================= SERVICE DIALOG MODAL SHARED STYLES ================= */
+  .service-dialog {
+    margin: auto;
+    border: none;
+    border-radius: 24px;
+    padding: 0;
+    background: transparent;
+    max-width: 860px;
+    width: 95%;
+    max-height: 90vh;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.25);
+    overflow: hidden;
+  }
+
+  .service-dialog::backdrop {
+    background: rgba(4, 11, 22, 0.82);
+    backdrop-filter: blur(10px);
+  }
+
+  .service-modal-wrap {
+    background: #08162b;
+    color: #e2e8f0;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .service-modal-header {
+    background: linear-gradient(90deg, #07152a 0%, #0d223f 100%);
+    padding: 1.2rem 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  }
+
+  .modal-brand-head {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .modal-head-icon {
+    font-size: 1.8rem;
+  }
+
+  .modal-head-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .modal-head-sub {
+    font-size: 0.78rem;
+    color: var(--gold-400);
+  }
+
+  .service-modal-close {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .service-modal-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+  }
+
+  /* Body */
+  .service-modal-body {
+    padding: 1.4rem 1.6rem;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+  }
+
+  .service-banner-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 14px;
+    padding: 0.9rem 1.2rem;
+  }
+
+  .banner-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .service-banner-box strong {
+    color: #ffffff;
+    font-size: 0.92rem;
+    display: block;
+  }
+
+  .service-banner-box p {
+    font-size: 0.8rem;
+    color: var(--ivory-muted);
+    margin-top: 0.15rem;
+  }
+
+  /* Grid of Features */
+  .service-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .modal-feature-card {
+    padding: 1.3rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .highlight-card {
+    border-color: var(--gold-500);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.2);
+  }
+
+  .feat-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .feat-badge-pill {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+  }
+
+  .feat-badge-pill.gold {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    font-weight: 800;
+  }
+
+  .feat-price {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--gold-400);
+  }
+
+  .feat-card-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.4rem;
+    line-height: 1.3;
+  }
+
+  .feat-card-desc {
+    font-size: 0.78rem;
+    color: var(--ivory-muted);
+    line-height: 1.45;
+    margin-bottom: 0.8rem;
+  }
+
+  .feat-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem;
+    flex: 1;
+  }
+
+  .feat-bullets li {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    position: relative;
+    padding-left: 1.1rem;
+    line-height: 1.35;
+  }
+
+  .feat-bullets li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--gold-400);
+    font-weight: 800;
+  }
+
+  .w-100 {
+    width: 100%;
+  }
+
+  /* Footer */
+  .service-modal-footer {
+    background: #060e1a;
+    padding: 1rem 1.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.8rem;
+  }
+
+  @media (max-width: 640px) {
+    .service-modal-footer {
+      flex-direction: column;
+    }
+    .service-modal-footer .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  function setupAllServiceModals() {
+    const photoModal = document.getElementById('modal-service-photo') as HTMLDialogElement;
+    const repModal = document.getElementById('modal-service-reparation') as HTMLDialogElement;
+    const gamingModal = document.getElementById('modal-service-gaming') as HTMLDialogElement;
+    const bureauModal = document.getElementById('modal-service-bureautique') as HTMLDialogElement;
+    const boutiqueModal = document.getElementById('boutique-modal') as HTMLDialogElement;
+
+    // Helper to setup open and close
+    function setupModal(dialog: HTMLDialogElement, openTriggerClass: string, closeTriggerClass: string) {
+      if (!dialog) return;
+
+      document.querySelectorAll(`.${openTriggerClass}`).forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+          e.preventDefault();
+          dialog.showModal();
+        });
+      });
+
+      document.querySelectorAll(`.${closeTriggerClass}`).forEach(closeBtn => {
+        closeBtn.addEventListener('click', () => dialog.close());
+      });
+
+      dialog.addEventListener('click', (e) => {
+        const rect = dialog.getBoundingClientRect();
+        const isInDialog = (
+          rect.top <= e.clientY &&
+          e.clientY <= rect.top + rect.height &&
+          rect.left <= e.clientX &&
+          e.clientX <= rect.left + rect.width
+        );
+        if (!isInDialog) dialog.close();
+      });
+    }
+
+    // Connect the 4 new modals
+    setupModal(photoModal, 'open-photo-trigger', 'close-photo-btn');
+    setupModal(repModal, 'open-reparation-trigger', 'close-reparation-btn');
+    setupModal(gamingModal, 'open-gaming-trigger', 'close-gaming-btn');
+    setupModal(bureauModal, 'open-bureautique-trigger', 'close-bureautique-btn');
+
+    // Connect Hero Chips and Services Cards to open the corresponding modal directly!
+    const heroChips = document.querySelectorAll('.hero-service-chip');
+    heroChips.forEach(chip => {
+      chip.addEventListener('click', (e) => {
+        e.preventDefault();
+        const cat = chip.getAttribute('data-category');
+        if (cat === 'studio-photo') photoModal?.showModal();
+        else if (cat === 'reparation-express') repModal?.showModal();
+        else if (cat === 'electronique-gaming') gamingModal?.showModal();
+        else if (cat === 'boutique-cadeaux') boutiqueModal?.showModal();
+        else if (cat === 'bureautique-transferts') bureauModal?.showModal();
+      });
+    });
+
+    // Also connect clicking in ServicesGrid cards
+    document.querySelectorAll('.service-card').forEach(card => {
+      const cat = card.getAttribute('data-category');
+      const actionBtn = card.querySelector('.service-action-btn');
+      
+      // Add a quick "Détails & Tarifs" trigger button on each card
+      const topRow = card.querySelector('.service-top-row');
+      if (topRow && !topRow.querySelector('.modal-trigger-chip')) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'modal-trigger-chip';
+        btn.innerHTML = '📋 Voir les Formules';
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (cat === 'studio-photo') photoModal?.showModal();
+          else if (cat === 'reparation-express') repModal?.showModal();
+          else if (cat === 'electronique-gaming') gamingModal?.showModal();
+          else if (cat === 'boutique-cadeaux') boutiqueModal?.showModal();
+          else if (cat === 'bureautique-transferts') bureauModal?.showModal();
+        });
+        topRow.prepend(btn);
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupAllServiceModals);
+  } else {
+    setupAllServiceModals();
+  }
+</script>
+
+<style>
+  :global(.modal-trigger-chip) {
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: var(--gold-300);
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  :global(.modal-trigger-chip:hover) {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+  }
+</style>

@@ -1,0 +1,303 @@
+---
+import { defaultSiteData } from '../data/siteData';
+const { business, services } = defaultSiteData;
+---
+
+<footer class="site-footer">
+  <div class="container footer-container">
+    <!-- Brand Col -->
+    <div class="footer-col brand-col">
+      <div class="footer-brand-header">
+        <div class="footer-crest">
+          <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="44" rx="12" fill="#0C1E3B"/>
+            <rect x="1.5" y="1.5" width="41" height="41" rx="10.5" stroke="#D4AF37" stroke-width="1.5"/>
+            <path d="M15 13L22 9L29 13L26 17H18L15 13Z" fill="#D4AF37"/>
+            <text x="22" y="32" font-family="'Playfair Display', serif" font-weight="800" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
+          </svg>
+        </div>
+        <div>
+          <h3 class="footer-title font-serif">{business.name}</h3>
+          <span class="footer-sub">{business.shortAddress}</span>
+        </div>
+      </div>
+
+      <p class="footer-desc">
+        Votre centre multiservices de référence au sein du <strong>Super U Deux Plateaux</strong>. Studio Photo Professionnel, Réparation Express, Gaming, Maroquinerie & Agence Mobile Money (Wave, Orange, MTN).
+      </p>
+
+      <div class="footer-status-box">
+        <div class="live-status-pill status-open">
+          <span class="status-dot open"></span>
+          <span>Ouvert du Lun au Sam : 09h - 20h</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 Services Links -->
+    <div class="footer-col">
+      <h4 class="footer-col-title">Nos 5 Pôles d'Excellence</h4>
+      <ul class="footer-links">
+        {services.map((s) => (
+          <li>
+            <a href="#services" class="footer-link">
+              <span class="bullet">›</span> {s.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Quick Navigation -->
+    <div class="footer-col">
+      <h4 class="footer-col-title">Navigation Rapide</h4>
+      <ul class="footer-links">
+        <li><a href="#hero" class="footer-link"><span class="bullet">›</span> Accueil</a></li>
+        <li><a href="#saison" class="footer-link"><span class="bullet">›</span> Vitrine Saisonnière & Promos</a></li>
+        <li><a href="#tarifs" class="footer-link"><span class="bullet">›</span> Tarifs & Simulateur Devis</a></li>
+        <li><a href="#super-u" class="footer-link"><span class="bullet">›</span> Accès & Parking Super U</a></li>
+        <li><a href="#contact" class="footer-link"><span class="bullet">›</span> Coordonnées & Horaires</a></li>
+        <li>
+          <button type="button" class="footer-link open-wave-modal-trigger link-btn">
+            <span class="bullet">›</span> <strong>Payer avec Wave</strong>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Direct Contact & Social -->
+    <div class="footer-col">
+      <h4 class="footer-col-title">Service Client</h4>
+      <p class="footer-contact-item">
+        <strong>Téléphone :</strong><br />
+        <a href={`tel:${business.phone}`} class="contact-hl">{business.phoneFormatted}</a>
+      </p>
+      <p class="footer-contact-item">
+        <strong>WhatsApp :</strong><br />
+        <a href={`https://wa.me/225${business.whatsapp}`} target="_blank" rel="noopener noreferrer" class="contact-hl">{business.whatsappFormatted}</a>
+      </p>
+      <p class="footer-contact-item">
+        <strong>Adresse :</strong><br />
+        <span>Centre Commercial Super U Deux Plateaux, Abidjan</span>
+      </p>
+
+      <div class="footer-wave-cta">
+        <button type="button" class="btn btn-wave btn-sm open-wave-modal-trigger w-100">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+          </svg>
+          Règlement Wave
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="footer-bottom">
+    <div class="container bottom-content">
+      <p class="copyright">
+        © {new Date().getFullYear()} {business.name}. Tous droits réservés.
+      </p>
+      <div class="bottom-actions">
+        <button type="button" class="admin-link open-admin-trigger">
+          ⚙️ Gestion & Personnalisation du site
+        </button>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: #040913;
+    border-top: 1px solid rgba(212, 175, 55, 0.25);
+    color: var(--ivory-muted);
+    padding-top: 4.5rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-container {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 0.9fr 1fr;
+    gap: 3rem;
+    padding-bottom: 3.5rem;
+  }
+
+  @media (max-width: 1024px) {
+    .footer-container {
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .footer-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  /* Brand Col */
+  .footer-brand-header {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-crest {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  .footer-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+
+  .footer-sub {
+    font-size: 0.74rem;
+    color: var(--gold-400);
+  }
+
+  .footer-desc {
+    font-size: 0.86rem;
+    line-height: 1.6;
+    margin-bottom: 1.4rem;
+  }
+
+  .footer-desc strong {
+    color: #ffffff;
+  }
+
+  /* Links */
+  .footer-col-title {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    color: #ffffff;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+
+  .footer-col-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 32px;
+    height: 2px;
+    background: var(--gold-gradient);
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+
+  .footer-link {
+    font-size: 0.86rem;
+    color: var(--ivory-muted);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .bullet {
+    color: var(--gold-400);
+    font-weight: 800;
+  }
+
+  .footer-link:hover {
+    color: var(--gold-300);
+    transform: translateX(3px);
+  }
+
+  .link-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    padding: 0;
+  }
+
+  .link-btn strong {
+    color: #38bdf8;
+  }
+
+  /* Contact */
+  .footer-contact-item {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin-bottom: 0.9rem;
+  }
+
+  .footer-contact-item strong {
+    color: #ffffff;
+  }
+
+  .contact-hl {
+    color: var(--gold-400);
+    font-weight: 700;
+  }
+
+  .contact-hl:hover {
+    color: #ffffff;
+  }
+
+  .footer-wave-cta {
+    margin-top: 1.2rem;
+  }
+
+  .w-100 {
+    width: 100%;
+  }
+
+  /* Bottom bar */
+  .footer-bottom {
+    background: #02060d;
+    padding: 1.2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.78rem;
+  }
+
+  .bottom-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  @media (max-width: 640px) {
+    .bottom-content {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  .copyright {
+    color: #64748b;
+  }
+
+  .admin-link {
+    background: none;
+    border: none;
+    color: var(--gold-400);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    transition: color 0.2s;
+  }
+
+  .admin-link:hover {
+    color: #ffffff;
+    text-decoration: underline;
+  }
+</style>

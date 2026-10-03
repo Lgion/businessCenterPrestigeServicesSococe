@@ -1,0 +1,277 @@
+---
+import '../styles/global.css';
+import WaveModal from '../components/WaveModal.astro';
+import FloatingActions from '../components/FloatingActions.astro';
+import BoutiqueModal from '../components/BoutiqueModal.astro';
+import ServiceModals from '../components/ServiceModals.astro';
+import AdminDrawer from '../components/AdminDrawer.astro';
+import { defaultSiteData } from '../data/siteData';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${defaultSiteData.business.name} | Studio Photo, Réparation & Services Super U Deux Plateaux`,
+  description = defaultSiteData.business.description
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, 'https://businesscenterprestige.ci');
+const isFullAdmin = Astro.url.pathname.startsWith('/admin');
+
+const schemaData = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": defaultSiteData.business.name,
+  "alternateName": [defaultSiteData.business.tradeName, "Studio Photo Super U Deux Plateaux", "BCPS Abidjan"],
+  "description": defaultSiteData.business.description,
+  "image": "https://businesscenterprestige.ci/images/hero-store.jpg",
+  "telephone": defaultSiteData.business.phoneFormatted,
+  "email": "contact@businesscenterprestige.ci",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Centre Commercial Super U, Boulevard des Martyrs (Gare de Sococé)",
+    "addressLocality": "Cocody Deux Plateaux, Abidjan",
+    "addressRegion": "Abidjan",
+    "addressCountry": "CI"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": "5.362692",
+    "longitude": "-3.998493"
+  },
+  "url": "https://businesscenterprestige.ci",
+  "openingHoursSpecification": [
+    {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "09:00",
+      "closes": "20:00"
+    }
+  ],
+  "priceRange": "FCFA",
+  "paymentAccepted": ["Wave", "Orange Money", "MTN Mobile Money", "Cash"]
+};
+---
+
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/images/hero-store.jpg" />
+    <meta property="og:locale" content="fr_FR" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content="/images/hero-store.jpg" />
+
+    <!-- Local SEO Geo tags -->
+    <meta name="geo.region" content="CI-AB" />
+    <meta name="geo.placename" content="Abidjan Deux Plateaux" />
+    <meta name="geo.position" content="5.362692;-3.998493" />
+    <meta name="ICBM" content="5.362692, -3.998493" />
+
+    <!-- Preconnect Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json" set:html={JSON.stringify(schemaData)} />
+  </head>
+  <body>
+    <slot />
+
+    <!-- Global Wave Payment Modal -->
+    <WaveModal />
+
+    <!-- Subtle E-Commerce Modal Dialog -->
+    <BoutiqueModal />
+
+    <!-- Modals for the 4 Other Services & Floating Services Dock -->
+    <ServiceModals />
+
+    <!-- Fixed Bottom-Right Quick Action Buttons (Omitted on /admin) -->
+    {!isFullAdmin && <FloatingActions />}
+
+    <!-- Live Administration Drawer (Omitted on /admin) -->
+    {!isFullAdmin && <AdminDrawer />}
+
+    <!-- Global Toast Notification -->
+    <div id="global-toast" class="toast-notice" role="alert" aria-live="polite">
+      <span class="toast-icon">✨</span>
+      <span class="toast-message">Message</span>
+    </div>
+
+    <!-- Client Script for Live Persistence & Admin Sync -->
+    <script>
+      // Toast notification helper
+      (window as any).showToast = function(msg: string, icon = '✨') {
+        const toast = document.getElementById('global-toast');
+        if (!toast) return;
+        const msgEl = toast.querySelector('.toast-message');
+        const iconEl = toast.querySelector('.toast-icon');
+        if (msgEl) msgEl.textContent = msg;
+        if (iconEl) iconEl.textContent = icon;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3200);
+      };
+
+      // Real-time store status (Calculated with Abidjan GMT time)
+      function updateStoreStatusBadge() {
+        const now = new Date();
+        const utcHours = now.getUTCHours(); // Abidjan is UTC+0 (GMT)
+        const day = now.getUTCDay(); // 0 is Sunday, 1 is Monday...
+        const isOpen = (day >= 1 && day <= 6) && (utcHours >= 9 && utcHours < 20);
+        
+        document.querySelectorAll('.live-status-pill').forEach((el) => {
+          if (isOpen) {
+            el.innerHTML = '<span class="status-dot open"></span> Ouvert actuellement • Super U (09h-20h)';
+            el.classList.add('status-open');
+            el.classList.remove('status-closed');
+          } else {
+            el.innerHTML = '<span class="status-dot closed"></span> Fermé actuellement • Réouverture à 09h00';
+            el.classList.add('status-closed');
+            el.classList.remove('status-open');
+          }
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        updateStoreStatusBadge();
+        setInterval(updateStoreStatusBadge, 60000);
+
+        // Check if admin config exists in localStorage
+        const stored = localStorage.getItem('bcps_site_data');
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+
+            // 1. General text bindings
+            document.querySelectorAll('[data-admin-bind]').forEach((el) => {
+              const key = el.getAttribute('data-admin-bind');
+              if (key && parsed[key]) {
+                el.textContent = parsed[key];
+              }
+            });
+
+            // 2. Hydrate 5 Services (background images, titles, items list)
+            if (parsed.servicesCustom && Array.isArray(parsed.servicesCustom)) {
+              parsed.servicesCustom.forEach((customSvc: any) => {
+                const card = document.querySelector(`.service-card[data-category="${customSvc.id}"]`);
+                if (card) {
+                  const img = card.querySelector('.service-img') as HTMLImageElement;
+                  const title = card.querySelector('.service-title');
+                  const sub = card.querySelector('.service-sub');
+                  const badge = card.querySelector('.service-tag-pill');
+                  const checklist = card.querySelector('.service-checklist');
+
+                  if (img && customSvc.image) img.src = customSvc.image;
+                  if (title && customSvc.title) title.textContent = customSvc.title;
+                  if (sub && customSvc.subtitle) sub.textContent = customSvc.subtitle;
+                  if (badge && customSvc.badge) badge.textContent = customSvc.badge;
+
+                  if (checklist && customSvc.items && customSvc.items.length) {
+                    checklist.innerHTML = '';
+                    customSvc.items.forEach((itemText: string) => {
+                      const li = document.createElement('li');
+                      li.className = 'check-item';
+                      li.innerHTML = `
+                        <span class="check-icon">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                          </svg>
+                        </span>
+                        <span class="check-text">${itemText}</span>
+                      `;
+                      checklist.appendChild(li);
+                    });
+                  }
+                }
+              });
+            }
+
+            // 3. Hydrate Seasonal showcase active tab
+            if (parsed.seasonSelect) {
+              const activeTabBtn = document.querySelector(`[data-season-target="${parsed.seasonSelect}"]`) as HTMLButtonElement;
+              activeTabBtn?.click();
+            }
+
+            // 4. Hydrate Wave Phone and amounts
+            if (parsed.wavePhone) {
+              const mobileBtn = document.getElementById('wave-open-mobile-btn') as HTMLAnchorElement;
+              if (mobileBtn) {
+                mobileBtn.href = `https://wave.com/pay/?phone=${parsed.wavePhone}&amount=${parsed.waveAmount || '10000'}`;
+              }
+            }
+          } catch(e) {
+            console.error('Failed to load custom admin data', e);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(.live-status-pill) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+  }
+
+  :global(.status-open) {
+    background: rgba(37, 211, 102, 0.12);
+    border: 1px solid rgba(37, 211, 102, 0.35);
+    color: #4ade80;
+  }
+
+  :global(.status-closed) {
+    background: rgba(244, 63, 94, 0.12);
+    border: 1px solid rgba(244, 63, 94, 0.35);
+    color: #fb7185;
+  }
+
+  :global(.status-dot) {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  :global(.status-dot.open) {
+    background-color: #22c55e;
+    box-shadow: 0 0 10px #22c55e;
+    animation: statusPulse 2s infinite;
+  }
+
+  :global(.status-dot.closed) {
+    background-color: #f43f5e;
+  }
+
+  @keyframes statusPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.2); }
+  }
+</style>

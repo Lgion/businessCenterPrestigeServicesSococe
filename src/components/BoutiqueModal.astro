@@ -1,0 +1,644 @@
+---
+import { defaultSiteData } from '../data/siteData';
+const { boutiqueProducts, business } = defaultSiteData;
+---
+
+<!-- Subtle E-Commerce Modal Dialog -->
+<dialog id="boutique-modal" class="boutique-dialog" aria-labelledby="boutique-modal-title">
+  <div class="boutique-modal-wrapper">
+    <!-- Header -->
+    <div class="boutique-modal-header">
+      <div class="boutique-head-brand">
+        <div class="boutique-head-icon">🛍️</div>
+        <div>
+          <h3 id="boutique-modal-title" class="boutique-title font-serif">La Boutique du Super U</h3>
+          <p class="boutique-sub">
+            Articles neufs garantis en stock au magasin • Retrait comptoir & Livraison partout à Abidjan
+          </p>
+        </div>
+      </div>
+      <button type="button" id="close-boutique-btn" class="boutique-close-btn" aria-label="Fermer la boutique">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Filters & Search Toolbar -->
+    <div class="boutique-toolbar">
+      <div class="boutique-search-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input 
+          type="text" 
+          id="boutique-search-input" 
+          class="boutique-search-input" 
+          placeholder="Rechercher une manette, sac, montre, chargeur..." 
+        />
+      </div>
+
+      <div class="boutique-categories-bar" role="tablist">
+        <button type="button" class="btq-cat-btn active" data-cat="all">Tous</button>
+        <button type="button" class="btq-cat-btn" data-cat="gaming">Gaming & PS5</button>
+        <button type="button" class="btq-cat-btn" data-cat="accessoires">High-Tech</button>
+        <button type="button" class="btq-cat-btn" data-cat="maroquinerie">Sacs & Cuir</button>
+        <button type="button" class="btq-cat-btn" data-cat="montres">Montres</button>
+        <button type="button" class="btq-cat-btn" data-cat="cadeaux">Cadeaux</button>
+      </div>
+    </div>
+
+    <!-- Products Grid -->
+    <div class="boutique-body">
+      <div class="boutique-products-grid" id="boutique-items-grid">
+        {boutiqueProducts.map((prod) => (
+          <article class="btq-item-card prestige-card" data-cat={prod.category}>
+            <div class="btq-item-media">
+              <img 
+                src={prod.image} 
+                alt={prod.name} 
+                class="btq-item-img" 
+                loading="lazy"
+                width="300"
+                height="200"
+              />
+              <span class="btq-badge-tag">{prod.badge}</span>
+            </div>
+
+            <div class="btq-item-content">
+              <div class="btq-meta-row">
+                <span class="btq-stock-indicator">
+                  <span class="stock-dot"></span> En stock Super U
+                </span>
+                <span class="btq-price-tag font-serif">{prod.price.toLocaleString('fr-FR')} FCFA</span>
+              </div>
+
+              <h4 class="btq-item-title">{prod.name}</h4>
+              <p class="btq-item-desc">{prod.description}</p>
+
+              <div class="btq-actions-row">
+                <a 
+                  href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent(`Bonjour Business Center Prestige Services, je souhaite commander l'article : ${prod.name} à ${prod.price} FCFA vu dans votre boutique.`)}`}
+                  class="btn btn-whatsapp btq-order-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                  <span>Commander</span>
+                </a>
+
+                <button 
+                  type="button" 
+                  class="btn btn-wave btq-wave-btn open-wave-modal-trigger"
+                  data-amount={prod.price}
+                  title="Payer cet article par Wave"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+                  </svg>
+                  <span>Wave</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+
+    <!-- Footer Note -->
+    <div class="boutique-modal-footer">
+      <div class="footer-notice">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>Possibilité d'essayer ou tester tous les articles en magasin au Super U Deux Plateaux avant achat.</span>
+      </div>
+      <a 
+        href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je recherche un article spécifique dans votre boutique : ')}`}
+        class="footer-ask-btn"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Demander un article non listé
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  /* Fixed Floating Button in Bottom-Left */
+  .floating-boutique-container {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    z-index: 9990;
+    pointer-events: auto;
+  }
+
+  @media (max-width: 640px) {
+    .floating-boutique-container {
+      bottom: 1rem;
+      left: 1rem;
+    }
+  }
+
+  .fixed-boutique-btn {
+    background: linear-gradient(135deg, #0e223f 0%, #061120 100%);
+    border: 1.5px solid var(--gold-500);
+    border-radius: var(--radius-full);
+    padding: 0.65rem 1.25rem 0.65rem 0.9rem;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.25);
+    backdrop-filter: blur(14px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    align-items: center;
+  }
+
+  .fixed-boutique-btn:hover {
+    transform: translateY(-4px) scale(1.03);
+    border-color: #ffe082;
+    box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6), 0 0 28px rgba(212, 175, 55, 0.4);
+    background: linear-gradient(135deg, #132e54 0%, #0a1b32 100%);
+  }
+
+  .boutique-btn-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .boutique-icon-wrap {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .bag-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .stock-pulse-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 0 2px #0e223f;
+    animation: stockPulse 2s infinite;
+  }
+
+  @keyframes stockPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+  }
+
+  .boutique-btn-texts {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .btn-main-label {
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+
+  .btn-sub-label {
+    font-size: 0.7rem;
+    color: var(--gold-400);
+    line-height: 1.2;
+  }
+
+  .boutique-tag-pill {
+    background: rgba(212, 175, 55, 0.18);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-300);
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 580px) {
+    .btn-sub-label {
+      display: none;
+    }
+    .boutique-tag-pill {
+      display: none;
+    }
+  }
+
+  /* Modal Dialog */
+  .boutique-dialog {
+    margin: auto;
+    border: none;
+    border-radius: 24px;
+    padding: 0;
+    background: transparent;
+    max-width: 860px;
+    width: 95%;
+    max-height: 90vh;
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.25);
+    overflow: hidden;
+  }
+
+  .boutique-dialog::backdrop {
+    background: rgba(4, 11, 22, 0.82);
+    backdrop-filter: blur(10px);
+  }
+
+  .boutique-modal-wrapper {
+    background: #08162b;
+    color: #e2e8f0;
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .boutique-modal-header {
+    background: linear-gradient(90deg, #07152a 0%, #0d223f 100%);
+    padding: 1.2rem 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+  }
+
+  .boutique-head-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+
+  .boutique-head-icon {
+    font-size: 1.8rem;
+  }
+
+  .boutique-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .boutique-sub {
+    font-size: 0.8rem;
+    color: var(--gold-400);
+  }
+
+  .boutique-close-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .boutique-close-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+  }
+
+  /* Toolbar */
+  .boutique-toolbar {
+    padding: 1rem 1.6rem;
+    background: rgba(6, 14, 26, 0.65);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .boutique-search-box {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(14, 32, 60, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    padding: 0.5rem 1rem;
+    color: #94a3b8;
+  }
+
+  .boutique-search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 0.9rem;
+  }
+
+  .boutique-categories-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.2rem;
+  }
+
+  .btq-cat-btn {
+    padding: 0.4rem 0.9rem;
+    border-radius: var(--radius-full);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--ivory-muted);
+    background: rgba(14, 32, 60, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .btq-cat-btn:hover {
+    border-color: var(--gold-400);
+    color: #ffffff;
+  }
+
+  .btq-cat-btn.active {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  }
+
+  /* Body & Grid */
+  .boutique-body {
+    padding: 1.4rem 1.6rem;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  .boutique-products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.4rem;
+  }
+
+  .btq-item-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: all 0.25s ease;
+  }
+
+  .btq-item-card.hidden {
+    display: none;
+  }
+
+  .btq-item-media {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+  }
+
+  .btq-item-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .btq-item-card:hover .btq-item-img {
+    transform: scale(1.06);
+  }
+
+  .btq-badge-tag {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    font-size: 0.68rem;
+    font-weight: 800;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    background: rgba(6, 14, 26, 0.85);
+    border: 1px solid var(--gold-500);
+    color: var(--gold-300);
+    backdrop-filter: blur(8px);
+  }
+
+  .btq-item-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .btq-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.45rem;
+  }
+
+  .btq-stock-indicator {
+    font-size: 0.7rem;
+    color: #4ade80;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 700;
+  }
+
+  .stock-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+  }
+
+  .btq-price-tag {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--gold-400);
+  }
+
+  .btq-item-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.35rem;
+    line-height: 1.3;
+  }
+
+  .btq-item-desc {
+    font-size: 0.76rem;
+    color: var(--ivory-muted);
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    flex: 1;
+  }
+
+  .btq-actions-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btq-order-btn {
+    flex: 1;
+    padding: 0.55rem 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  .btq-wave-btn {
+    padding: 0.55rem 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  /* Footer */
+  .boutique-modal-footer {
+    background: #060e1a;
+    padding: 0.9rem 1.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .footer-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ivory-muted);
+  }
+
+  .footer-notice svg {
+    color: var(--gold-400);
+    flex-shrink: 0;
+  }
+
+  .footer-ask-btn {
+    color: var(--gold-400);
+    font-weight: 700;
+    white-space: nowrap;
+    text-decoration: underline;
+  }
+
+  .footer-ask-btn:hover {
+    color: #ffffff;
+  }
+
+  @media (max-width: 640px) {
+    .boutique-modal-footer {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.6rem;
+    }
+  }
+</style>
+
+<script>
+  function setupBoutiqueModal() {
+    const dialog = document.getElementById('boutique-modal') as HTMLDialogElement;
+    const openBtn = document.getElementById('open-boutique-btn');
+    const closeBtn = document.getElementById('close-boutique-btn');
+    const searchInput = document.getElementById('boutique-search-input') as HTMLInputElement;
+    const catBtns = document.querySelectorAll('.btq-cat-btn');
+    const cards = document.querySelectorAll('.btq-item-card');
+
+    if (!dialog) return;
+
+    // Open triggers
+    document.querySelectorAll('.open-boutique-trigger').forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        dialog.showModal();
+      });
+    });
+
+    closeBtn?.addEventListener('click', () => dialog.close());
+
+    // Backdrop click close
+    dialog.addEventListener('click', (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const isInDialog = (
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width
+      );
+      if (!isInDialog) dialog.close();
+    });
+
+    // Filtering & Search
+    let activeCat = 'all';
+    let searchQuery = '';
+
+    function filterItems() {
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-cat') || '';
+        const title = card.querySelector('.btq-item-title')?.textContent?.toLowerCase() || '';
+        const desc = card.querySelector('.btq-item-desc')?.textContent?.toLowerCase() || '';
+
+        const matchesCat = (activeCat === 'all' || cat === activeCat);
+        const matchesSearch = !searchQuery || title.includes(searchQuery) || desc.includes(searchQuery);
+
+        if (matchesCat && matchesSearch) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    catBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        catBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCat = btn.getAttribute('data-cat') || 'all';
+        filterItems();
+      });
+    });
+
+    searchInput?.addEventListener('input', (e) => {
+      searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      filterItems();
+    });
+
+    // Wave pay button inside boutique: updates Wave amount and opens Wave modal
+    document.querySelectorAll('.btq-wave-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const amt = btn.getAttribute('data-amount');
+        if (amt) {
+          const waveInput = document.getElementById('wave-amount-input') as HTMLInputElement;
+          if (waveInput) {
+            waveInput.value = amt;
+            waveInput.dispatchEvent(new Event('input'));
+          }
+        }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupBoutiqueModal);
+</script>

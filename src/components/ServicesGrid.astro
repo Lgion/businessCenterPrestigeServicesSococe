@@ -1,0 +1,369 @@
+---
+import { defaultSiteData } from '../data/siteData';
+const { services, business } = defaultSiteData;
+---
+
+<section class="services-section" id="services">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="services-header text-center">
+      <span class="section-tagline">Excellence & Polyvalence</span>
+      <h2 class="section-title">
+        Les 5 Pôles de Services <span class="gold-gradient-text">Prestige</span>
+      </h2>
+      <p class="section-subtitle">
+        Une offre complète réunie sous un même toit au centre commercial <strong>Super U Deux Plateaux</strong>. Des prestations de haute qualité avec devis gratuit sur WhatsApp et garantie de satisfaction.
+      </p>
+
+      <!-- Category Filter Pills -->
+      <div class="services-filter-bar" role="tablist" aria-label="Filtrer les services">
+        <button type="button" class="filter-btn active" data-filter="all">Tous nos Pôles (5)</button>
+        <button type="button" class="filter-btn" data-filter="studio-photo">Studio Photo</button>
+        <button type="button" class="filter-btn" data-filter="reparation-express">Réparation</button>
+        <button type="button" class="filter-btn" data-filter="electronique-gaming">High-Tech & Gaming</button>
+        <button type="button" class="filter-btn" data-filter="boutique-cadeaux">Boutique & Montres</button>
+        <button type="button" class="filter-btn" data-filter="bureautique-transferts">Bureautique & Wave</button>
+      </div>
+    </div>
+
+    <!-- 5 Services Cards Grid -->
+    <div class="services-grid" id="services-cards-container">
+      {services.map((service, index) => (
+        <article class={`service-card prestige-card service-cat-${service.id}`} data-category={service.id}>
+          <!-- Card Image Thumbnail with Overlay -->
+          <div class="service-media">
+            <img 
+              src={service.image} 
+              alt={service.title} 
+              class="service-img" 
+              loading="lazy"
+              width="600"
+              height="380"
+            />
+            <div class="media-overlay"></div>
+            
+            <!-- Number badge -->
+            <div class="service-index-badge">{service.number}</div>
+            
+            <!-- Popular / Special Badge -->
+            <div class="service-tag-pill">{service.badge}</div>
+          </div>
+
+          <!-- Card Content Body -->
+          <div class="service-body">
+            <div class="service-top-row">
+              <span class="service-popular-tag">{service.popularTag}</span>
+              <button 
+                type="button" 
+                class="card-wave-btn open-wave-modal-trigger" 
+                title="Payer ce service par Wave"
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+                </svg>
+                <span>Wave</span>
+              </button>
+            </div>
+
+            <h3 class="service-title font-serif">{service.title}</h3>
+            <p class="service-sub">{service.subtitle}</p>
+
+            <!-- Checklist of features -->
+            <ul class="service-checklist">
+              {service.items.map((item) => (
+                <li class="check-item">
+                  <span class="check-icon">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </span>
+                  <span class="check-text">{item}</span>
+                </li>
+              ))}
+            </ul>
+
+            <!-- Footer Action Button -->
+            <div class="service-footer">
+              <a 
+                href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent(service.actionMessage)}`}
+                class="btn btn-whatsapp service-action-btn"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                <span>{service.actionText}</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .services-section {
+    padding: 5rem 0;
+    background-color: var(--navy-900);
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .services-header {
+    margin-bottom: 3.5rem;
+  }
+
+  /* Filter bar */
+  .services-filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 2rem;
+  }
+
+  .filter-btn {
+    padding: 0.55rem 1.15rem;
+    border-radius: var(--radius-full);
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--ivory-muted);
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    transition: all 0.22s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--gold-400);
+    color: #ffffff;
+    background: rgba(212, 175, 55, 0.1);
+  }
+
+  .filter-btn.active {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    font-weight: 700;
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+  }
+
+  /* Services Grid */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .services-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  /* Card */
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .service-card.hidden {
+    display: none;
+  }
+
+  /* Media */
+  .service-media {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+  }
+
+  .service-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .service-card:hover .service-img {
+    transform: scale(1.06);
+  }
+
+  .media-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(6, 14, 26, 0.2) 0%, rgba(8, 22, 43, 0.95) 100%);
+  }
+
+  .service-index-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--navy-950);
+    background: var(--gold-gradient);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .service-tag-pill {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: rgba(6, 14, 26, 0.75);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Body */
+  .service-body {
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .service-top-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+  }
+
+  .service-popular-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--gold-400);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .card-wave-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: rgba(0, 134, 229, 0.15);
+    border: 1px solid rgba(0, 134, 229, 0.4);
+    color: #38bdf8;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+
+  .card-wave-btn:hover {
+    background: #0086e5;
+    color: #ffffff;
+  }
+
+  .service-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.4rem;
+    line-height: 1.25;
+  }
+
+  .service-sub {
+    font-size: 0.88rem;
+    color: var(--ivory-muted);
+    line-height: 1.5;
+    margin-bottom: 1.3rem;
+  }
+
+  /* Checklist */
+  .service-checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1.8rem;
+    flex: 1;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    font-size: 0.86rem;
+    color: #d1d5db;
+    line-height: 1.4;
+  }
+
+  .check-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.15);
+    color: var(--gold-400);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* Footer */
+  .service-footer {
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .service-action-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.92rem;
+  }
+</style>
+
+<script>
+  function setupServicesFilter() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.service-card');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        cards.forEach(card => {
+          const cat = card.getAttribute('data-category');
+          if (filter === 'all' || cat === filter) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupServicesFilter);
+</script>

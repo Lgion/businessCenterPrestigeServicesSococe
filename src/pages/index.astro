@@ -1,0 +1,56 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import SectionDivider from '../components/SectionDivider.astro';
+import ServicesGrid from '../components/ServicesGrid.astro';
+import SeasonalShowcase from '../components/SeasonalShowcase.astro';
+import PricingSection from '../components/PricingSection.astro';
+import AboutLocation from '../components/AboutLocation.astro';
+import Footer from '../components/Footer.astro';
+import { defaultSiteData } from '../data/siteData';
+
+const pageTitle = `${defaultSiteData.business.name} | Studio Photo, Réparation & Services Super U Deux Plateaux`;
+const pageDescription = defaultSiteData.business.description;
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+  <!-- Sticky Header with Wave Payment CTA & Admin Quick Access -->
+  <Header />
+
+  <!-- Main Landmark -->
+  <main id="main-content">
+    <!-- Hero Section -->
+    <Hero />
+
+    <!-- Visual Transition 1: Fluid Wave with Gold Crest Line -->
+    <SectionDivider type="wave" color="#08162b" accentGold={true} />
+
+    <!-- The 5 Services Grid -->
+    <ServicesGrid />
+
+    <!-- Visual Transition 2: Prestigious Asymmetric Curve with Gold Glow -->
+    <SectionDivider type="curve" color="#0c1e3b" accentGold={true} />
+
+    <!-- Dynamic Seasonal Showcase & Event Products -->
+    <SeasonalShowcase />
+
+    <!-- Visual Transition 3: Architectural Slant with Gold Border Accent -->
+    <SectionDivider type="angle" color="#050d1a" accentGold={true} />
+
+    <!-- Transparent Pricing & Interactive Quote Simulator -->
+    <PricingSection />
+
+    <!-- Visual Transition 4: Monogrammed Crest Divider -->
+    <SectionDivider type="crest" color="#060e1a" accentGold={true} />
+
+    <!-- Location Super U Deux Plateaux, Gare de Sococé, Map & FAQ -->
+    <AboutLocation />
+
+    <!-- Visual Transition 5: Smooth Wave into Luxury Footer -->
+    <SectionDivider type="wave" color="#040913" accentGold={true} />
+  </main>
+
+  <!-- Luxury Footer -->
+  <Footer />
+</Layout>

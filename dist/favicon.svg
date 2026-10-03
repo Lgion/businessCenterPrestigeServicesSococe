@@ -1,0 +1,6 @@
+<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="12" fill="#0A192F"/>
+  <rect x="2" y="2" width="44" height="44" rx="10" stroke="#D4AF37" stroke-width="2"/>
+  <path d="M16 14L24 9L32 14L28 18H20L16 14Z" fill="#D4AF37"/>
+  <text x="24" y="34" font-family="Georgia, serif" font-weight="bold" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
+</svg>

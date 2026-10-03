@@ -1,0 +1,86 @@
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"Generated 1ms","label":"types","level":"info"}
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"Re-optimizing dependencies because vite config has changed","label":"vite","level":"info"}
+{"message":" astro  v7.3.5 ready in 494 ms\n┃ Local    http://localhost:4321/\n┃ Network  http://192.168.1.19:4321/","label":"SKIP_FORMAT","level":"info"}
+{"message":"watching for file changes...","label":null,"level":"info"}
+{"message":"[200] / 116ms","label":null,"level":"info"}
+{"message":"[console.warn] Unable to access iframe: SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin \"http://localhost:4321\" from accessing a cross-origin frame.\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1390:28)\n    at eval (eval at evaluate (:290:30), <anonymous>:1591:18)\n    at UtilityScript.evaluate (<anonymous>:297:18)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)","label":"vite","level":"warn"}
+{"message":"[console.warn] Unable to access iframe: SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin \"http://localhost:4321\" from accessing a cross-origin frame.\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1390:28)\n    at eval (eval at evaluate (:290:30), <anonymous>:1591:18)\n    at UtilityScript.evaluate (<anonymous>:297:18)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)","label":"vite","level":"warn"}
+{"message":"[console.warn] Unable to access iframe: SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin \"http://localhost:4321\" from accessing a cross-origin frame.\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1390:28)\n    at eval (eval at evaluate (:290:30), <anonymous>:1591:18)\n    at UtilityScript.evaluate (<anonymous>:297:18)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)","label":"vite","level":"warn"}
+{"message":"[console.warn] Unable to access iframe: SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin \"http://localhost:4321\" from accessing a cross-origin frame.\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1390:28)\n    at eval (eval at evaluate (:290:30), <anonymous>:1591:18)\n    at UtilityScript.evaluate (<anonymous>:297:18)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)","label":"vite","level":"warn"}
+{"message":"[console.warn] Unable to access iframe: SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin \"http://localhost:4321\" from accessing a cross-origin frame.\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1390:28)\n    at eval (eval at evaluate (:290:30), <anonymous>:1591:18)\n    at UtilityScript.evaluate (<anonymous>:297:18)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)","label":"vite","level":"warn"}
+{"message":"[console.warn] Unable to access iframe: SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin \"http://localhost:4321\" from accessing a cross-origin frame.\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1390:28)\n    at eval (eval at evaluate (:290:30), <anonymous>:1591:18)\n    at UtilityScript.evaluate (<anonymous>:297:18)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)","label":"vite","level":"warn"}
+{"message":"[console.warn] Unable to access iframe: SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin \"http://localhost:4321\" from accessing a cross-origin frame.\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1551:15)\n    at buildDomTree (eval at evaluate (:290:30), <anonymous>:1390:28)\n    at eval (eval at evaluate (:290:30), <anonymous>:1591:18)\n    at UtilityScript.evaluate (<anonymous>:297:18)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)","label":"vite","level":"warn"}
+{"message":"/src/components/Hero.astro?astro&type=style&index=0&lang.css","label":"watch","level":"info"}
+{"message":"[200] / 58ms","label":null,"level":"info"}
+{"message":"[200] / 189ms","label":null,"level":"info"}
+{"message":"[200] / 198ms","label":null,"level":"info"}
+{"message":"/src/components/Hero.astro?astro&type=style&index=0&lang.css","label":"watch","level":"info"}
+{"message":"[200] / 102ms","label":null,"level":"info"}
+{"message":"/src/components/Hero.astro?astro&type=style&index=0&lang.css","label":"watch","level":"info"}
+{"message":"src/layouts/Layout.astro","label":"watch","level":"info"}
+{"message":"[200] / 106ms","label":null,"level":"info"}
+{"message":"src/layouts/Layout.astro","label":"watch","level":"info"}
+{"message":"[200] / 71ms","label":null,"level":"info"}
+{"message":"src/layouts/Layout.astro","label":"watch","level":"info"}
+{"message":"[200] / 101ms","label":null,"level":"info"}
+{"message":"[200] / 12ms","label":null,"level":"info"}
+{"message":"[200] /admin 166ms","label":null,"level":"info"}
+{"message":"src/components/BoutiqueModal.astro","label":"watch","level":"info"}
+{"message":"src/components/BoutiqueModal.astro","label":"watch","level":"info"}
+{"message":"[200] /admin 130ms","label":null,"level":"info"}
+{"message":"src/layouts/Layout.astro","label":"watch","level":"info"}
+{"message":"[200] /admin 106ms","label":null,"level":"info"}
+{"message":"src/layouts/Layout.astro","label":"watch","level":"info"}
+{"message":"[200] /admin 121ms","label":null,"level":"info"}
+{"message":"[200] / 66ms","label":null,"level":"info"}
+{"message":"[200] / 29ms","label":null,"level":"info"}
+{"message":"[200] / 33ms","label":null,"level":"info"}
+{"message":"[200] /admin 20ms","label":null,"level":"info"}
+{"message":"Configuration file updated. Restarting...","label":null,"level":"info"}
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"Re-optimizing dependencies because vite config has changed","label":"vite","level":"info"}
+{"message":"server restarted.","label":"vite","level":"info"}
+{"message":"[200] /admin 256ms","label":null,"level":"info"}
+{"message":"[200] / 378ms","label":null,"level":"info"}
+{"message":"src/components/ServiceModals.astro","label":"watch","level":"info"}
+{"message":"[200] /admin 281ms","label":null,"level":"info"}
+{"message":"[200] / 518ms","label":null,"level":"info"}
+{"message":"/src/components/ServiceModals.astro?astro&type=style&index=0&lang.css, /src/components/ServiceModals.astro?astro&type=style&index=1&lang.css","label":"watch","level":"info"}
+{"message":"src/components/Header.astro","label":"watch","level":"info"}
+{"message":"[200] /admin 157ms","label":null,"level":"info"}
+{"message":"[200] / 325ms","label":null,"level":"info"}
+{"message":"src/layouts/Layout.astro","label":"watch","level":"info"}
+{"message":"[200] /admin 98ms","label":null,"level":"info"}
+{"message":"[200] / 267ms","label":null,"level":"info"}
+{"message":"/src/styles/global.css","label":"watch","level":"info"}
+{"message":"src/pages/admin.astro","label":"watch","level":"info"}
+{"message":"[CompilerError] Expected `,` or `)` but found `Identifier` (The stacktrace appears to be already rewritten by something else, but was passed to vite.ssrFixStacktrace. This may cause incorrect stacktraces.)\n  Stack trace:\n    at /home/nihongo/Bureau/CLIENTS/studioMariaSococe/src/pages/admin.astro:1708:2\n    [...] See full stack trace in the browser, or rerun with --verbose.","label":null,"level":"error"}
+{"message":"[200] / 157ms","label":null,"level":"info"}
+{"message":"src/pages/admin.astro","label":"watch","level":"info"}
+{"message":"[200] / 195ms","label":null,"level":"info"}
+{"message":"[200] /admin 111ms","label":null,"level":"info"}
+{"message":"[200] / 56ms","label":null,"level":"info"}
+{"message":"[200] / 35ms","label":null,"level":"info"}
+{"message":"[200] /admin 40ms","label":null,"level":"info"}
+{"message":"src/components/ServiceModals.astro","label":"watch","level":"info"}
+{"message":"[200] /admin 315ms","label":null,"level":"info"}
+{"message":"[200] /admin 315ms","label":null,"level":"info"}
+{"message":"src/pages/admin.astro","label":"watch","level":"info"}
+{"message":"[200] /admin 108ms","label":null,"level":"info"}
+{"message":"[200] /admin 108ms","label":null,"level":"info"}
+{"message":"[200] /admin 17ms","label":null,"level":"info"}
+{"message":"[200] / 51ms","label":null,"level":"info"}
+{"message":"Configuration file updated. Restarting...","label":null,"level":"info"}
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"connected.","label":"vite","level":"info"}
+{"message":"Re-optimizing dependencies because vite config has changed","label":"vite","level":"info"}
+{"message":"server restarted.","label":"vite","level":"info"}
+{"message":"[200] /admin 290ms","label":null,"level":"info"}
+{"message":"[200] / 330ms","label":null,"level":"info"}
+{"message":"docs/admin/index.html","label":"watch","level":"info"}
+{"message":"docs/admin/index.html","label":"watch","level":"info"}
+{"message":"docs/index.html","label":"watch","level":"info"}
+{"message":"docs/index.html","label":"watch","level":"info"}

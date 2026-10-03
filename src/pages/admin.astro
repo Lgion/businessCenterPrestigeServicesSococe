@@ -1,0 +1,1715 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { defaultSiteData } from '../data/siteData';
+
+const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts, wavePayment, announcement } = defaultSiteData;
+---
+
+<Layout title="Administration | Business Center Prestige Services">
+  <div class="admin-page-container">
+    <!-- Top Global Header -->
+    <header class="admin-topbar">
+      <div class="container admin-topbar-inner">
+        <div class="admin-brand">
+          <a href="/" class="admin-logo-link" title="Retourner au site vitrine">
+            <div class="admin-crest">
+              <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
+                <rect width="44" height="44" rx="10" fill="#0E223F"/>
+                <rect x="1.5" y="1.5" width="41" height="41" rx="8.5" stroke="#D4AF37" stroke-width="1.5"/>
+                <text x="22" y="28" font-family="serif" font-weight="800" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
+              </svg>
+            </div>
+            <div>
+              <h1 class="admin-heading">Console d'Administration Globale</h1>
+              <p class="admin-tag">Business Center Prestige Services • Super U Deux Plateaux</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="admin-topbar-actions">
+          <a href="/" class="btn btn-navy-outline btn-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+            <span>Voir le Site en Direct</span>
+          </a>
+
+          <button type="button" id="admin-page-save-btn" class="btn btn-gold btn-sm">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            <span>Enregistrer les Modifications</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Admin Workspace Layout -->
+    <div class="container admin-main-layout">
+      <!-- Left Navigation Menu -->
+      <aside class="admin-nav-sidebar">
+        <div class="sidebar-sticky-box">
+          <span class="sidebar-title">Sections du Site</span>
+          <nav class="sidebar-menu">
+            <a href="#sec-general" class="sidebar-link active">
+              <span class="link-icon">🏛️</span>
+              <span>1. Informations Générales</span>
+            </a>
+            <a href="#sec-services" class="sidebar-link">
+              <span class="link-icon">🌟</span>
+              <span>2. Les 5 Pôles & Fonds</span>
+            </a>
+            <a href="#sec-seasons" class="sidebar-link">
+              <span class="link-icon">🎪</span>
+              <span>3. Vitrine Événementielle</span>
+            </a>
+            <a href="#sec-pricing" class="sidebar-link">
+              <span class="link-icon">🏷️</span>
+              <span>4. Tarifs & Formules</span>
+            </a>
+            <a href="#sec-boutique" class="sidebar-link">
+              <span class="link-icon">🛍️</span>
+              <span>5. Boutique E-Commerce</span>
+            </a>
+            <a href="#sec-wave" class="sidebar-link">
+              <span class="link-icon">💙</span>
+              <span>6. Paramètres Wave</span>
+            </a>
+          </nav>
+
+          <div class="sidebar-tools-box">
+            <span class="sidebar-sub-title">Outils de Données</span>
+            <button type="button" id="sidebar-export-btn" class="sidebar-tool-btn">
+              📥 Exporter la configuration JSON
+            </button>
+            <label for="sidebar-import-input" class="sidebar-tool-btn import-btn">
+              📤 Importer un fichier JSON
+            </label>
+            <input type="file" id="sidebar-import-input" accept=".json" style="display: none;" />
+            <button type="button" id="sidebar-reset-btn" class="sidebar-reset-btn">
+              🔄 Réinitialiser aux valeurs initiales
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right Form Sections Area -->
+      <main class="admin-content-area">
+        <form id="global-admin-form" class="global-admin-form">
+
+          <!-- ================= SECTION 1: GENERAL INFO ================= -->
+          <section id="sec-general" class="admin-card-section prestige-card">
+            <div class="section-card-head">
+              <div class="badge-num">01</div>
+              <div>
+                <h2 class="card-sec-title">Informations Générales, En-tête & Coordonnées</h2>
+                <p class="card-sec-desc">Nom officiel, localisation Super U, contacts téléphoniques et bannière d'annonce.</p>
+              </div>
+            </div>
+
+            <div class="form-fields-grid">
+              <div class="field-item full-width">
+                <label for="adm-name">Nom Officiel du Commerce</label>
+                <input type="text" id="adm-name" class="adm-input" value={business.name} />
+              </div>
+
+              <div class="field-item">
+                <label for="adm-phone">Téléphone Appel Direct (ex: +225 07 89 08 30 85)</label>
+                <input type="text" id="adm-phone" class="adm-input" value={business.phoneFormatted} />
+              </div>
+
+              <div class="field-item">
+                <label for="adm-whatsapp">Numéro WhatsApp Commercial (ex: +225 05 44 26 32 45)</label>
+                <input type="text" id="adm-whatsapp" class="adm-input" value={business.whatsappFormatted} />
+              </div>
+
+              <div class="field-item full-width">
+                <label for="adm-whatsapp-msg">Message WhatsApp d'accueil pré-rempli</label>
+                <input type="text" id="adm-whatsapp-msg" class="adm-input" value={business.whatsappPreFilled} />
+              </div>
+
+              <div class="field-item full-width">
+                <label for="adm-address">Adresse physique complète</label>
+                <input type="text" id="adm-address" class="adm-input" value={business.address} />
+              </div>
+
+              <div class="field-item">
+                <label for="adm-hours">Horaires d'Ouverture affichés</label>
+                <input type="text" id="adm-hours" class="adm-input" value={business.openingHours} />
+              </div>
+
+              <div class="field-item">
+                <label for="adm-schedule-note">Note d'ouverture complémentaire</label>
+                <input type="text" id="adm-schedule-note" class="adm-input" value={business.scheduleNote} />
+              </div>
+
+              <div class="field-item">
+                <label for="adm-ann-badge">Bannière Annonce - Badge</label>
+                <input type="text" id="adm-ann-badge" class="adm-input" value={announcement.badge} />
+              </div>
+
+              <div class="field-item">
+                <label for="adm-ann-text">Bannière Annonce - Texte</label>
+                <input type="text" id="adm-ann-text" class="adm-input" value={announcement.text} />
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SECTION 2: 5 SERVICES & BACKGROUNDS ================= -->
+          <section id="sec-services" class="admin-card-section prestige-card">
+            <div class="section-card-head">
+              <div class="badge-num">02</div>
+              <div>
+                <h2 class="card-sec-title">Les 5 Pôles d'Excellence (Fonds d'écran & Prestations)</h2>
+                <p class="card-sec-desc">
+                  Personnalisez pour chacun des 5 secteurs son image de fond, ses textes et sa liste de services détaillée (ajoutez, modifiez ou supprimez des points).
+                </p>
+              </div>
+            </div>
+
+            <div class="services-admin-stack" id="services-admin-cards">
+              {services.map((svc, idx) => (
+                <div class="service-editor-card" data-service-id={svc.id}>
+                  <div class="svc-editor-head">
+                    <span class="svc-index font-serif">Pôle {svc.number}</span>
+                    <h3 class="svc-name">{svc.title}</h3>
+                    <span class="svc-badge-tag">{svc.badge}</span>
+                  </div>
+
+                  <div class="form-fields-grid">
+                    <div class="field-item">
+                      <label>Titre du Pôle</label>
+                      <input type="text" class="adm-input svc-title-input" value={svc.title} />
+                    </div>
+
+                    <div class="field-item">
+                      <label>Sous-titre / Accroche</label>
+                      <input type="text" class="adm-input svc-subtitle-input" value={svc.subtitle} />
+                    </div>
+
+                    <div class="field-item">
+                      <label>Badge de mise en avant</label>
+                      <input type="text" class="adm-input svc-badge-input" value={svc.badge} />
+                    </div>
+
+                    <div class="field-item">
+                      <label>Tag de popularité</label>
+                      <input type="text" class="adm-input svc-popular-input" value={svc.popularTag} />
+                    </div>
+
+                    <!-- Fond d'écran / Image de fond modifiable -->
+                    <div class="field-item full-width">
+                      <label>Image de Fond du Pôle (URL ou sélection)</label>
+                      <div class="image-picker-row">
+                        <input type="text" class="adm-input svc-image-input" value={svc.image} />
+                        <div class="image-thumb-preview">
+                          <img src={svc.image} alt={svc.title} class="svc-thumb-img" />
+                        </div>
+                      </div>
+                      <span class="field-hint">Images locales suggérées : /images/photo-studio.jpg, /images/tech-repair.jpg, /images/hero-store.jpg, /images/boutique-gifts.jpg</span>
+                    </div>
+
+                    <!-- Prestations / Liste des services détaillée -->
+                    <div class="field-item full-width">
+                      <div class="items-list-head">
+                        <label>Prestations incluses dans ce Pôle ({svc.items.length})</label>
+                        <button type="button" class="btn-add-item add-svc-item-btn">
+                          ➕ Ajouter une prestation
+                        </button>
+                      </div>
+
+                      <div class="svc-items-container">
+                        {svc.items.map((item) => (
+                          <div class="svc-item-row">
+                            <span class="bullet-dot">›</span>
+                            <input type="text" class="adm-input svc-item-input" value={item} />
+                            <button type="button" class="btn-del-item del-svc-item-btn" title="Supprimer cette prestation">
+                              🗑️
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <!-- ================= SECTION 3: SEASONS & PRODUCTS ================= -->
+          <section id="sec-seasons" class="admin-card-section prestige-card">
+            <div class="section-card-head">
+              <div class="badge-num">03</div>
+              <div>
+                <h2 class="card-sec-title">Vitrine Événementielle & Produits Saisonniers</h2>
+                <p class="card-sec-desc">
+                  Comprendre et piloter la vitrine dynamique : activez la saison souhaitée et gérez les produits en vedette (ajout, modification, suppression).
+                </p>
+              </div>
+            </div>
+
+            <!-- Explanatory note for the client -->
+            <div class="explanation-box">
+              <div class="expl-icon">💡</div>
+              <div class="expl-content">
+                <strong>Comment fonctionne la vitrine saisonnière ?</strong>
+                <p>
+                  Ce bloc permet d'adapter instantanément votre devanture digitale au moment fort de l'année (ex: Rentrée scolaire en septembre, Fêtes de fin d'année et Noël en décembre, Cérémonies de mariage, ou High-Tech Fest). Les clients voient les produits correspondants et peuvent les commander en 1 clic sur WhatsApp ou les payer par Wave.
+                </p>
+              </div>
+            </div>
+
+            <div class="form-fields-grid">
+              <div class="field-item">
+                <label for="adm-season-select">Saison affichée par défaut sur le site</label>
+                <select id="adm-season-select" class="adm-select">
+                  {seasonalShowcase.seasons.map((s) => (
+                    <option value={s.id} selected={s.id === seasonalShowcase.activeSeasonId}>
+                      {s.name} ({s.tag})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div class="field-item">
+                <label for="adm-season-title">Titre principal de la vitrine</label>
+                <input type="text" id="adm-season-title" class="adm-input" value={seasonalShowcase.title} />
+              </div>
+
+              <div class="field-item full-width">
+                <label for="adm-season-sub">Sous-titre explicatif de la vitrine</label>
+                <input type="text" id="adm-season-sub" class="adm-input" value={seasonalShowcase.subtitle} />
+              </div>
+            </div>
+
+            <!-- Seasonal Products Manager -->
+            <div class="products-manager-box">
+              <div class="manager-head">
+                <div>
+                  <h3 class="manager-title">Catalogue des Produits Saisonniers</h3>
+                  <span class="manager-sub">Gérez les articles associés à chaque saison</span>
+                </div>
+                <button type="button" id="btn-add-seasonal-prod" class="btn btn-gold btn-sm">
+                  ➕ Ajouter un produit saisonnier
+                </button>
+              </div>
+
+              <div class="seasonal-products-table-wrap">
+                <div class="seasonal-prods-grid" id="seasonal-prods-admin-list">
+                  {seasonalShowcase.products.map((prod) => (
+                    <div class="prod-admin-card" data-prod-id={prod.id}>
+                      <div class="prod-admin-media">
+                        <img src={prod.image} alt={prod.name} class="prod-admin-img" />
+                      </div>
+                      <div class="prod-admin-form">
+                        <div class="prod-row-1">
+                          <input type="text" class="adm-input prod-name-input" value={prod.name} placeholder="Nom du produit" />
+                          <select class="adm-select prod-season-select">
+                            <option value="rentree" selected={prod.seasonId === 'rentree'}>Rentrée Scolaire</option>
+                            <option value="noel" selected={prod.seasonId === 'noel'}>Fêtes & Noël</option>
+                            <option value="mariages" selected={prod.seasonId === 'mariages'}>Cérémonies & Mariages</option>
+                            <option value="hightech" selected={prod.seasonId === 'hightech'}>High-Tech & Gaming</option>
+                          </select>
+                        </div>
+                        <div class="prod-row-2">
+                          <input type="number" class="adm-input prod-price-input" value={prod.price} placeholder="Prix FCFA" />
+                          <input type="text" class="adm-input prod-badge-input" value={prod.badge} placeholder="Badge promo" />
+                          <input type="text" class="adm-input prod-img-input" value={prod.image} placeholder="URL Image" />
+                        </div>
+                        <input type="text" class="adm-input prod-desc-input" value={prod.description} placeholder="Courte description" />
+                        <div class="prod-row-del">
+                          <button type="button" class="btn-del-prod del-seasonal-prod-btn">
+                            🗑️ Supprimer ce produit
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================= SECTION 4: PRICING PACKAGES ================= -->
+          <section id="sec-pricing" class="admin-card-section prestige-card">
+            <div class="section-card-head">
+              <div class="badge-num">04</div>
+              <div>
+                <h2 class="card-sec-title">Formules Tarifaires & Devis ('Transparence & Prix Doux')</h2>
+                <p class="card-sec-desc">
+                  Gérez les cartes de tarifs affichées sur le site (ajoutez de nouvelles formules, modifiez les prix et caractéristiques).
+                </p>
+              </div>
+            </div>
+
+            <div class="manager-head">
+              <span class="manager-sub">Cartes de prix actuellement visibles par les clients</span>
+              <button type="button" id="btn-add-pricing-pkg" class="btn btn-gold btn-sm">
+                ➕ Ajouter une formule tarifaire
+              </button>
+            </div>
+
+            <div class="pricing-pkgs-stack" id="pricing-pkgs-admin-list">
+              {pricingPackages.map((pkg) => (
+                <div class="pkg-admin-card" data-pkg-id={pkg.id}>
+                  <div class="pkg-admin-row-top">
+                    <input type="text" class="adm-input pkg-title-input" value={pkg.title} placeholder="Titre de la formule" />
+                    <input type="text" class="adm-input pkg-cat-input" value={pkg.category} placeholder="Catégorie (ex: Studio Photo)" />
+                    <input type="text" class="adm-input pkg-price-input" value={pkg.price} placeholder="Prix (ex: 15 000 FCFA)" />
+                    <input type="text" class="adm-input pkg-period-input" value={pkg.period || ''} placeholder="Période (ex: la séance)" />
+                  </div>
+
+                  <div class="pkg-admin-features-box">
+                    <label>Caractéristiques incluses dans cette formule</label>
+                    <textarea class="adm-textarea pkg-features-input" rows="3" placeholder="Une caractéristique par ligne">{pkg.features.join('\n')}</textarea>
+                  </div>
+
+                  <div class="pkg-admin-bottom">
+                    <label class="checkbox-label">
+                      <input type="checkbox" class="pkg-popular-checkbox" checked={pkg.popular} />
+                      <span>Formule la plus populaire (Mise en avant or)</span>
+                    </label>
+
+                    <button type="button" class="btn-del-prod del-pricing-pkg-btn">
+                      🗑️ Supprimer cette formule
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <!-- ================= SECTION 5: BOUTIQUE E-COMMERCE ================= -->
+          <section id="sec-boutique" class="admin-card-section prestige-card">
+            <div class="section-card-head">
+              <div class="badge-num">05</div>
+              <div>
+                <h2 class="card-sec-title">Boutique E-Commerce Subtile (Articles en Vente Directe)</h2>
+                <p class="card-sec-desc">
+                  Gérez les articles présentés dans la fenêtre modale accessible via le bouton fixé en bas à gauche de l'écran.
+                </p>
+              </div>
+            </div>
+
+            <div class="manager-head">
+              <div>
+                <h3 class="manager-title">Catalogue des Articles en Vente Directe</h3>
+                <span class="manager-sub">Manettes de jeu, câbles, chargeurs, maroquinerie, montres et cadeaux</span>
+              </div>
+              <button type="button" id="btn-add-boutique-prod" class="btn btn-gold btn-sm">
+                ➕ Ajouter un article en boutique
+              </button>
+            </div>
+
+            <div class="boutique-admin-grid" id="boutique-admin-list">
+              {boutiqueProducts.map((bp) => (
+                <div class="btq-admin-card" data-btq-id={bp.id}>
+                  <div class="btq-admin-top">
+                    <img src={bp.image} alt={bp.name} class="btq-admin-thumb" />
+                    <div class="btq-admin-main-inputs">
+                      <input type="text" class="adm-input btq-name-input" value={bp.name} placeholder="Nom de l'article" />
+                      <div class="btq-row-price-cat">
+                        <input type="number" class="adm-input btq-price-input" value={bp.price} placeholder="Prix FCFA" />
+                        <select class="adm-select btq-cat-select">
+                          <option value="gaming" selected={bp.category === 'gaming'}>Gaming & Consoles</option>
+                          <option value="accessoires" selected={bp.category === 'accessoires'}>High-Tech & Câbles</option>
+                          <option value="maroquinerie" selected={bp.category === 'maroquinerie'}>Sacs & Cuir</option>
+                          <option value="montres" selected={bp.category === 'montres'}>Montres & Bijoux</option>
+                          <option value="cadeaux" selected={bp.category === 'cadeaux'}>Cadeaux & Divers</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="btq-admin-fields">
+                    <input type="text" class="adm-input btq-badge-input" value={bp.badge} placeholder="Badge (ex: Top Vente)" />
+                    <input type="text" class="adm-input btq-img-input" value={bp.image} placeholder="URL Image" />
+                    <textarea class="adm-textarea btq-desc-input" rows="2" placeholder="Description de l'article">{bp.description}</textarea>
+                  </div>
+
+                  <div class="btq-admin-footer">
+                    <label class="checkbox-label">
+                      <input type="checkbox" class="btq-stock-checkbox" checked={bp.inStock} />
+                      <span>Article en stock au Super U</span>
+                    </label>
+
+                    <button type="button" class="btn-del-prod del-btq-prod-btn">
+                      🗑️ Supprimer
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <!-- ================= SECTION 6: WAVE PAYMENT ================= -->
+          <section id="sec-wave" class="admin-card-section prestige-card">
+            <div class="section-card-head">
+              <div class="badge-num">06</div>
+              <div>
+                <h2 class="card-sec-title">Paramètres de Paiement Wave Côte d'Ivoire</h2>
+                <p class="card-sec-desc">Identifiants marchands et montants pré-configurés pour la modale Wave.</p>
+              </div>
+            </div>
+
+            <div class="form-fields-grid">
+              <div class="field-item">
+                <label for="adm-wave-phone">Numéro Marchand Wave (ex: 0544263245)</label>
+                <input type="text" id="adm-wave-phone" class="adm-input" value={wavePayment.merchantPhone} />
+              </div>
+
+              <div class="field-item">
+                <label for="adm-wave-amount">Montant par défaut (FCFA)</label>
+                <input type="number" id="adm-wave-amount" class="adm-input" value={wavePayment.defaultAmount} />
+              </div>
+
+              <div class="field-item full-width">
+                <label for="adm-wave-banks">Banques Partenaires Agrées affichées</label>
+                <input type="text" id="adm-wave-banks" class="adm-input" value={wavePayment.partnerBanks} />
+              </div>
+            </div>
+          </section>
+
+          <!-- Floating Bottom Save Bar -->
+          <div class="admin-sticky-bottom-bar">
+            <div class="container bottom-bar-inner">
+              <span class="bar-notice">💡 Pensez à enregistrer vos changements pour qu'ils s'appliquent immédiatement sur le site vitrine.</span>
+              <button type="submit" class="btn btn-gold btn-save-big">
+                💾 Sauvegarder & Publier en Direct
+              </button>
+            </div>
+          </div>
+
+        </form>
+      </main>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .admin-page-container {
+    background-color: #040913;
+    min-height: 100vh;
+    padding-bottom: 7rem;
+    color: #f1f5f9;
+  }
+
+  /* Topbar */
+  .admin-topbar {
+    background: #08162b;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+  }
+
+  .admin-topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .admin-brand {
+    display: flex;
+    align-items: center;
+  }
+
+  .admin-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    text-decoration: none;
+  }
+
+  .admin-crest {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+  }
+
+  .admin-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    font-family: var(--font-serif);
+    line-height: 1.2;
+  }
+
+  .admin-tag {
+    font-size: 0.76rem;
+    color: var(--gold-400);
+  }
+
+  .admin-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+
+  .btn-sm {
+    padding: 0.55rem 1.1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Main Layout Grid */
+  .admin-main-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2.5rem;
+    margin-top: 2.5rem;
+    align-items: flex-start;
+  }
+
+  /* Fixed Navigation Sidebar in its left position */
+  .admin-nav-sidebar {
+    width: 280px;
+    min-width: 280px;
+    position: relative;
+    height: 100%;
+  }
+
+  .sidebar-sticky-box {
+    position: fixed;
+    top: 90px;
+    width: 280px;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+    z-index: 90;
+    background: rgba(10, 26, 52, 0.94);
+    border: 1.5px solid rgba(212, 175, 55, 0.35);
+    border-radius: var(--radius-lg);
+    padding: 1.3rem;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.15);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  @media (max-width: 1024px) {
+    .admin-main-layout {
+      grid-template-columns: 1fr;
+      margin-top: 1rem;
+    }
+    .admin-nav-sidebar {
+      width: 100%;
+      min-width: unset;
+      position: sticky;
+      top: 75px;
+      z-index: 95;
+      margin-bottom: 1.5rem;
+      height: auto;
+    }
+    .sidebar-sticky-box {
+      position: relative;
+      top: 0;
+      width: 100%;
+      max-height: none;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+    .sidebar-title, .sidebar-tools-box {
+      display: none;
+    }
+    .sidebar-menu {
+      flex-direction: row;
+      overflow-x: auto;
+      gap: 0.5rem;
+      padding-bottom: 0.2rem;
+    }
+    .sidebar-link {
+      white-space: nowrap;
+      font-size: 0.8rem;
+      padding: 0.45rem 0.75rem;
+      flex-shrink: 0;
+    }
+  }
+
+  .sidebar-title {
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--gold-400);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ivory-muted);
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .sidebar-link:hover, .sidebar-link.active {
+    background: rgba(212, 175, 55, 0.12);
+    color: var(--gold-300);
+  }
+
+  .link-icon {
+    font-size: 1.1rem;
+  }
+
+  .sidebar-tools-box {
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .sidebar-sub-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-transform: uppercase;
+  }
+
+  .sidebar-tool-btn {
+    background: rgba(14, 34, 64, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #cbd5e1;
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .sidebar-tool-btn:hover {
+    border-color: var(--gold-400);
+    color: #ffffff;
+    background: rgba(212, 175, 55, 0.1);
+  }
+
+  .import-btn {
+    cursor: pointer;
+  }
+
+  .sidebar-reset-btn {
+    background: none;
+    border: none;
+    color: #f87171;
+    font-size: 0.76rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    padding: 0.4rem 0.2rem;
+  }
+
+  .sidebar-reset-btn:hover {
+    text-decoration: underline;
+  }
+
+  /* Form & Sections */
+  .global-admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .admin-card-section {
+    padding: 2.2rem;
+    border-radius: var(--radius-xl);
+    scroll-margin-top: 100px;
+  }
+
+  .section-card-head {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1.8rem;
+  }
+
+  .badge-num {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--navy-950);
+    background: var(--gold-gradient);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-sec-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #ffffff;
+    font-family: var(--font-serif);
+  }
+
+  .card-sec-desc {
+    font-size: 0.84rem;
+    color: var(--ivory-muted);
+    margin-top: 0.2rem;
+  }
+
+  /* Fields Grid */
+  .form-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  @media (max-width: 640px) {
+    .form-fields-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .field-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .field-item label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #cbd5e1;
+  }
+
+  .adm-input, .adm-select, .adm-textarea {
+    background: rgba(6, 14, 26, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    color: #ffffff;
+    padding: 0.7rem 0.95rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .adm-input:focus, .adm-select:focus, .adm-textarea:focus {
+    border-color: var(--gold-400);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+  }
+
+  .field-hint {
+    font-size: 0.72rem;
+    color: var(--gold-400);
+    margin-top: 0.2rem;
+  }
+
+  /* Image Picker */
+  .image-picker-row {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+  }
+
+  .image-thumb-preview {
+    width: 60px;
+    height: 42px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    flex-shrink: 0;
+  }
+
+  .svc-thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Service Editors */
+  .services-admin-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+  }
+
+  .service-editor-card {
+    background: rgba(10, 24, 46, 0.65);
+    border: 1px solid rgba(212, 175, 55, 0.22);
+    border-radius: 16px;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .svc-editor-head {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .svc-index {
+    color: var(--gold-400);
+    font-weight: 800;
+    font-size: 1rem;
+  }
+
+  .svc-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+    flex: 1;
+  }
+
+  .svc-badge-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: var(--gold-300);
+  }
+
+  .items-list-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .btn-add-item {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #4ade80;
+    font-size: 0.76rem;
+    font-weight: 700;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-add-item:hover {
+    background: #22c55e;
+    color: #ffffff;
+  }
+
+  .svc-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .svc-item-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .bullet-dot {
+    color: var(--gold-400);
+    font-weight: 800;
+    font-size: 1.1rem;
+  }
+
+  .svc-item-input {
+    flex: 1;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .btn-del-item {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .btn-del-item:hover {
+    background: #ef4444;
+    color: #ffffff;
+  }
+
+  /* Explanatory Box */
+  .explanation-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 14px;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .expl-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+  }
+
+  .expl-content strong {
+    color: #ffffff;
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .expl-content p {
+    font-size: 0.84rem;
+    color: var(--ivory-muted);
+    line-height: 1.5;
+  }
+
+  /* Products Manager */
+  .products-manager-box {
+    margin-top: 2rem;
+    padding-top: 1.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .manager-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.4rem;
+  }
+
+  .manager-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .manager-sub {
+    font-size: 0.78rem;
+    color: var(--ivory-muted);
+  }
+
+  .seasonal-prods-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .prod-admin-card {
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  @media (max-width: 640px) {
+    .prod-admin-card {
+      flex-direction: column;
+    }
+  }
+
+  .prod-admin-media {
+    width: 90px;
+    height: 90px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  .prod-admin-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .prod-admin-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .prod-row-1, .prod-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .prod-row-2 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .btn-del-prod {
+    background: none;
+    border: none;
+    color: #f87171;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.2rem 0;
+    align-self: flex-start;
+  }
+
+  .btn-del-prod:hover {
+    text-decoration: underline;
+  }
+
+  /* Pricing admin */
+  .pricing-pkgs-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .pkg-admin-card {
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .pkg-admin-row-top {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  @media (max-width: 768px) {
+    .pkg-admin-row-top {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pkg-admin-features-box label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .adm-textarea {
+    width: 100%;
+    resize: vertical;
+  }
+
+  .pkg-admin-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--ivory-muted);
+    cursor: pointer;
+  }
+
+  /* Boutique Admin */
+  .boutique-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .btq-admin-card {
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .btq-admin-top {
+    display: flex;
+    gap: 0.8rem;
+  }
+
+  .btq-admin-thumb {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    flex-shrink: 0;
+  }
+
+  .btq-admin-main-inputs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .btq-row-price-cat {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+
+  .btq-admin-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .btq-admin-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.4rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* Sticky Bottom Bar */
+  .admin-sticky-bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(6, 14, 26, 0.95);
+    border-top: 1px solid var(--gold-500);
+    backdrop-filter: blur(14px);
+    padding: 1rem 0;
+    z-index: 999;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7);
+  }
+
+  .bottom-bar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .bar-notice {
+    font-size: 0.86rem;
+    color: var(--ivory-muted);
+  }
+
+  .btn-save-big {
+    padding: 0.8rem 1.8rem;
+    font-size: 1rem;
+  }
+</style>
+
+<script>
+  function setupAdminPage() {
+    const form = document.getElementById('global-admin-form') as HTMLFormElement;
+    const topSaveBtn = document.getElementById('admin-page-save-btn');
+    const exportBtn = document.getElementById('sidebar-export-btn');
+    const importInput = document.getElementById('sidebar-import-input') as HTMLInputElement;
+    const resetBtn = document.getElementById('sidebar-reset-btn');
+
+    // Load saved data from localStorage into the form inputs
+    function loadSavedAdminData() {
+      const stored = localStorage.getItem('bcps_site_data');
+      if (!stored) return;
+      try {
+        const data = JSON.parse(stored);
+        if (data.name) (document.getElementById('adm-name') as HTMLInputElement).value = data.name;
+        if (data.phoneFormatted) (document.getElementById('adm-phone') as HTMLInputElement).value = data.phoneFormatted;
+        if (data.whatsappFormatted) (document.getElementById('adm-whatsapp') as HTMLInputElement).value = data.whatsappFormatted;
+        if (data.whatsappPreFilled) (document.getElementById('adm-whatsapp-msg') as HTMLInputElement).value = data.whatsappPreFilled;
+        if (data.address) (document.getElementById('adm-address') as HTMLInputElement).value = data.address;
+        if (data.openingHours) (document.getElementById('adm-hours') as HTMLInputElement).value = data.openingHours;
+        if (data.scheduleNote) (document.getElementById('adm-schedule-note') as HTMLInputElement).value = data.scheduleNote;
+        if (data.announcementBadge) (document.getElementById('adm-ann-badge') as HTMLInputElement).value = data.announcementBadge;
+        if (data.announcementText) (document.getElementById('adm-ann-text') as HTMLInputElement).value = data.announcementText;
+
+        if (data.seasonSelect) (document.getElementById('adm-season-select') as HTMLSelectElement).value = data.seasonSelect;
+        if (data.seasonTitle) (document.getElementById('adm-season-title') as HTMLInputElement).value = data.seasonTitle;
+        if (data.seasonSubtitle) (document.getElementById('adm-season-sub') as HTMLInputElement).value = data.seasonSubtitle;
+
+        if (data.wavePhone) (document.getElementById('adm-wave-phone') as HTMLInputElement).value = data.wavePhone;
+        if (data.waveAmount) (document.getElementById('adm-wave-amount') as HTMLInputElement).value = data.waveAmount;
+        if (data.waveBanks) (document.getElementById('adm-wave-banks') as HTMLInputElement).value = data.waveBanks;
+
+        // Custom services background and items
+        if (data.servicesCustom) {
+          data.servicesCustom.forEach((customSvc: any) => {
+            const card = document.querySelector(`[data-service-id="${customSvc.id}"]`);
+            if (card) {
+              const imgInput = card.querySelector('.svc-image-input') as HTMLInputElement;
+              const titleInput = card.querySelector('.svc-title-input') as HTMLInputElement;
+              const subInput = card.querySelector('.svc-subtitle-input') as HTMLInputElement;
+              const thumbImg = card.querySelector('.svc-thumb-img') as HTMLImageElement;
+              if (imgInput && customSvc.image) {
+                imgInput.value = customSvc.image;
+                if (thumbImg) thumbImg.src = customSvc.image;
+              }
+              if (titleInput && customSvc.title) titleInput.value = customSvc.title;
+              if (subInput && customSvc.subtitle) subInput.value = customSvc.subtitle;
+
+              // Items list
+              if (customSvc.items && customSvc.items.length) {
+                const container = card.querySelector('.svc-items-container');
+                if (container) {
+                  container.innerHTML = '';
+                  customSvc.items.forEach((itemText: string) => {
+                    const row = document.createElement('div');
+                    row.className = 'svc-item-row';
+                    row.innerHTML = `
+                      <span class="bullet-dot">›</span>
+                      <input type="text" class="adm-input svc-item-input" value="${itemText}" />
+                      <button type="button" class="btn-del-item del-svc-item-btn" title="Supprimer cette prestation">🗑️</button>
+                    `;
+                    container.appendChild(row);
+                  });
+                }
+              }
+            }
+          });
+        }
+      } catch(e) {
+        console.error('Error loading saved admin data', e);
+      }
+    }
+
+    loadSavedAdminData();
+
+    // Image preview live change
+    document.querySelectorAll('.svc-image-input').forEach(input => {
+      input.addEventListener('input', (e) => {
+        const val = (e.target as HTMLInputElement).value;
+        const card = (e.target as HTMLElement).closest('.service-editor-card');
+        const thumb = card?.querySelector('.svc-thumb-img') as HTMLImageElement;
+        if (thumb) thumb.src = val;
+      });
+    });
+
+    // Delete service item
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      if (target.classList.contains('del-svc-item-btn')) {
+        const row = target.closest('.svc-item-row');
+        row?.remove();
+      }
+
+      if (target.classList.contains('del-seasonal-prod-btn')) {
+        const card = target.closest('.prod-admin-card');
+        card?.remove();
+      }
+
+      if (target.classList.contains('del-pricing-pkg-btn')) {
+        const card = target.closest('.pkg-admin-card');
+        card?.remove();
+      }
+
+      if (target.classList.contains('del-btq-prod-btn')) {
+        const card = target.closest('.btq-admin-card');
+        card?.remove();
+      }
+    });
+
+    // Add service item
+    document.querySelectorAll('.add-svc-item-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.service-editor-card');
+        const container = card?.querySelector('.svc-items-container');
+        if (container) {
+          const row = document.createElement('div');
+          row.className = 'svc-item-row';
+          row.innerHTML = `
+            <span class="bullet-dot">›</span>
+            <input type="text" class="adm-input svc-item-input" value="Nouvelle prestation..." />
+            <button type="button" class="btn-del-item del-svc-item-btn" title="Supprimer cette prestation">🗑️</button>
+          `;
+          container.appendChild(row);
+        }
+      });
+    });
+
+    // Add seasonal product
+    document.getElementById('btn-add-seasonal-prod')?.addEventListener('click', () => {
+      const list = document.getElementById('seasonal-prods-admin-list');
+      if (!list) return;
+      const id = 'prod-' + Date.now();
+      const div = document.createElement('div');
+      div.className = 'prod-admin-card';
+      div.setAttribute('data-prod-id', id);
+      div.innerHTML = `
+        <div class="prod-admin-media">
+          <img src="/images/boutique-gifts.jpg" alt="Nouveau produit" class="prod-admin-img" />
+        </div>
+        <div class="prod-admin-form">
+          <div class="prod-row-1">
+            <input type="text" class="adm-input prod-name-input" value="Nouveau Produit Saisonnier" placeholder="Nom du produit" />
+            <select class="adm-select prod-season-select">
+              <option value="rentree">Rentrée Scolaire</option>
+              <option value="noel">Fêtes & Noël</option>
+              <option value="mariages">Cérémonies & Mariages</option>
+              <option value="hightech">High-Tech & Gaming</option>
+            </select>
+          </div>
+          <div class="prod-row-2">
+            <input type="number" class="adm-input prod-price-input" value="10000" placeholder="Prix FCFA" />
+            <input type="text" class="adm-input prod-badge-input" value="Nouveauté" placeholder="Badge promo" />
+            <input type="text" class="adm-input prod-img-input" value="/images/boutique-gifts.jpg" placeholder="URL Image" />
+          </div>
+          <input type="text" class="adm-input prod-desc-input" value="Description courte du produit..." placeholder="Courte description" />
+          <div class="prod-row-del">
+            <button type="button" class="btn-del-prod del-seasonal-prod-btn">🗑️ Supprimer ce produit</button>
+          </div>
+        </div>
+      `;
+      list.prepend(div);
+    });
+
+    // Add pricing package
+    document.getElementById('btn-add-pricing-pkg')?.addEventListener('click', () => {
+      const list = document.getElementById('pricing-pkgs-admin-list');
+      if (!list) return;
+      const id = 'pkg-' + Date.now();
+      const div = document.createElement('div');
+      div.className = 'pkg-admin-card';
+      div.setAttribute('data-pkg-id', id);
+      div.innerHTML = `
+        <div class="pkg-admin-row-top">
+          <input type="text" class="adm-input pkg-title-input" value="Nouvelle Formule" placeholder="Titre de la formule" />
+          <input type="text" class="adm-input pkg-cat-input" value="Prestation" placeholder="Catégorie" />
+          <input type="text" class="adm-input pkg-price-input" value="10 000 FCFA" placeholder="Prix" />
+          <input type="text" class="adm-input pkg-period-input" value="la séance" placeholder="Période" />
+        </div>
+        <div class="pkg-admin-features-box">
+          <label>Caractéristiques incluses</label>
+          <textarea class="adm-textarea pkg-features-input" rows="3" placeholder="Une caractéristique par ligne">Caractéristique 1\nCaractéristique 2</textarea>
+        </div>
+        <div class="pkg-admin-bottom">
+          <label class="checkbox-label">
+            <input type="checkbox" class="pkg-popular-checkbox" />
+            <span>Formule la plus populaire (Mise en avant or)</span>
+          </label>
+          <button type="button" class="btn-del-prod del-pricing-pkg-btn">🗑️ Supprimer cette formule</button>
+        </div>
+      `;
+      list.prepend(div);
+    });
+
+    // Add boutique article
+    document.getElementById('btn-add-boutique-prod')?.addEventListener('click', () => {
+      const list = document.getElementById('boutique-admin-list');
+      if (!list) return;
+      const id = 'btq-' + Date.now();
+      const div = document.createElement('div');
+      div.className = 'btq-admin-card';
+      div.setAttribute('data-btq-id', id);
+      div.innerHTML = `
+        <div class="btq-admin-top">
+          <img src="/images/hero-store.jpg" alt="Article" class="btq-admin-thumb" />
+          <div class="btq-admin-main-inputs">
+            <input type="text" class="adm-input btq-name-input" value="Nouvel Article en Boutique" placeholder="Nom de l'article" />
+            <div class="btq-row-price-cat">
+              <input type="number" class="adm-input btq-price-input" value="15000" placeholder="Prix FCFA" />
+              <select class="adm-select btq-cat-select">
+                <option value="gaming">Gaming & Consoles</option>
+                <option value="accessoires">High-Tech & Câbles</option>
+                <option value="maroquinerie">Sacs & Cuir</option>
+                <option value="montres">Montres & Bijoux</option>
+                <option value="cadeaux">Cadeaux & Divers</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="btq-admin-fields">
+          <input type="text" class="adm-input btq-badge-input" value="Disponible" placeholder="Badge" />
+          <input type="text" class="adm-input btq-img-input" value="/images/hero-store.jpg" placeholder="URL Image" />
+          <textarea class="adm-textarea btq-desc-input" rows="2" placeholder="Description de l'article">Description de l'article disponible au magasin...</textarea>
+        </div>
+        <div class="btq-admin-footer">
+          <label class="checkbox-label">
+            <input type="checkbox" class="btq-stock-checkbox" checked />
+            <span>Article en stock au Super U</span>
+          </label>
+          <button type="button" class="btn-del-prod del-btq-prod-btn">🗑️ Supprimer</button>
+        </div>
+      `;
+      list.prepend(div);
+    });
+
+    // Save all form data
+    function saveAllAdminData() {
+      const name = (document.getElementById('adm-name') as HTMLInputElement).value;
+      const phoneFormatted = (document.getElementById('adm-phone') as HTMLInputElement).value;
+      const whatsappFormatted = (document.getElementById('adm-whatsapp') as HTMLInputElement).value;
+      const whatsappPreFilled = (document.getElementById('adm-whatsapp-msg') as HTMLInputElement).value;
+      const address = (document.getElementById('adm-address') as HTMLInputElement).value;
+      const openingHours = (document.getElementById('adm-hours') as HTMLInputElement).value;
+      const scheduleNote = (document.getElementById('adm-schedule-note') as HTMLInputElement).value;
+      const announcementBadge = (document.getElementById('adm-ann-badge') as HTMLInputElement).value;
+      const announcementText = (document.getElementById('adm-ann-text') as HTMLInputElement).value;
+
+      const seasonSelect = (document.getElementById('adm-season-select') as HTMLSelectElement).value;
+      const seasonTitle = (document.getElementById('adm-season-title') as HTMLInputElement).value;
+      const seasonSubtitle = (document.getElementById('adm-season-sub') as HTMLInputElement).value;
+
+      const wavePhone = (document.getElementById('adm-wave-phone') as HTMLInputElement).value;
+      const waveAmount = (document.getElementById('adm-wave-amount') as HTMLInputElement).value;
+      const waveBanks = (document.getElementById('adm-wave-banks') as HTMLInputElement).value;
+
+      // Extract 5 Services data
+      const servicesCustom: any[] = [];
+      document.querySelectorAll('.service-editor-card').forEach(card => {
+        const id = card.getAttribute('data-service-id') || '';
+        const title = (card.querySelector('.svc-title-input') as HTMLInputElement)?.value || '';
+        const subtitle = (card.querySelector('.svc-subtitle-input') as HTMLInputElement)?.value || '';
+        const badge = (card.querySelector('.svc-badge-input') as HTMLInputElement)?.value || '';
+        const popularTag = (card.querySelector('.svc-popular-input') as HTMLInputElement)?.value || '';
+        const image = (card.querySelector('.svc-image-input') as HTMLInputElement)?.value || '';
+
+        const items: string[] = [];
+        card.querySelectorAll('.svc-item-input').forEach(inp => {
+          const val = (inp as HTMLInputElement).value.trim();
+          if (val) items.push(val);
+        });
+
+        servicesCustom.push({
+          id,
+          title,
+          subtitle,
+          badge,
+          popularTag,
+          image,
+          items
+        });
+      });
+
+      // Extract Seasonal Products
+      const seasonalProductsCustom: any[] = [];
+      document.querySelectorAll('.prod-admin-card').forEach(card => {
+        const id = card.getAttribute('data-prod-id') || '';
+        const name = (card.querySelector('.prod-name-input') as HTMLInputElement)?.value || '';
+        const seasonId = (card.querySelector('.prod-season-select') as HTMLSelectElement)?.value || 'rentree';
+        const price = parseInt((card.querySelector('.prod-price-input') as HTMLInputElement)?.value || '0', 10);
+        const badge = (card.querySelector('.prod-badge-input') as HTMLInputElement)?.value || '';
+        const image = (card.querySelector('.prod-img-input') as HTMLInputElement)?.value || '';
+        const description = (card.querySelector('.prod-desc-input') as HTMLInputElement)?.value || '';
+
+        seasonalProductsCustom.push({
+          id,
+          name,
+          seasonId,
+          price,
+          badge,
+          image,
+          description
+        });
+      });
+
+      // Extract Pricing Packages
+      const pricingPackagesCustom: any[] = [];
+      document.querySelectorAll('.pkg-admin-card').forEach(card => {
+        const id = card.getAttribute('data-pkg-id') || '';
+        const title = (card.querySelector('.pkg-title-input') as HTMLInputElement)?.value || '';
+        const category = (card.querySelector('.pkg-cat-input') as HTMLInputElement)?.value || '';
+        const price = (card.querySelector('.pkg-price-input') as HTMLInputElement)?.value || '';
+        const period = (card.querySelector('.pkg-period-input') as HTMLInputElement)?.value || '';
+        const popular = (card.querySelector('.pkg-popular-checkbox') as HTMLInputElement)?.checked || false;
+        const featuresRaw = (card.querySelector('.pkg-features-input') as HTMLTextAreaElement)?.value || '';
+        const features = featuresRaw.split('\n').map(s => s.trim()).filter(Boolean);
+
+        pricingPackagesCustom.push({
+          id,
+          title,
+          category,
+          price,
+          period,
+          popular,
+          features
+        });
+      });
+
+      // Extract Boutique Products
+      const boutiqueProductsCustom: any[] = [];
+      document.querySelectorAll('.btq-admin-card').forEach(card => {
+        const id = card.getAttribute('data-btq-id') || '';
+        const name = (card.querySelector('.btq-name-input') as HTMLInputElement)?.value || '';
+        const category = (card.querySelector('.btq-cat-select') as HTMLSelectElement)?.value || 'gaming';
+        const price = parseInt((card.querySelector('.btq-price-input') as HTMLInputElement)?.value || '0', 10);
+        const badge = (card.querySelector('.btq-badge-input') as HTMLInputElement)?.value || '';
+        const image = (card.querySelector('.btq-img-input') as HTMLInputElement)?.value || '';
+        const description = (card.querySelector('.btq-desc-input') as HTMLTextAreaElement)?.value || '';
+        const inStock = (card.querySelector('.btq-stock-checkbox') as HTMLInputElement)?.checked || false;
+
+        boutiqueProductsCustom.push({
+          id,
+          name,
+          category,
+          price,
+          badge,
+          image,
+          description,
+          inStock
+        });
+      });
+
+      const fullConfig = {
+        name,
+        phoneFormatted,
+        whatsappFormatted,
+        whatsappPreFilled,
+        address,
+        openingHours,
+        scheduleNote,
+        announcementBadge,
+        announcementText,
+        seasonSelect,
+        seasonTitle,
+        seasonSubtitle,
+        wavePhone,
+        waveAmount,
+        waveBanks,
+        servicesCustom,
+        seasonalProductsCustom,
+        pricingPackagesCustom,
+        boutiqueProductsCustom
+      };
+
+      localStorage.setItem('bcps_site_data', JSON.stringify(fullConfig));
+
+      if ((window as any).showToast) {
+        (window as any).showToast('Toutes les modifications ont été enregistrées et appliquées en direct !', '✅');
+      } else {
+        alert('Toutes les modifications ont été enregistrées et appliquées en direct !');
+      }
+    }
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveAllAdminData();
+    });
+
+    topSaveBtn?.addEventListener('click', () => {
+      saveAllAdminData();
+    });
+
+    // Export JSON
+    exportBtn?.addEventListener('click', () => {
+      saveAllAdminData();
+      const stored = localStorage.getItem('bcps_site_data') || '{}';
+      const blob = new Blob([stored], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'bcps-site-config.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Import JSON
+    importInput?.addEventListener('change', (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const content = event.target?.result as string;
+          JSON.parse(content);
+          localStorage.setItem('bcps_site_data', content);
+          alert('Configuration importée avec succès ! La page va se recharger.');
+          location.reload();
+        } catch(err) {
+          alert('Fichier JSON invalide.');
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // Reset default
+    resetBtn?.addEventListener('click', () => {
+      if (confirm('Voulez-vous restaurer toutes les valeurs par défaut de la boutique ?')) {
+        localStorage.removeItem('bcps_site_data');
+        location.reload();
+      }
+    });
+
+    // Anchor & Fixed Alignment for Left Sidebar
+    function alignAdminSidebar() {
+      const sidebar = document.querySelector('.admin-nav-sidebar') as HTMLElement;
+      const box = document.querySelector('.sidebar-sticky-box') as HTMLElement;
+      if (!sidebar || !box) return;
+
+      if (window.innerWidth > 1024) {
+        const rect = sidebar.getBoundingClientRect();
+        box.style.position = 'fixed';
+        box.style.top = '90px';
+        box.style.left = `${rect.left}px`;
+        box.style.width = `${sidebar.clientWidth}px`;
+      } else {
+        box.style.position = '';
+        box.style.top = '';
+        box.style.left = '';
+        box.style.width = '';
+      }
+    }
+
+    alignAdminSidebar();
+    window.addEventListener('resize', alignAdminSidebar);
+    window.addEventListener('scroll', alignAdminSidebar, { passive: true });
+
+    // Scrollspy for sidebar links
+    const sections = document.querySelectorAll('.admin-card-section');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const secId = entry.target.getAttribute('id');
+            sidebarLinks.forEach(link => {
+              if (link.getAttribute('href') === `#${secId}`) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            });
+          }
+        });
+      }, { rootMargin: '-20% 0px -65% 0px' });
+
+      sections.forEach(sec => observer.observe(sec));
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupAdminPage);
+  } else {
+    setupAdminPage();
+  }
+</script>
