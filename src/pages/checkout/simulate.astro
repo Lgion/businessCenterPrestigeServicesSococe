@@ -1,0 +1,299 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { defaultSiteData } from '../../data/siteData';
+
+const orderId = Astro.url.searchParams.get('order_id') || 'BCPS-TEST-001';
+const title = Astro.url.searchParams.get('title') || 'Commande Prestige Services';
+const amount = Astro.url.searchParams.get('amount') || '10000';
+---
+
+<Layout title="Passerelle PayDunya (Test) | Business Center Prestige Services">
+  <div class="simulate-container">
+    <div class="simulate-card prestige-card">
+      <div class="simulate-header">
+        <div class="paydunya-logo-badge">
+          <span class="pay-logo-text">Pay<span class="pay-accent">Dunya</span></span>
+          <span class="sandbox-tag">SANDBOX / SIMULATEUR</span>
+        </div>
+        <h1 class="sim-title">Guichet de Paiement Sécurisé</h1>
+        <p class="sim-desc">Business Center Prestige Services • Super U Deux Plateaux</p>
+      </div>
+
+      <div class="order-summary-box">
+        <div class="summary-row">
+          <span class="label">Référence Commande :</span>
+          <strong class="value font-mono">{orderId}</strong>
+        </div>
+        <div class="summary-row">
+          <span class="label">Prestation / Produit :</span>
+          <span class="value">{title}</span>
+        </div>
+        <div class="summary-row total-row">
+          <span class="label">Montant Total à Régler :</span>
+          <span class="total-amount gold-gradient-text font-serif">{Number(amount).toLocaleString('fr-FR')} FCFA</span>
+        </div>
+      </div>
+
+      <div class="methods-selection">
+        <label class="methods-label">Choisissez un mode de paiement (Simulation) :</label>
+        <div class="methods-grid">
+          <label class="method-option active">
+            <input type="radio" name="payMethod" value="Wave" checked />
+            <div class="method-box">
+              <span class="method-icon wave-icon">🌊</span>
+              <span class="method-name">Wave Côte d'Ivoire</span>
+            </div>
+          </label>
+
+          <label class="method-option">
+            <input type="radio" name="payMethod" value="Orange Money" />
+            <div class="method-box">
+              <span class="method-icon orange-icon">🍊</span>
+              <span class="method-name">Orange Money</span>
+            </div>
+          </label>
+
+          <label class="method-option">
+            <input type="radio" name="payMethod" value="MTN MoMo" />
+            <div class="method-box">
+              <span class="method-icon mtn-icon">💛</span>
+              <span class="method-name">MTN Mobile Money</span>
+            </div>
+          </label>
+
+          <label class="method-option">
+            <input type="radio" name="payMethod" value="Carte VISA / Mastercard" />
+            <div class="method-box">
+              <span class="method-icon card-icon">💳</span>
+              <span class="method-name">Carte Bancaire VISA / MC</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="sim-actions">
+        <button type="button" id="btn-confirm-pay" class="btn btn-gold btn-lg w-100">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <span>Confirmer le Paiement ({Number(amount).toLocaleString('fr-FR')} FCFA)</span>
+        </button>
+
+        <a href={`/commande/annulee?order_id=${encodeURIComponent(orderId)}`} class="btn-cancel">
+          Annuler et retourner au site
+        </a>
+      </div>
+
+      <div class="sim-notice">
+        <span>🔒 Simulation connectée à MongoDB Atlas. L'encaissement passera automatiquement en mode PayDunya officiel dès l'ajout des clés marchand dans le fichier de configuration.</span>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .simulate-container {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background: radial-gradient(circle at top, var(--navy-800) 0%, var(--navy-950) 100%);
+  }
+
+  .simulate-card {
+    max-width: 540px;
+    width: 100%;
+    padding: 2.5rem;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    background: rgba(10, 24, 46, 0.95);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 175, 55, 0.15);
+  }
+
+  .simulate-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .paydunya-logo-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-full);
+    margin-bottom: 1rem;
+  }
+
+  .pay-logo-text {
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+  }
+
+  .pay-accent {
+    color: #00d084;
+  }
+
+  .sandbox-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--gold-400);
+    letter-spacing: 0.05em;
+  }
+
+  .sim-title {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 0.35rem;
+  }
+
+  .sim-desc {
+    font-size: 0.88rem;
+    color: var(--ivory-muted);
+  }
+
+  .order-summary-box {
+    background: rgba(6, 14, 26, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--ivory-muted);
+    padding: 0.45rem 0;
+  }
+
+  .summary-row.total-row {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    font-size: 1.05rem;
+  }
+
+  .total-amount {
+    font-size: 1.5rem;
+    font-weight: 800;
+  }
+
+  .methods-selection {
+    margin-bottom: 2rem;
+  }
+
+  .methods-label {
+    display: block;
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--ivory-muted);
+    margin-bottom: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .methods-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .method-option {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .method-option input {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .method-box {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 0.9rem;
+    border-radius: var(--radius-md);
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+  }
+
+  .method-option input:checked + .method-box {
+    border-color: var(--gold-400);
+    background: rgba(212, 175, 55, 0.15);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+  }
+
+  .method-name {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .sim-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    text-align: center;
+  }
+
+  .btn-cancel {
+    font-size: 0.86rem;
+    color: var(--ivory-muted);
+    text-decoration: underline;
+    transition: color 0.2s ease;
+  }
+
+  .btn-cancel:hover {
+    color: #ffffff;
+  }
+
+  .sim-notice {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+    text-align: center;
+    line-height: 1.4;
+  }
+</style>
+
+<script define:vars={{ orderId }}>
+  document.getElementById('btn-confirm-pay')?.addEventListener('click', async () => {
+    const btn = document.getElementById('btn-confirm-pay');
+    if (!btn) return;
+    btn.disabled = true;
+    btn.textContent = 'Traitement en cours...';
+
+    const selected = document.querySelector('input[name="payMethod"]:checked')?.value || 'Wave';
+
+    try {
+      const res = await fetch('/api/checkout/confirm-simulated', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, paymentMethod: selected })
+      });
+
+      if (res.ok) {
+        window.location.href = `/commande/succes?order_id=${encodeURIComponent(orderId)}`;
+      } else {
+        alert('Erreur lors de la validation du paiement.');
+        btn.disabled = false;
+        btn.textContent = 'Réessayer';
+      }
+    } catch (e) {
+      alert('Erreur réseau.');
+      btn.disabled = false;
+    }
+  });
+</script>

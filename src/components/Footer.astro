@@ -3,7 +3,77 @@ import { defaultSiteData } from '../data/siteData';
 const { business, services } = defaultSiteData;
 ---
 
-<footer class="site-footer">
+<footer class="site-footer" id="super-u">
+  <!-- Proximité & Accessibilité Super U Banner (Consolidated) -->
+  <div class="footer-access-section" id="proximite">
+    <div class="container">
+      <div class="access-card prestige-card">
+        <div class="access-grid">
+          <div class="access-info">
+            <span class="gold-badge">📍 Emplacement Privilégié</span>
+            <h3 class="access-title font-serif">Nous trouver au Super U Deux Plateaux</h3>
+            <p class="access-desc">
+              Situé au carrefour névralgique de Cocody Deux Plateaux sur le Boulevard des Martyrs, à seulement 2 minutes de la <strong>Gare de Sococé</strong>.
+            </p>
+            <div class="access-perks">
+              <div class="perk-item">
+                <span class="perk-icon">🚗</span>
+                <div>
+                  <strong>Parking Gratuit & Surveillé</strong>
+                  <span>Accès direct et sécurisé pour vos courses et démarches</span>
+                </div>
+              </div>
+              <div class="perk-item">
+                <span class="perk-icon">❄️</span>
+                <div>
+                  <strong>Cadre Moderne & Climatisé</strong>
+                  <span>Boutique spacieuse au cœur de la galerie marchande</span>
+                </div>
+              </div>
+              <div class="perk-item">
+                <span class="perk-icon">🕒</span>
+                <div>
+                  <strong>Non-stop 09h00 - 20h00</strong>
+                  <span>Du Lundi au Samedi (fermé le Dimanche)</span>
+                </div>
+              </div>
+            </div>
+            <div class="access-actions">
+              <a 
+                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('Super U Deux Plateaux Cocody Abidjan')}`} 
+                class="btn btn-gold"
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path>
+                  <circle cx="12" cy="9" r="2.5"></circle>
+                </svg>
+                <span>Ouvrir l'Itinéraire Google Maps</span>
+              </a>
+              <a 
+                href={`tel:${business.phone}`} 
+                class="btn btn-navy-outline"
+              >
+                <span>Appel : {business.phoneFormatted}</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="access-map-box">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3972.395159828551!2d-3.999557!3d5.356598!2m3!1f0!2f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xfc1ebd7cb01f9bb%3A0x6b77c86720521e25!2sSuper%20U%20Deux%20Plateaux!5e0!3m2!1sfr!2sci!4v1710000000000!5m2!1sfr!2sci" 
+              class="access-iframe-map" 
+              loading="lazy" 
+              title="Plan d'accès Super U Deux Plateaux Cocody Abidjan"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="container footer-container">
     <!-- Brand Col -->
     <div class="footer-col brand-col">
@@ -40,7 +110,7 @@ const { business, services } = defaultSiteData;
       <ul class="footer-links">
         {services.map((s) => (
           <li>
-            <a href="#services" class="footer-link">
+            <a href="#service-hub" class="footer-link">
               <span class="bullet">›</span> {s.title}
             </a>
           </li>
@@ -53,13 +123,13 @@ const { business, services } = defaultSiteData;
       <h4 class="footer-col-title">Navigation Rapide</h4>
       <ul class="footer-links">
         <li><a href="#hero" class="footer-link"><span class="bullet">›</span> Accueil</a></li>
-        <li><a href="#saison" class="footer-link"><span class="bullet">›</span> Vitrine Saisonnière & Promos</a></li>
+        <li><a href="#service-hub" class="footer-link"><span class="bullet">›</span> Espace Démarches Express</a></li>
         <li><a href="#tarifs" class="footer-link"><span class="bullet">›</span> Tarifs & Simulateur Devis</a></li>
+        <li><a href="#saison" class="footer-link"><span class="bullet">›</span> Vitrine Saisonnière & Promos</a></li>
         <li><a href="#super-u" class="footer-link"><span class="bullet">›</span> Accès & Parking Super U</a></li>
-        <li><a href="#contact" class="footer-link"><span class="bullet">›</span> Coordonnées & Horaires</a></li>
         <li>
-          <button type="button" class="footer-link open-wave-modal-trigger link-btn">
-            <span class="bullet">›</span> <strong>Payer avec Wave</strong>
+          <button type="button" class="footer-link open-boutique-trigger link-btn">
+            <span class="bullet">›</span> <strong>Boutique High-Tech & Sacs</strong>
           </button>
         </li>
       </ul>
@@ -99,9 +169,9 @@ const { business, services } = defaultSiteData;
         © {new Date().getFullYear()} {business.name}. Tous droits réservés.
       </p>
       <div class="bottom-actions">
-        <button type="button" class="admin-link open-admin-trigger">
-          ⚙️ Gestion & Personnalisation du site
-        </button>
+        <a href="/admin" class="admin-link">
+          ⚙️ Administration & Commandes
+        </a>
       </div>
     </div>
   </div>
@@ -112,15 +182,119 @@ const { business, services } = defaultSiteData;
     background: #040913;
     border-top: 1px solid rgba(212, 175, 55, 0.25);
     color: var(--ivory-muted);
-    padding-top: 4.5rem;
+    padding-top: 0;
     position: relative;
     z-index: 1;
+  }
+
+  /* Consolidated Proximity Section */
+  .footer-access-section {
+    padding: 3.5rem 0 3rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: radial-gradient(circle at 50% 0%, rgba(14, 34, 64, 0.4) 0%, transparent 70%);
+  }
+
+  .access-card {
+    background: rgba(10, 24, 48, 0.7);
+    border: 1.5px solid rgba(212, 175, 55, 0.35);
+    border-radius: 20px;
+    padding: 2.2rem;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .access-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  @media (max-width: 900px) {
+    .access-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .access-title {
+    font-size: 1.6rem;
+    color: #ffffff;
+    margin: 0.8rem 0 0.6rem;
+  }
+
+  .access-desc {
+    font-size: 0.92rem;
+    color: var(--ivory-muted);
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+  }
+
+  .access-perks {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-bottom: 1.8rem;
+  }
+
+  .perk-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .perk-icon {
+    font-size: 1.3rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .perk-item div {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .perk-item strong {
+    font-size: 0.88rem;
+    color: #ffffff;
+  }
+
+  .perk-item span {
+    font-size: 0.76rem;
+    color: var(--ivory-muted);
+  }
+
+  .access-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .access-map-box {
+    border-radius: 16px;
+    overflow: hidden;
+    height: 280px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+
+  .access-iframe-map {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
   }
 
   .footer-container {
     display: grid;
     grid-template-columns: 1.3fr 1fr 0.9fr 1fr;
     gap: 3rem;
+    padding-top: 4rem;
     padding-bottom: 3.5rem;
   }
 

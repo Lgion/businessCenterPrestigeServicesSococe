@@ -1,0 +1,1876 @@
+---
+import { defaultSiteData } from '../data/siteData';
+import { getAssetPath } from '../utils/assets';
+
+const { business, yangoDelivery, services } = defaultSiteData;
+---
+
+<section class="interactive-hub-section" id="service-hub">
+  <div class="container hub-container">
+    <!-- Header of the Interactive Hub -->
+    <div class="hub-header text-center">
+      <span class="section-tagline">Interaction Directe & Services Express</span>
+      <h2 class="section-title">
+        Espace Démarches & <span class="gold-gradient-text">Réservations en Ligne</span>
+      </h2>
+      <p class="section-subtitle">
+        Sélectionnez votre univers ci-dessous pour déclencher vos démarches, planifier une collecte coursier ou transférer vos fichiers.
+      </p>
+
+      <!-- Menu Non-Défilant : Grille Responsive des 5 Pôles -->
+      <div class="hub-tabs-container" role="tablist" aria-label="Sélectionnez un pôle de service">
+        <div class="hub-tabs-grid" id="hub-tabs-grid">
+          <button type="button" class="hub-tab-btn active" data-hub-target="studio" role="tab" aria-selected="true">
+            <span class="tab-btn-icon">📸</span>
+            <div class="tab-btn-texts">
+              <span class="tab-btn-title">Studio Photo Pro</span>
+              <span class="tab-btn-badge">Tirages & Identité</span>
+            </div>
+          </button>
+
+          <button type="button" class="hub-tab-btn" data-hub-target="reparation" role="tab" aria-selected="false">
+            <span class="tab-btn-icon">⚡</span>
+            <div class="tab-btn-texts">
+              <span class="tab-btn-title">Réparation Express</span>
+              <span class="tab-btn-badge">Option Yango 30min</span>
+            </div>
+          </button>
+
+          <button type="button" class="hub-tab-btn" data-hub-target="boutique" role="tab" aria-selected="false">
+            <span class="tab-btn-icon">🛍️</span>
+            <div class="tab-btn-texts">
+              <span class="tab-btn-title">Boutique</span>
+              <span class="tab-btn-badge">High-Tech & Maroquinerie</span>
+            </div>
+          </button>
+
+          <button type="button" class="hub-tab-btn" data-hub-target="bureautique" role="tab" aria-selected="false">
+            <span class="tab-btn-icon">🖨️</span>
+            <div class="tab-btn-texts">
+              <span class="tab-btn-title">Bureautique & PAO</span>
+              <span class="tab-btn-badge">Impression & Flyers</span>
+            </div>
+          </button>
+
+          <button type="button" class="hub-tab-btn" data-hub-target="mobile-money" role="tab" aria-selected="false">
+            <span class="tab-btn-icon">📱</span>
+            <div class="tab-btn-texts">
+              <span class="tab-btn-title">Mobile Money</span>
+              <span class="tab-btn-badge">Wave • Orange • MTN</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- The 5 Dynamic Interactive Panels with Dynamic Thematic Backgrounds -->
+    <div class="hub-panels-box prestige-card" id="hub-panels-box" data-active-theme="studio">
+      <!-- Background Ambient Layers (cross-fade on tab switch) -->
+      <div class="hub-dynamic-backdrop-container" aria-hidden="true">
+        <div class="hub-theme-bg bg-studio active"></div>
+        <div class="hub-theme-bg bg-reparation"></div>
+        <div class="hub-theme-bg bg-boutique"></div>
+        <div class="hub-theme-bg bg-bureautique"></div>
+        <div class="hub-theme-bg bg-mobilemoney"></div>
+        <div class="hub-backdrop-overlay"></div>
+      </div>
+      
+      <!-- ================= 1. PANNEAU STUDIO PHOTO ================= -->
+      <div class="hub-panel active" id="panel-studio" data-panel-name="studio">
+        <div class="panel-grid">
+          <div class="panel-info">
+            <div class="panel-badge-row">
+              <span class="gold-badge">📸 Pôle 01 • Studio Photo</span>
+              <span class="live-pill">Prêt en 5 min au Super U</span>
+            </div>
+            <h3 class="panel-title font-serif">Transférez vos photos & Commandez vos tirages</h3>
+            <p class="panel-desc">
+              Besoin d'un tirage haute définition, d'une photo d'identité certifiée ou d'une restauration d'image ancienne ? Téléversez votre photo ou indiquez son lien, nous la traitons directement au laboratoire.
+            </p>
+            <ul class="panel-perks">
+              <li>✨ Tirage argentique HD résistant au temps</li>
+              <li>⚡ Normes biométriques pour passeports & visas</li>
+              <li>🎨 Restauration d'art & retouche lumière professionnelle</li>
+            </ul>
+          </div>
+
+          <div class="panel-form-box">
+            <form id="studio-upload-form" class="hub-form">
+              <div class="form-group">
+                <label>Prestation souhaitée</label>
+                <select id="studio-service-type" class="hub-select">
+                  <option value="photo_identite">Photos d'Identité Express (Planche de 8 - 2 500 F)</option>
+                  <option value="tirage_hd">Tirage Photo Haute Définition A4 / A3</option>
+                  <option value="restauration">Restauration Photo Ancienne / Retouche</option>
+                  <option value="shooting_studio">Réservation Séance Shooting Studio (15 000 F)</option>
+                </select>
+              </div>
+
+              <!-- Drag & Drop Cloudinary File Upload -->
+              <div class="form-group">
+                <label>Téléverser votre photo (depuis votre appareil)</label>
+                <div class="dropzone-area" id="studio-dropzone">
+                  <input type="file" id="studio-file-input" accept="image/*" class="dropzone-input" />
+                  <div class="dropzone-content">
+                    <span class="dropzone-icon">📁</span>
+                    <span class="dropzone-text" id="studio-file-name">Cliquez ou glissez une image ici</span>
+                    <span class="dropzone-hint">JPG, PNG, WEBP (Max 15 Mo) • Traité via Cloudinary</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Or External URL -->
+              <div class="form-group">
+                <label>Ou URL d'image externe (Cloudinary / Web)</label>
+                <input type="url" id="studio-url-input" class="hub-input" placeholder="https://res.cloudinary.com/... ou lien web" />
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Votre Nom</label>
+                  <input type="text" id="studio-client-name" class="hub-input" placeholder="Ex: Kouamé Marc" required />
+                </div>
+                <div class="form-group">
+                  <label>Numéro WhatsApp</label>
+                  <input type="tel" id="studio-client-phone" class="hub-input" placeholder="+225 07..." required />
+                </div>
+              </div>
+
+              <!-- Option Livraison Yango Tirages -->
+              <div class="form-group yango-delivery-mini-box">
+                <label class="custom-checkbox-row">
+                  <input type="checkbox" id="studio-yango-toggle" />
+                  <span class="checkbox-label-text">
+                    <strong>🛵 Me faire livrer mes tirages / cadres à domicile par coursier Yango</strong>
+                  </span>
+                </label>
+                <div id="studio-yango-subfield" class="yango-details hidden" style="margin-top: 0.5rem;">
+                  <input type="text" id="studio-yango-address" class="hub-input" placeholder="Votre adresse exacte de livraison à Abidjan" />
+                </div>
+              </div>
+
+              <div class="form-actions-row">
+                <button type="submit" id="btn-studio-submit" class="btn btn-gold w-100">
+                  <span>Transférer & Valider au Studio</span>
+                </button>
+              </div>
+
+              <div id="studio-result-msg" class="result-msg hidden"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 2. PANNEAU RÉPARATION TECH & YANGO ================= -->
+      <div class="hub-panel" id="panel-reparation" data-panel-name="reparation">
+        <div class="panel-grid">
+          <div class="panel-info">
+            <div class="panel-badge-row">
+              <span class="gold-badge">⚡ Pôle 02 • Réparation Express</span>
+              <span class="live-pill yango-pill">🛵 Option Coursier Yango Actif</span>
+            </div>
+            <h3 class="panel-title font-serif">Diagnostic & Prise en Charge Équipements Tech</h3>
+            <p class="panel-desc">
+              Écran fissuré, batterie épuisée, surchauffe ou appareil bloqué ? Évitez le déplacement : un coursier Yango peut venir récupérer votre équipement tech chez vous et vous le relivrer après intervention au Super U Deux Plateaux.
+            </p>
+            <div class="yango-pricing-summary">
+              <span class="yango-summary-title">Estimation Distance & Paliers Yango :</span>
+              <div class="yango-badges-row">
+                {yangoDelivery.tiers.map(t => (
+                  <span class="yango-tier-chip">
+                    <strong>{t.distance} :</strong> {t.price.toLocaleString('fr-FR')} F
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-form-box">
+            <form id="repair-order-form" class="hub-form">
+              <!-- Type d'équipement tech -->
+              <div class="form-group">
+                <label>Type d'équipement Tech à réparer</label>
+                <select id="repair-device-type" class="hub-select">
+                  <option value="smartphone">📱 Smartphone (iPhone, Samsung, Xiaomi, Tecno...)</option>
+                  <option value="laptop">💻 Ordinateur Portable / Mac / PC</option>
+                  <option value="tablet">📲 Tablette tactile (iPad, Galaxy Tab...)</option>
+                  <option value="gaming">🎮 Console de Jeux (PS4, PS5, Nintendo Switch...)</option>
+                  <option value="watch">⌚ Montre Connectée / Smartwatch</option>
+                  <option value="autre">🔌 Autre équipement électronique</option>
+                </select>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Marque</label>
+                  <select id="repair-brand" class="hub-select">
+                    <option value="Apple">Apple</option>
+                    <option value="Samsung">Samsung</option>
+                    <option value="HP / Dell / Lenovo">HP / Dell / Lenovo</option>
+                    <option value="Sony PlayStation">Sony PlayStation</option>
+                    <option value="Xiaomi / Redmi">Xiaomi / Redmi</option>
+                    <option value="Tecno / Infinix">Tecno / Infinix</option>
+                    <option value="Autre">Autre marque</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Modèle précis</label>
+                  <input type="text" id="repair-model" class="hub-input" placeholder="Ex: iPhone 14 Pro, HP Envy 15, PS5..." required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Panne ou intervention souhaitée</label>
+                <select id="repair-issue" class="hub-select">
+                  <option value="ecran_casse" data-est="15000">Écran / Dalle fissurée / Tactile HS (Dès 15 000 F)</option>
+                  <option value="batterie_faible" data-est="10000">Batterie usée / Décharge rapide (Dès 10 000 F)</option>
+                  <option value="connecteur_charge" data-est="8000">Connecteur de charge / Ne s'allume plus (Dès 8 000 F)</option>
+                  <option value="camera_micro" data-est="10000">Caméra / Micro / Haut-parleurs (Dès 10 000 F)</option>
+                  <option value="reinstallation_nettoyage" data-est="12000">Dépoussiérage / Pâte thermique / Système (12 000 F)</option>
+                  <option value="deblocage_systeme" data-est="7000">Mot de passe oublié / Réinitialisation (7 000 F)</option>
+                  <option value="autre" data-est="5000">Diagnostic complet en laboratoire</option>
+                </select>
+              </div>
+
+              <!-- Double Option Yango : Collecte & Livraison Retour -->
+              <div class="yango-checkbox-box">
+                <span class="yango-options-header">🛵 Options Coursier Express Yango :</span>
+                
+                <div class="yango-dual-toggles">
+                  <label class="custom-checkbox-row yango-check-item">
+                    <input type="checkbox" id="repair-pickup-toggle" />
+                    <span class="checkbox-label-text">
+                      <strong>1. Collecte chez moi</strong>
+                      <small class="d-block text-muted">Un coursier vient récupérer l'appareil à mon adresse</small>
+                    </span>
+                  </label>
+
+                  <label class="custom-checkbox-row yango-check-item">
+                    <input type="checkbox" id="repair-return-toggle" />
+                    <span class="checkbox-label-text">
+                      <strong>2. Livraison retour</strong>
+                      <small class="d-block text-muted">Un coursier me ramène l'appareil réparé</small>
+                    </span>
+                  </label>
+                </div>
+
+                <!-- Subform avec Carte Interactive Leaflet -->
+                <div id="repair-yango-map-subform" class="yango-details hidden">
+                  <div class="map-helper-bar">
+                    <span>📍 <strong>Positionnez votre adresse sur la carte</strong> ou cliquez pour placer le repère :</span>
+                    <button type="button" id="btn-locate-me" class="btn btn-navy-outline btn-xs">
+                      🎯 Me géolocaliser
+                    </button>
+                  </div>
+
+                  <!-- Container Leaflet Map -->
+                  <div id="yango-leaflet-map" class="yango-map-view"></div>
+
+                  <div class="map-calculation-badge" id="map-calculation-badge">
+                    <div class="calc-row">
+                      <span>Distance calculée depuis Super U :</span>
+                      <strong id="calc-distance-km">2.4 km</strong>
+                    </div>
+                    <div class="calc-row">
+                      <span>Palier appliqué :</span>
+                      <strong id="calc-zone-name" class="gold-text">Cocody Deux Plateaux (1 500 F / trajet)</strong>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-top: 0.75rem;">
+                    <label>Adresse précise / Précisions d'accès (bâtiment, porte...)</label>
+                    <input type="text" id="repair-pickup-address" class="hub-input" placeholder="Ex: Deux Plateaux Aghien, Villa 42 en face de..." />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Votre Nom</label>
+                  <input type="text" id="repair-client-name" class="hub-input" placeholder="Ex: Sarah B." required />
+                </div>
+                <div class="form-group">
+                  <label>Numéro WhatsApp</label>
+                  <input type="tel" id="repair-client-phone" class="hub-input" placeholder="+225..." required />
+                </div>
+              </div>
+
+              <div class="repair-total-bar">
+                <div class="total-breakdown">
+                  <span id="repair-base-display">Intervention : 15 000 F</span>
+                  <span id="repair-course-display" class="hidden">+ Coursier : 0 F</span>
+                </div>
+                <div class="total-main">
+                  <span>Total estimé :</span>
+                  <strong class="total-fig font-serif" id="repair-total-display">15 000 FCFA</strong>
+                </div>
+              </div>
+
+              <div class="form-actions-row dual-actions">
+                <button type="submit" id="btn-repair-pay" class="btn btn-gold">
+                  <span>💳 Payer en Ligne (PayDunya)</span>
+                </button>
+                <button type="button" id="btn-repair-whatsapp" class="btn btn-whatsapp">
+                  <span>Demander sur WhatsApp</span>
+                </button>
+              </div>
+
+              <div id="repair-result-msg" class="result-msg hidden"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 3. PANNEAU BOUTIQUE : HIGH-TECH & MAROQUINERIE ================= -->
+      <div class="hub-panel" id="panel-boutique" data-panel-name="boutique">
+        <div class="panel-grid">
+          <div class="panel-info">
+            <div class="panel-badge-row">
+              <span class="gold-badge">🛍️ Pôle 03 • Boutique Officielle</span>
+              <span class="live-pill">En Rayon au Super U</span>
+            </div>
+            <h3 class="panel-title font-serif">High-Tech, Gaming & Maroquinerie Fine sous le même toit</h3>
+            <p class="panel-desc">
+              Tous nos articles sont certifiés, neufs et disponibles immédiatement au centre commercial Super U Deux Plateaux.
+            </p>
+            <div class="two-pillars-box">
+              <div class="pillar-col">
+                <strong class="pillar-title">1. Rayon High-Tech & Gaming</strong>
+                <p>Manettes PS4/PS5, câbles blindés tressés, chargeurs ultra-rapides, écouteurs sans fil, power banks LED.</p>
+              </div>
+              <div class="pillar-col">
+                <strong class="pillar-title">2. Rayon Maroquinerie, Montres & Accessoires</strong>
+                <p>Sacs à main de luxe, sacoches cuir homme, montres chronographes, changement de pile immédiat (3 min).</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-form-box">
+            <div class="boutique-cta-card">
+              <h4 class="b-cta-title">🛍️ Explorez le Catalogue & Commandez en 1 Clic</h4>
+              <p class="b-cta-text" style="font-size: 0.88rem; color: var(--ivory-muted); margin-bottom: 1rem;">
+                Parcourez nos articles High-Tech et Maroquinerie, ajoutez au panier et réglez en toute sécurité via PayDunya ou Wave.
+              </p>
+
+              <button type="button" class="btn btn-gold btn-lg w-100 open-boutique-modal-trigger">
+                <span>Ouvrir la Boutique (High-Tech & Maroquinerie)</span>
+                <span class="btn-arrow">➔</span>
+              </button>
+            </div>
+
+            <div class="callback-request-box">
+              <h5 class="cb-title">📞 Vous cherchez un accessoire précis ? Rappel Express</h5>
+              <form id="gaming-callback-form" class="cb-form">
+                <div class="form-row-2">
+                  <input type="text" id="cb-item-name" class="hub-input" placeholder="Article cherché (ex: Manette PS5 Pro, Sac cuir...)" required />
+                  <input type="tel" id="cb-phone" class="hub-input" placeholder="Votre numéro de rappel" required />
+                </div>
+                <button type="submit" class="btn btn-navy-outline w-100 btn-sm">
+                  Être rappelé dans les 15 minutes par un conseiller
+                </button>
+                <div id="cb-result-msg" class="result-msg hidden"></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 4. PANNEAU BUREAUTIQUE & PAO ================= -->
+      <div class="hub-panel" id="panel-bureautique" data-panel-name="bureautique">
+        <div class="panel-grid">
+          <div class="panel-info">
+            <div class="panel-badge-row">
+              <span class="gold-badge">🖨️ Pôle 04 • Bureautique & PAO</span>
+              <span class="live-pill">Atelier d'Impression Pro</span>
+            </div>
+            <h3 class="panel-title font-serif">Impressions Laser HD, Reliures & Conception PAO</h3>
+            <p class="panel-desc">
+              Confiez-nous vos documents ou vos projets de conception graphique : mémoires d'études, rapports de stage, flyers publicitaires, affiches et cartes de visite professionnelles.
+            </p>
+            <ul class="panel-perks">
+              <li>📄 Impressions laser haute fidélité noir & blanc ou couleur</li>
+              <li>🎨 PAO : Conception graphique et impression de flyers & cartes 300g</li>
+              <li>📚 Reliures spirales plastiques/métalliques & plastification</li>
+              <li>🏛️ Assistance démarches administratives & inscriptions aux concours</li>
+            </ul>
+          </div>
+
+          <div class="panel-form-box">
+            <form id="print-order-form" class="hub-form">
+              <div class="form-group">
+                <label>Type de prestation bureautique & PAO</label>
+                <select id="print-type" class="hub-select">
+                  <option value="impression_cours" data-price="2500">Impression & Reliure Dossier/Mémoire (Dès 2 500 F)</option>
+                  <option value="flyers_100" data-price="18000">Pack 100 Flyers Professionnels A5 (18 000 F)</option>
+                  <option value="cartes_visite" data-price="15000">Pack 100 Cartes de Visite 300g (15 000 F)</option>
+                  <option value="scan_hd" data-price="1000">Numérisation HD & Scan vers Email/Clé USB (1 000 F)</option>
+                  <option value="plastification" data-price="2000">Plastification de documents officiels (2 000 F)</option>
+                </select>
+              </div>
+
+              <!-- Upload Document direct (PDF, Word, Images, etc.) -->
+              <div class="form-group">
+                <label>Déposer votre document à imprimer / maquette</label>
+                <div class="dropzone-area" id="print-dropzone">
+                  <input type="file" id="print-file-input" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.webp" class="dropzone-input" />
+                  <div class="dropzone-content">
+                    <span class="dropzone-icon">📄</span>
+                    <span class="dropzone-text" id="print-file-name">Cliquez ou glissez votre fichier ici (PDF, DOCX...)</span>
+                    <span class="dropzone-hint">PDF, Word, Images • Traitement confidentiel immédiat</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Instructions d'impression (pages, reliure, couleur ou N&B)</label>
+                <input type="text" id="print-quantity" class="hub-input" placeholder="Ex: 1 exemplaire recto-verso couleur reliure plastique spirale..." required />
+              </div>
+
+              <!-- Option Livraison Yango pour impressions -->
+              <div class="form-group yango-delivery-mini-box">
+                <label class="custom-checkbox-row">
+                  <input type="checkbox" id="print-yango-toggle" />
+                  <span class="checkbox-label-text">
+                    <strong>🛵 Me faire livrer mes impressions/documents par coursier Yango</strong>
+                  </span>
+                </label>
+                <div id="print-yango-subfield" class="yango-details hidden" style="margin-top: 0.5rem;">
+                  <input type="text" id="print-yango-address" class="hub-input" placeholder="Adresse exacte de livraison du colis" />
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Votre Nom</label>
+                  <input type="text" id="print-name" class="hub-input" placeholder="Ex: Eric K." required />
+                </div>
+                <div class="form-group">
+                  <label>Numéro WhatsApp</label>
+                  <input type="tel" id="print-phone" class="hub-input" placeholder="+225..." required />
+                </div>
+              </div>
+
+              <div class="form-actions-row dual-actions">
+                <button type="submit" id="btn-print-pay" class="btn btn-gold">
+                  <span>Envoyer & Payer en Ligne</span>
+                </button>
+                <a 
+                  href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent("Bonjour, j'ai des documents PDF ou un projet PAO à imprimer au Super U.")}`}
+                  class="btn btn-whatsapp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span>Envoyer PDF WhatsApp</span>
+                </a>
+              </div>
+
+              <div id="print-result-msg" class="result-msg hidden"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 5. PANNEAU MOBILE MONEY DISTINCT ================= -->
+      <div class="hub-panel" id="panel-mobile-money" data-panel-name="mobile-money">
+        <div class="panel-grid">
+          <div class="panel-info">
+            <div class="panel-badge-row">
+              <span class="gold-badge">📱 Pôle 05 • Mobile Money Agréé</span>
+              <span class="live-pill">Wave • Orange • MTN</span>
+            </div>
+            <h3 class="panel-title font-serif">Guichet Agréé & Coupe-File VIP Express</h3>
+            <p class="panel-desc">
+              Gagnez un temps précieux au centre commercial : préparez votre opération Mobile Money en ligne pour obtenir un code coupe-file prioritaire sans attente au guichet sécurisé du Super U Deux Plateaux.
+            </p>
+            <div class="services-duo-pills">
+              <span class="duo-pill">🌊 Wave Dépôt / Retrait</span>
+              <span class="duo-pill">🍊 Orange Money</span>
+              <span class="duo-pill">💛 MTN MoMo</span>
+              <span class="duo-pill">⚡ Push & Recharges</span>
+            </div>
+            <ul class="panel-perks" style="margin-top: 1rem;">
+              <li>🔒 Zéro rupture de liquidité pour vos dépôts et retraits</li>
+              <li>🛡️ Espace climatisé, confidentiel et sécurisé au sein du Super U</li>
+              <li>🚗 Parking gratuit surveillé pour vos opérations financières</li>
+            </ul>
+          </div>
+
+          <div class="panel-form-box">
+            <form id="fastpass-form" class="hub-form">
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Opération</label>
+                  <select id="fp-operation" class="hub-select">
+                    <option value="depot">Dépôt d'argent</option>
+                    <option value="retrait">Retrait d'argent</option>
+                    <option value="transfert">Transfert vers tiers</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Réseau / Opérateur</label>
+                  <select id="fp-operator" class="hub-select">
+                    <option value="wave">Wave</option>
+                    <option value="orange">Orange Money</option>
+                    <option value="mtn">MTN Mobile Money</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Montant prévu (FCFA)</label>
+                  <input type="number" id="fp-amount" class="hub-input" placeholder="Ex: 50000" min="500" required />
+                </div>
+
+                <div class="form-group">
+                  <label>Numéro du bénéficiaire</label>
+                  <input type="tel" id="fp-recipient" class="hub-input" placeholder="+225..." />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Votre Numéro de Téléphone</label>
+                <input type="tel" id="fp-phone" class="hub-input" placeholder="Votre numéro WhatsApp" required />
+              </div>
+
+              <button type="submit" class="btn btn-gold w-100">
+                ⚡ Obtenir mon Code Coupe-File VIP
+              </button>
+
+              <div id="fp-result-msg" class="result-msg hidden"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .interactive-hub-section {
+    padding: 4.5rem 0 3.5rem 0;
+    background: linear-gradient(180deg, var(--navy-900) 0%, var(--navy-950) 100%);
+    position: relative;
+    z-index: 2;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .hub-header {
+    max-width: 860px;
+    margin: 0 auto 2.5rem auto;
+  }
+
+  /* Hub Tabs : Grille Responsive Non-Défilante */
+  .hub-tabs-container {
+    margin-top: 2.25rem;
+    width: 100%;
+  }
+
+  .hub-tabs-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  @media (max-width: 992px) {
+    .hub-tabs-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hub-tabs-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+  }
+
+  .hub-tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    background: rgba(14, 32, 60, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    color: var(--ivory-muted);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    text-align: left;
+    backdrop-filter: blur(8px);
+    width: 100%;
+  }
+
+  .hub-tab-btn:hover {
+    border-color: var(--gold-400);
+    color: #ffffff;
+    background: rgba(20, 46, 84, 0.85);
+    transform: translateY(-2px);
+  }
+
+  .hub-tab-btn.active {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    border-color: #ffffff;
+    font-weight: 800;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+  }
+
+  .tab-btn-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .tab-btn-texts {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .tab-btn-title {
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tab-btn-badge {
+    font-size: 0.66rem;
+    opacity: 0.85;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-top: 0.15rem;
+  }
+
+  .hub-tab-btn.active .tab-btn-badge {
+    color: var(--navy-900);
+    font-weight: 800;
+  }
+
+  /* Panels Box & Dynamic Ambient Backdrop */
+  .hub-panels-box {
+    position: relative;
+    padding: 2.25rem;
+    border-radius: var(--radius-xl);
+    border: 2px solid rgba(212, 175, 55, 0.45);
+    background: rgba(8, 20, 38, 0.72);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(212, 175, 55, 0.2);
+    overflow: hidden;
+    transition: border-color 0.45s ease, box-shadow 0.45s ease;
+  }
+
+  /* Distinct glow borders per theme */
+  .hub-panels-box[data-active-theme="studio"] {
+    border-color: rgba(246, 211, 101, 0.65);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(212, 175, 55, 0.35);
+  }
+  .hub-panels-box[data-active-theme="reparation"] {
+    border-color: rgba(0, 150, 255, 0.65);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(0, 134, 229, 0.35);
+  }
+  .hub-panels-box[data-active-theme="boutique"] {
+    border-color: rgba(245, 158, 11, 0.65);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(245, 158, 11, 0.35);
+  }
+  .hub-panels-box[data-active-theme="bureautique"] {
+    border-color: rgba(16, 185, 129, 0.65);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(16, 185, 129, 0.35);
+  }
+  .hub-panels-box[data-active-theme="mobile-money"] {
+    border-color: rgba(249, 115, 22, 0.65);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(249, 115, 22, 0.35);
+  }
+
+  .hub-dynamic-backdrop-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .hub-theme-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.6s ease-out;
+    transform: scale(1.05);
+  }
+
+  .hub-theme-bg.active {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+
+  .bg-studio {
+    background: radial-gradient(circle at 85% 15%, rgba(212, 175, 55, 0.45) 0%, transparent 55%),
+                radial-gradient(circle at 15% 85%, rgba(246, 211, 101, 0.25) 0%, transparent 60%),
+                radial-gradient(circle at 50% 50%, rgba(13, 34, 63, 0.5) 0%, transparent 80%),
+                url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    background-blend-mode: overlay;
+  }
+
+  .bg-reparation {
+    background: radial-gradient(circle at 80% 20%, rgba(0, 134, 229, 0.55) 0%, transparent 60%),
+                radial-gradient(circle at 20% 80%, rgba(239, 68, 68, 0.45) 0%, transparent 65%),
+                radial-gradient(circle at 50% 30%, rgba(14, 165, 233, 0.3) 0%, transparent 70%),
+                url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    background-blend-mode: overlay;
+  }
+
+  .bg-boutique {
+    background: radial-gradient(circle at 50% 15%, rgba(245, 158, 11, 0.5) 0%, transparent 60%),
+                radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.45) 0%, transparent 65%),
+                radial-gradient(circle at 15% 65%, rgba(180, 83, 9, 0.35) 0%, transparent 70%),
+                url('https://images.unsplash.com/photo-1605901309584-818e25960b8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    background-blend-mode: overlay;
+  }
+
+  .bg-bureautique {
+    background: radial-gradient(circle at 20% 25%, rgba(16, 185, 129, 0.5) 0%, transparent 60%),
+                radial-gradient(circle at 80% 75%, rgba(59, 130, 246, 0.45) 0%, transparent 65%),
+                radial-gradient(circle at 50% 85%, rgba(5, 150, 105, 0.3) 0%, transparent 70%),
+                url('https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    background-blend-mode: overlay;
+  }
+
+  .bg-mobilemoney {
+    background: radial-gradient(circle at 85% 15%, rgba(0, 134, 229, 0.55) 0%, transparent 55%),
+                radial-gradient(circle at 15% 85%, rgba(249, 115, 22, 0.5) 0%, transparent 60%),
+                radial-gradient(circle at 50% 50%, rgba(234, 88, 12, 0.3) 0%, transparent 70%),
+                url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    background-blend-mode: overlay;
+  }
+
+  .hub-backdrop-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(7, 18, 34, 0.4) 0%, rgba(5, 13, 26, 0.65) 100%);
+    pointer-events: none;
+  }
+
+  /* Yango Dual Options & Interactive Map Styling */
+  .yango-options-header {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold-300);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  .yango-dual-toggles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  @media (max-width: 580px) {
+    .yango-dual-toggles {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .yango-check-item {
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .yango-check-item:hover {
+    border-color: var(--gold-400);
+    background: rgba(20, 46, 84, 0.75);
+  }
+
+  .yango-map-view {
+    width: 100%;
+    height: 220px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    margin-top: 0.5rem;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .map-helper-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--ivory-muted);
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.35rem;
+  }
+
+  .btn-xs {
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .map-calculation-badge {
+    background: rgba(6, 17, 32, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: var(--radius-md);
+    padding: 0.6rem 0.85rem;
+    margin-top: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.8rem;
+  }
+
+  .calc-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .gold-text {
+    color: #f6d365;
+    font-weight: 700;
+  }
+
+  .total-breakdown {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.78rem;
+    color: var(--ivory-muted);
+    line-height: 1.3;
+  }
+
+  .total-main {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+  }
+
+  .yango-delivery-mini-box {
+    background: rgba(14, 32, 60, 0.45);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 0.85rem;
+  }
+
+  .panel-grid {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hub-panel {
+    display: none;
+    animation: fadeInHub 0.35s ease forwards;
+  }
+
+  .hub-panel.active {
+    display: block;
+  }
+
+  @keyframes fadeInHub {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .panel-grid {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+
+  .panel-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .live-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid #22c55e;
+    color: #4ade80;
+  }
+
+  .live-pill.yango-pill {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: #ef4444;
+    color: #f87171;
+  }
+
+  .panel-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.85rem;
+    line-height: 1.25;
+  }
+
+  .panel-desc {
+    font-size: 0.92rem;
+    color: var(--ivory-muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .panel-perks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.88rem;
+    color: #d1d5db;
+  }
+
+  /* Forms styling */
+  .panel-form-box {
+    background: rgba(6, 14, 26, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+  }
+
+  .hub-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ivory-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .hub-input, .hub-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s ease;
+  }
+
+  .hub-input:focus, .hub-select:focus {
+    border-color: var(--gold-400);
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.25);
+  }
+
+  .form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+  }
+
+  @media (max-width: 580px) {
+    .form-row-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Dropzone */
+  .dropzone-area {
+    position: relative;
+    border: 2px dashed rgba(212, 175, 55, 0.4);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    text-align: center;
+    background: rgba(14, 32, 60, 0.4);
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .dropzone-area:hover {
+    border-color: var(--gold-400);
+    background: rgba(212, 175, 55, 0.08);
+  }
+
+  .dropzone-input {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .dropzone-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .dropzone-icon {
+    font-size: 1.8rem;
+  }
+
+  .dropzone-text {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #ffffff;
+  }
+
+  .dropzone-hint {
+    font-size: 0.72rem;
+    color: var(--ivory-muted);
+  }
+
+  /* Yango Subform */
+  .yango-checkbox-box {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin: 0.5rem 0;
+  }
+
+  .custom-checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    cursor: pointer;
+    color: #ffffff;
+    font-size: 0.9rem;
+  }
+
+  .yango-details {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .yango-details.hidden {
+    display: none;
+  }
+
+  .repair-total-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-md);
+    background: rgba(14, 32, 60, 0.75);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    font-size: 0.95rem;
+    color: var(--ivory-muted);
+  }
+
+  .total-fig {
+    font-size: 1.35rem;
+    color: var(--gold-400);
+  }
+
+  .form-actions-row.dual-actions {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 0.75rem;
+  }
+
+  @media (max-width: 600px) {
+    .form-actions-row.dual-actions {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Result messages */
+  .result-msg {
+    padding: 0.85rem;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    line-height: 1.4;
+  }
+
+  .result-msg.success {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid #22c55e;
+    color: #4ade80;
+  }
+
+  .result-msg.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid #ef4444;
+    color: #f87171;
+  }
+
+  .result-msg.hidden {
+    display: none;
+  }
+
+  /* Boutique CTA Card */
+  .boutique-cta-card {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(14, 32, 60, 0.8) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .b-cta-title {
+    font-size: 1.1rem;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+  }
+
+  .b-cta-text {
+    font-size: 0.86rem;
+    color: var(--ivory-muted);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .callback-request-box {
+    padding: 1.25rem;
+    background: rgba(14, 32, 60, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+  }
+
+  .cb-title {
+    font-size: 0.88rem;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+  }
+
+  .two-pillars-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1rem;
+  }
+
+  .pillar-col {
+    background: rgba(14, 32, 60, 0.5);
+    border-left: 3px solid var(--gold-400);
+    padding: 0.75rem 1rem;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  }
+
+  .pillar-title {
+    display: block;
+    font-size: 0.88rem;
+    color: var(--gold-400);
+    margin-bottom: 0.2rem;
+  }
+
+  .pillar-col p {
+    font-size: 0.82rem;
+    color: var(--ivory-muted);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  /* Sub Tabs inside Bureautique */
+  .sub-tab-bar {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.5rem;
+  }
+
+  .sub-tab-btn {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--ivory-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sub-tab-btn.active {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: var(--gold-400);
+    color: #ffffff;
+  }
+
+  .subpanel.hidden {
+    display: none;
+  }
+
+  .services-duo-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 1rem;
+  }
+
+  .duo-pill {
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.08);
+    color: #e2e8f0;
+  }
+
+  .pile-express-highlight {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(14, 32, 60, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    padding: 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+  }
+
+  .pile-icon {
+    font-size: 2.2rem;
+  }
+
+  .pile-title {
+    font-size: 0.95rem;
+    color: #ffffff;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .pile-sub {
+    font-size: 0.84rem;
+    color: var(--ivory-muted);
+    margin: 0;
+  }
+
+  .maroquinerie-btns-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .yango-badges-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+  }
+
+  .yango-tier-chip {
+    font-size: 0.74rem;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    color: #fca5a5;
+  }
+</style>
+
+<script>
+  function setupInteractiveHub() {
+    // 1. Responsive Grid Tab switching with dynamic themed backdrops
+    const tabBtns = document.querySelectorAll<HTMLButtonElement>('.hub-tab-btn, .arc-pill');
+    const panels = document.querySelectorAll<HTMLElement>('.hub-panel');
+    const themeBgs = document.querySelectorAll<HTMLElement>('.hub-theme-bg');
+    const panelsBox = document.getElementById('hub-panels-box');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-hub-target');
+        if (!target) return;
+
+        // Update active tab buttons
+        tabBtns.forEach(b => {
+          const isActive = b.getAttribute('data-hub-target') === target;
+          b.classList.toggle('active', isActive);
+          b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+
+        // Switch active panel
+        panels.forEach(pan => {
+          pan.classList.toggle('active', pan.getAttribute('data-panel-name') === target);
+        });
+
+        // Switch dynamic ambient backdrop
+        themeBgs.forEach(bg => {
+          bg.classList.toggle('active', bg.classList.contains(`bg-${target}`));
+        });
+
+        // Set data attribute on panels box for any theme-specific styling
+        if (panelsBox) {
+          panelsBox.setAttribute('data-active-theme', target);
+        }
+      });
+    });
+
+    // 2. Studio Photo File Input Display & Yango Delivery Toggle
+    const studioFileInput = document.getElementById('studio-file-input') as HTMLInputElement;
+    const studioFileNameDisplay = document.getElementById('studio-file-name');
+    studioFileInput?.addEventListener('change', () => {
+      if (studioFileInput.files && studioFileInput.files[0]) {
+        if (studioFileNameDisplay) studioFileNameDisplay.textContent = `Fichier sélectionné : ${studioFileInput.files[0].name}`;
+      }
+    });
+
+    const studioYangoToggle = document.getElementById('studio-yango-toggle') as HTMLInputElement;
+    const studioYangoSubfield = document.getElementById('studio-yango-subfield');
+    studioYangoToggle?.addEventListener('change', () => {
+      studioYangoSubfield?.classList.toggle('hidden', !studioYangoToggle.checked);
+    });
+
+    // Studio form submit (Upload to Cloudinary + MongoDB)
+    const studioForm = document.getElementById('studio-upload-form') as HTMLFormElement;
+    studioForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('btn-studio-submit') as HTMLButtonElement;
+      const resMsg = document.getElementById('studio-result-msg');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Envoi vers Cloudinary...';
+      }
+
+      const clientName = (document.getElementById('studio-client-name') as HTMLInputElement)?.value;
+      const clientPhone = (document.getElementById('studio-client-phone') as HTMLInputElement)?.value;
+      const serviceType = (document.getElementById('studio-service-type') as HTMLSelectElement)?.value;
+      const urlInput = (document.getElementById('studio-url-input') as HTMLInputElement)?.value;
+      const file = studioFileInput?.files?.[0];
+      const withDelivery = studioYangoToggle?.checked || false;
+      const deliveryAddress = (document.getElementById('studio-yango-address') as HTMLInputElement)?.value || '';
+
+      try {
+        let fetchRes;
+        if (file) {
+          const fd = new FormData();
+          fd.append('file', file);
+          fd.append('customerName', clientName);
+          fd.append('customerPhone', clientPhone);
+          fd.append('serviceType', serviceType);
+          fd.append('instructions', withDelivery ? `Livraison Yango demandée à: ${deliveryAddress}` : 'Retrait boutique Super U');
+          fetchRes = await fetch('/api/upload/photo', { method: 'POST', body: fd });
+        } else if (urlInput) {
+          fetchRes = await fetch('/api/upload/photo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              imageUrl: urlInput,
+              customerName: clientName,
+              customerPhone: clientPhone,
+              serviceType,
+              instructions: withDelivery ? `Livraison Yango demandée à: ${deliveryAddress}` : 'Retrait boutique Super U'
+            })
+          });
+        } else {
+          alert('Veuillez sélectionner un fichier ou renseigner une URL d\'image.');
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Transférer & Valider au Studio';
+          }
+          return;
+        }
+
+        const data = await fetchRes.json();
+        if (data.success) {
+          if (resMsg) {
+            resMsg.className = 'result-msg success';
+            resMsg.innerHTML = `✅ <strong>Photo transmise avec succès au laboratoire Super U !</strong><br/>Référence Cloudinary enregistrée. ${withDelivery ? 'Option livraison Yango transmise.' : 'Retrait prévu au centre commercial.'} Nous vous contactons au ${clientPhone}.`;
+          }
+        } else {
+          throw new Error(data.error);
+        }
+      } catch (err: any) {
+        if (resMsg) {
+          resMsg.className = 'result-msg error';
+          resMsg.textContent = `Erreur: ${err.message || 'Échec de transmission'}`;
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Transférer & Valider au Studio';
+        }
+      }
+    });
+
+    // 3. Interactive Leaflet Map & Distance Calculation for Yango
+    const SUPER_U_COORDS: [number, number] = [5.362692, -3.998493]; // Super U Deux Plateaux
+    let leafletMap: any = null;
+    let clientMarker: any = null;
+    let selectedLat = SUPER_U_COORDS[0];
+    let selectedLng = SUPER_U_COORDS[1];
+    let currentDistanceKm = 1.5;
+    let currentTierFee = 1500;
+    let currentTierName = "Cocody Deux Plateaux / Vallon / Aghien";
+
+    // Haversine Distance formula in km
+    function computeDistanceKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+      const R = 6371; // Rayon Terre en km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return Math.round((R * c) * 10) / 10;
+    }
+
+    function determineTier(distance: number): { fee: number; name: string } {
+      if (distance <= 3.0) {
+        return { fee: 1500, name: "Cocody Deux Plateaux / Vallon / Aghien (0 - 3 km)" };
+      } else if (distance <= 8.0) {
+        return { fee: 2500, name: "Riviera 2, 3, 4, Palmeraie, Bonoumin (3 - 8 km)" };
+      } else if (distance <= 15.0) {
+        return { fee: 3500, name: "Plateau / Adjamé / Marcory / Zone 4 (8 - 15 km)" };
+      } else {
+        return { fee: 5000, name: "Yopougon / Koumassi / Port-Bouët / Bingerville (15+ km)" };
+      }
+    }
+
+    function initLeafletMapIfNeeded() {
+      const mapContainer = document.getElementById('yango-leaflet-map');
+      if (!mapContainer || leafletMap || !(window as any).L) return;
+
+      const L = (window as any).L;
+      leafletMap = L.map('yango-leaflet-map').setView(SUPER_U_COORDS, 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap'
+      }).addTo(leafletMap);
+
+      // Marker for Super U
+      const superUIcon = L.divIcon({
+        className: 'super-u-map-icon',
+        html: '<div style="background:#d4af37; color:#061120; font-weight:900; border-radius:50%; width:28px; height:28px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 10px #d4af37; border:2px solid #fff;">U</div>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+      });
+      L.marker(SUPER_U_COORDS, { icon: superUIcon }).addTo(leafletMap).bindPopup("<strong>Super U Deux Plateaux</strong><br/>Atelier Prestige Services").openPopup();
+
+      // Client Location marker (draggable)
+      const clientIcon = L.divIcon({
+        className: 'client-map-icon',
+        html: '<div style="background:#ef4444; color:#fff; font-weight:900; border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 12px rgba(239,68,68,0.8); border:2px solid #fff;">📍</div>',
+        iconSize: [26, 26],
+        iconAnchor: [13, 13]
+      });
+
+      const initialClientPos: [number, number] = [5.368, -4.005];
+      clientMarker = L.marker(initialClientPos, { draggable: true, icon: clientIcon }).addTo(leafletMap);
+
+      function onPositionUpdated(lat: number, lng: number) {
+        selectedLat = lat;
+        selectedLng = lng;
+        currentDistanceKm = computeDistanceKm(SUPER_U_COORDS[0], SUPER_U_COORDS[1], lat, lng);
+        const tier = determineTier(currentDistanceKm);
+        currentTierFee = tier.fee;
+        currentTierName = tier.name;
+
+        const distEl = document.getElementById('calc-distance-km');
+        const zoneEl = document.getElementById('calc-zone-name');
+        if (distEl) distEl.textContent = `${currentDistanceKm} km`;
+        if (zoneEl) zoneEl.textContent = `${currentTierName} (${currentTierFee.toLocaleString('fr-FR')} F / trajet)`;
+
+        updateRepairEstimate();
+      }
+
+      clientMarker.on('dragend', () => {
+        const pos = clientMarker.getLatLng();
+        onPositionUpdated(pos.lat, pos.lng);
+      });
+
+      leafletMap.on('click', (e: any) => {
+        clientMarker.setLatLng(e.latlng);
+        onPositionUpdated(e.latlng.lat, e.latlng.lng);
+      });
+
+      onPositionUpdated(initialClientPos[0], initialClientPos[1]);
+    }
+
+    // Geolocation button
+    document.getElementById('btn-locate-me')?.addEventListener('click', () => {
+      if (navigator.geolocation && leafletMap && clientMarker) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            clientMarker.setLatLng([lat, lng]);
+            leafletMap.setView([lat, lng], 14);
+            selectedLat = lat;
+            selectedLng = lng;
+            currentDistanceKm = computeDistanceKm(SUPER_U_COORDS[0], SUPER_U_COORDS[1], lat, lng);
+            const tier = determineTier(currentDistanceKm);
+            currentTierFee = tier.fee;
+            currentTierName = tier.name;
+
+            const distEl = document.getElementById('calc-distance-km');
+            const zoneEl = document.getElementById('calc-zone-name');
+            if (distEl) distEl.textContent = `${currentDistanceKm} km`;
+            if (zoneEl) zoneEl.textContent = `${currentTierName} (${currentTierFee.toLocaleString('fr-FR')} F / trajet)`;
+
+            updateRepairEstimate();
+          },
+          () => alert("Impossible d'obtenir la position GPS actuelle. Vous pouvez cliquer directement sur la carte.")
+        );
+      }
+    });
+
+    // 4. Dual Yango Toggles in Tech Repair
+    const pickupToggle = document.getElementById('repair-pickup-toggle') as HTMLInputElement;
+    const returnToggle = document.getElementById('repair-return-toggle') as HTMLInputElement;
+    const mapSubform = document.getElementById('repair-yango-map-subform');
+    const repairIssueSelect = document.getElementById('repair-issue') as HTMLSelectElement;
+    const totalDisplay = document.getElementById('repair-total-display');
+    const baseDisplay = document.getElementById('repair-base-display');
+    const courseDisplay = document.getElementById('repair-course-display');
+
+    function updateRepairEstimate() {
+      const issueOption = repairIssueSelect?.selectedOptions[0];
+      const basePrice = parseInt(issueOption?.getAttribute('data-est') || '15000', 10);
+      
+      const withPickup = pickupToggle?.checked || false;
+      const withReturn = returnToggle?.checked || false;
+      const coursesCount = (withPickup ? 1 : 0) + (withReturn ? 1 : 0);
+      const totalYangoFee = coursesCount * currentTierFee;
+
+      if (withPickup || withReturn) {
+        mapSubform?.classList.remove('hidden');
+        if (leafletMap) {
+          setTimeout(() => leafletMap.invalidateSize(), 150);
+        } else {
+          setTimeout(initLeafletMapIfNeeded, 100);
+        }
+      } else {
+        mapSubform?.classList.add('hidden');
+      }
+
+      if (baseDisplay) baseDisplay.textContent = `Intervention : ${basePrice.toLocaleString('fr-FR')} F`;
+      if (courseDisplay) {
+        if (coursesCount > 0) {
+          courseDisplay.classList.remove('hidden');
+          courseDisplay.textContent = `+ Coursier (${coursesCount} trajet${coursesCount > 1 ? 's' : ''}) : ${totalYangoFee.toLocaleString('fr-FR')} F`;
+        } else {
+          courseDisplay.classList.add('hidden');
+        }
+      }
+
+      const total = basePrice + totalYangoFee;
+      if (totalDisplay) {
+        totalDisplay.textContent = `${total.toLocaleString('fr-FR')} FCFA`;
+      }
+    }
+
+    pickupToggle?.addEventListener('change', updateRepairEstimate);
+    returnToggle?.addEventListener('change', updateRepairEstimate);
+    repairIssueSelect?.addEventListener('change', updateRepairEstimate);
+
+    // Tab button click for "reparation" initializes map once visible
+    document.querySelectorAll('[data-hub-target="reparation"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setTimeout(() => {
+          if ((pickupToggle?.checked || returnToggle?.checked) && leafletMap) {
+            leafletMap.invalidateSize();
+          }
+        }, 200);
+      });
+    });
+
+    // Repair form submit (PayDunya checkout)
+    const repairForm = document.getElementById('repair-order-form') as HTMLFormElement;
+    repairForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payBtn = document.getElementById('btn-repair-pay') as HTMLButtonElement;
+      if (payBtn) {
+        payBtn.disabled = true;
+        payBtn.textContent = 'Ouverture du paiement...';
+      }
+
+      const deviceType = (document.getElementById('repair-device-type') as HTMLSelectElement)?.value || 'smartphone';
+      const brand = (document.getElementById('repair-brand') as HTMLSelectElement)?.value;
+      const model = (document.getElementById('repair-model') as HTMLInputElement)?.value;
+      const issue = repairIssueSelect?.selectedOptions[0]?.text;
+      const withPickup = pickupToggle?.checked || false;
+      const withReturn = returnToggle?.checked || false;
+      const address = (document.getElementById('repair-pickup-address') as HTMLInputElement)?.value || '';
+      const name = (document.getElementById('repair-client-name') as HTMLInputElement)?.value;
+      const phone = (document.getElementById('repair-client-phone') as HTMLInputElement)?.value;
+
+      const issuePrice = parseInt(repairIssueSelect?.selectedOptions[0]?.getAttribute('data-est') || '15000', 10);
+      const coursesCount = (withPickup ? 1 : 0) + (withReturn ? 1 : 0);
+      const totalYangoFee = coursesCount * currentTierFee;
+      const total = issuePrice + totalYangoFee;
+
+      try {
+        // Save to MongoDB
+        await fetch('/api/repair/request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            brand,
+            model,
+            issue,
+            deviceType,
+            withPickup,
+            withReturn,
+            clientLat: selectedLat,
+            clientLng: selectedLng,
+            distanceKm: currentDistanceKm,
+            yangoTierName: currentTierName,
+            yangoFee: currentTierFee,
+            pickupAddress: address,
+            customerName: name,
+            customerPhone: phone,
+            estimatedPrice: issuePrice
+          })
+        });
+
+        // Trigger PayDunya checkout tunnel
+        const items = [
+          { name: `Diagnostic & Réparation ${brand} ${model}`, quantity: 1, unit_price: issuePrice, total_price: issuePrice }
+        ];
+        if (withPickup) {
+          items.push({ name: `Collecte Yango aller (${currentTierName})`, quantity: 1, unit_price: currentTierFee, total_price: currentTierFee });
+        }
+        if (withReturn) {
+          items.push({ name: `Livraison Yango retour (${currentTierName})`, quantity: 1, unit_price: currentTierFee, total_price: currentTierFee });
+        }
+
+        const checkoutRes = await fetch('/api/checkout/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: 'reparation',
+            title: `Réparation ${brand} ${model} ${coursesCount > 0 ? `+ Coursier (${coursesCount} trajet)` : ''}`,
+            amount: total,
+            customerName: name,
+            customerPhone: phone,
+            pickupType: coursesCount > 0 ? 'yango' : 'comptoir',
+            deliveryAddress: address,
+            items
+          })
+        });
+
+        const chData = await checkoutRes.json();
+        if (chData.success && chData.paymentUrl) {
+          window.location.href = chData.paymentUrl;
+        } else {
+          throw new Error(chData.error || 'Erreur paiement');
+        }
+      } catch (err: any) {
+        alert(`Erreur: ${err.message}`);
+        if (payBtn) {
+          payBtn.disabled = false;
+          payBtn.textContent = '💳 Payer en Ligne (PayDunya)';
+        }
+      }
+    });
+
+    // 5. Bureautique & PAO Form with File Upload & Yango
+    const printFileInput = document.getElementById('print-file-input') as HTMLInputElement;
+    const printFileNameDisplay = document.getElementById('print-file-name');
+    printFileInput?.addEventListener('change', () => {
+      if (printFileInput.files && printFileInput.files[0]) {
+        if (printFileNameDisplay) printFileNameDisplay.textContent = `Fichier prêt : ${printFileInput.files[0].name}`;
+      }
+    });
+
+    const printYangoToggle = document.getElementById('print-yango-toggle') as HTMLInputElement;
+    const printYangoSubfield = document.getElementById('print-yango-subfield');
+    printYangoToggle?.addEventListener('change', () => {
+      printYangoSubfield?.classList.toggle('hidden', !printYangoToggle.checked);
+    });
+
+    const printForm = document.getElementById('print-order-form') as HTMLFormElement;
+    printForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payBtn = document.getElementById('btn-print-pay') as HTMLButtonElement;
+      const resMsg = document.getElementById('print-result-msg');
+      if (payBtn) {
+        payBtn.disabled = true;
+        payBtn.textContent = 'Envoi et préparation du paiement...';
+      }
+
+      const printSelect = document.getElementById('print-type') as HTMLSelectElement;
+      const printTitle = printSelect?.selectedOptions[0]?.text;
+      const printPrice = parseInt(printSelect?.selectedOptions[0]?.getAttribute('data-price') || '2500', 10);
+      const instructions = (document.getElementById('print-quantity') as HTMLInputElement)?.value;
+      const name = (document.getElementById('print-name') as HTMLInputElement)?.value;
+      const phone = (document.getElementById('print-phone') as HTMLInputElement)?.value;
+      const withDelivery = printYangoToggle?.checked || false;
+      const deliveryAddress = (document.getElementById('print-yango-address') as HTMLInputElement)?.value || '';
+      const file = printFileInput?.files?.[0];
+
+      try {
+        let uploadedUrl = '';
+        if (file) {
+          const fd = new FormData();
+          fd.append('file', file);
+          fd.append('customerName', name);
+          fd.append('customerPhone', phone);
+          fd.append('serviceType', printSelect.value);
+          fd.append('instructions', instructions);
+          fd.append('withDelivery', withDelivery.toString());
+          fd.append('deliveryAddress', deliveryAddress);
+
+          const upRes = await fetch('/api/upload/document', { method: 'POST', body: fd });
+          const upData = await upRes.json();
+          if (!upData.success) throw new Error(upData.error || 'Échec upload document');
+          uploadedUrl = upData.secureUrl;
+        }
+
+        // Checkout tunnel
+        const deliveryFee = withDelivery ? 1500 : 0;
+        const total = printPrice + deliveryFee;
+
+        const res = await fetch('/api/checkout/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: 'imprimerie',
+            title: `Bureautique/PAO: ${printTitle}`,
+            amount: total,
+            customerName: name,
+            customerPhone: phone,
+            deliveryAddress: withDelivery ? deliveryAddress : '',
+            items: [
+              { name: `${printTitle} (${instructions})`, quantity: 1, unit_price: printPrice, total_price: printPrice },
+              ...(withDelivery ? [{ name: 'Livraison Yango Document', quantity: 1, unit_price: 1500, total_price: 1500 }] : [])
+            ]
+          })
+        });
+
+        const data = await res.json();
+        if (data.success && data.paymentUrl) {
+          window.location.href = data.paymentUrl;
+        } else {
+          if (resMsg) {
+            resMsg.className = 'result-msg success';
+            resMsg.innerHTML = `✅ <strong>Document transmis au laboratoire Bureautique Super U !</strong><br/>Nous préparons vos tirages. Contact au ${phone}.`;
+          }
+        }
+      } catch (err: any) {
+        alert(`Erreur: ${err.message}`);
+        if (payBtn) {
+          payBtn.disabled = false;
+          payBtn.textContent = 'Envoyer & Payer en Ligne';
+        }
+      }
+    });
+
+    // 6. Gaming Callback Form
+    const cbForm = document.getElementById('gaming-callback-form') as HTMLFormElement;
+    cbForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const item = (document.getElementById('cb-item-name') as HTMLInputElement)?.value;
+      const phone = (document.getElementById('cb-phone') as HTMLInputElement)?.value;
+      const resMsg = document.getElementById('cb-result-msg');
+
+      try {
+        const res = await fetch('/api/gaming/callback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ itemName: item, customerPhone: phone })
+        });
+        const data = await res.json();
+        if (data.success && resMsg) {
+          resMsg.className = 'result-msg success';
+          resMsg.textContent = '✅ Demande enregistrée ! Notre conseiller vous appelle sous 15 minutes.';
+          cbForm.reset();
+        }
+      } catch (e) {
+        if (resMsg) {
+          resMsg.className = 'result-msg error';
+          resMsg.textContent = 'Erreur lors de l\'enregistrement.';
+        }
+      }
+    });
+
+    // 7. FastPass Form submit
+    const fpForm = document.getElementById('fastpass-form') as HTMLFormElement;
+    fpForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const op = (document.getElementById('fp-operation') as HTMLSelectElement)?.value;
+      const oper = (document.getElementById('fp-operator') as HTMLSelectElement)?.value;
+      const amount = parseInt((document.getElementById('fp-amount') as HTMLInputElement)?.value || '0', 10);
+      const recipient = (document.getElementById('fp-recipient') as HTMLInputElement)?.value;
+      const phone = (document.getElementById('fp-phone') as HTMLInputElement)?.value;
+      const resMsg = document.getElementById('fp-result-msg');
+
+      try {
+        const res = await fetch('/api/fastpass/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            operationType: op,
+            operator: oper,
+            amount,
+            recipientPhone: recipient,
+            customerPhone: phone
+          })
+        });
+
+        const data = await res.json();
+        if (data.success && resMsg) {
+          resMsg.className = 'result-msg success';
+          resMsg.innerHTML = `🎉 <strong>Code Coupe-File VIP généré : <span style="font-size:1.2rem; color:#d4af37;">${data.fastpassCode}</span></strong><br/>Présentez ce code directement au guichet Super U Deux Plateaux pour passer prioritairement sans attente.`;
+        }
+      } catch (e: any) {
+        if (resMsg) {
+          resMsg.className = 'result-msg error';
+          resMsg.textContent = 'Échec de génération du code.';
+        }
+      }
+    });
+
+    // 8. Open Boutique Modal triggers from hub
+    document.querySelectorAll('.open-boutique-modal-trigger').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const modal = document.getElementById('boutique-modal') as HTMLDialogElement;
+        const cat = btn.getAttribute('data-filter-cat');
+        if (modal) {
+          modal.showModal();
+          if (cat) {
+            const filterBtn = modal.querySelector(`[data-cat-filter="${cat}"]`) as HTMLButtonElement;
+            filterBtn?.click();
+          }
+        }
+      });
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupInteractiveHub);
+</script>

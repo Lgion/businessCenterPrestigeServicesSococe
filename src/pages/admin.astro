@@ -3,11 +3,50 @@ import Layout from '../layouts/Layout.astro';
 import { defaultSiteData } from '../data/siteData';
 import { getAssetPath } from '../utils/assets';
 
-const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts, wavePayment, announcement } = defaultSiteData;
+const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts, wavePayment, announcement, yangoDelivery } = defaultSiteData;
 ---
 
 <Layout title="Administration | Business Center Prestige Services">
   <div class="admin-page-container">
+    <!-- Admin Security Protection Modal (PIN or Clerk) -->
+    <div id="admin-auth-overlay" class="admin-auth-overlay" style="display: none;">
+      <div class="auth-modal-card prestige-card">
+        <div class="auth-crest">
+          <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
+            <rect width="44" height="44" rx="10" fill="#0E223F"/>
+            <rect x="1.5" y="1.5" width="41" height="41" rx="8.5" stroke="#D4AF37" stroke-width="1.5"/>
+            <text x="22" y="28" font-family="serif" font-weight="800" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
+          </svg>
+        </div>
+        <h2 class="auth-title font-serif">Espace Sécurisé Administration</h2>
+        <p class="auth-sub">Veuillez saisir votre code d'accès administrateur pour accéder à la console de gestion.</p>
+
+        <form id="admin-pin-form" class="auth-form">
+          <div class="pin-input-group">
+            <input 
+              type="password" 
+              id="admin-pin-input" 
+              class="adm-input pin-input" 
+              placeholder="Code PIN (par défaut: 1234)" 
+              autocomplete="current-password"
+              maxlength="20"
+              required 
+            />
+          </div>
+          <div id="pin-error-msg" class="pin-error-msg" style="display: none;">
+            ⚠️ Code d'accès incorrect. Veuillez réessayer.
+          </div>
+          <button type="submit" class="btn btn-gold w-100 btn-unlock">
+            🔓 Déverrouiller la Console
+          </button>
+        </form>
+
+        <div class="auth-hint">
+          <span>💡 <em>Code maître par défaut : <strong>1234</strong>. La session reste déverrouillée sur votre navigateur.</em></span>
+        </div>
+      </div>
+    </div>
+
     <!-- Top Global Header -->
     <header class="admin-topbar">
       <div class="container admin-topbar-inner">
@@ -28,6 +67,11 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
         </div>
 
         <div class="admin-topbar-actions">
+          <span class="db-status-pill" id="db-status-pill">
+            <span class="status-dot-pulse"></span>
+            <span>MongoDB Atlas Persisté</span>
+          </span>
+
           <a href="/" class="btn btn-navy-outline btn-sm">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
@@ -42,7 +86,7 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
               <polyline points="17 21 17 13 7 13 7 21"></polyline>
               <polyline points="7 3 7 8 15 8"></polyline>
             </svg>
-            <span>Enregistrer les Modifications</span>
+            <span>Enregistrer dans MongoDB</span>
           </button>
         </div>
       </div>
@@ -55,7 +99,11 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
         <div class="sidebar-sticky-box">
           <span class="sidebar-title">Sections du Site</span>
           <nav class="sidebar-menu">
-            <a href="#sec-general" class="sidebar-link active">
+            <a href="#sec-orders" class="sidebar-link active">
+              <span class="link-icon">📊</span>
+              <span>0. Commandes & Leads</span>
+            </a>
+            <a href="#sec-general" class="sidebar-link">
               <span class="link-icon">🏛️</span>
               <span>1. Informations Générales</span>
             </a>
@@ -75,9 +123,13 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
               <span class="link-icon">🛍️</span>
               <span>5. Boutique E-Commerce</span>
             </a>
+            <a href="#sec-yango" class="sidebar-link">
+              <span class="link-icon">🛵</span>
+              <span>6. Coursier Yango & Zones</span>
+            </a>
             <a href="#sec-wave" class="sidebar-link">
               <span class="link-icon">💙</span>
-              <span>6. Paramètres Wave</span>
+              <span>7. Paramètres Wave</span>
             </a>
           </nav>
 
@@ -99,7 +151,112 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
 
       <!-- Right Form Sections Area -->
       <main class="admin-content-area">
+        <!-- Horizontal Stepper / Tab Bar for Step-by-Step Single-Section View -->
+        <div class="admin-stepper-bar" id="admin-stepper-bar" role="tablist" aria-label="Sections administrables">
+          <button type="button" class="stepper-step active" data-step-target="sec-orders" role="tab" aria-selected="true">
+            <span class="step-num">0</span>
+            <span class="step-label">Commandes & Leads</span>
+          </button>
+          <button type="button" class="stepper-step" data-step-target="sec-general" role="tab" aria-selected="false">
+            <span class="step-num">1</span>
+            <span class="step-label">Général</span>
+          </button>
+          <button type="button" class="stepper-step" data-step-target="sec-services" role="tab" aria-selected="false">
+            <span class="step-num">2</span>
+            <span class="step-label">5 Pôles & Fonds</span>
+          </button>
+          <button type="button" class="stepper-step" data-step-target="sec-seasons" role="tab" aria-selected="false">
+            <span class="step-num">3</span>
+            <span class="step-label">Vitrine Saisonnière</span>
+          </button>
+          <button type="button" class="stepper-step" data-step-target="sec-pricing" role="tab" aria-selected="false">
+            <span class="step-num">4</span>
+            <span class="step-label">Tarifs & Devis</span>
+          </button>
+          <button type="button" class="stepper-step" data-step-target="sec-boutique" role="tab" aria-selected="false">
+            <span class="step-num">5</span>
+            <span class="step-label">Boutique</span>
+          </button>
+          <button type="button" class="stepper-step" data-step-target="sec-yango" role="tab" aria-selected="false">
+            <span class="step-num">6</span>
+            <span class="step-label">Coursier Yango</span>
+          </button>
+          <button type="button" class="stepper-step" data-step-target="sec-wave" role="tab" aria-selected="false">
+            <span class="step-num">7</span>
+            <span class="step-label">Paiement Wave</span>
+          </button>
+        </div>
+
         <form id="global-admin-form" class="global-admin-form">
+          <!-- ================= SECTION 0: LIVE ORDERS & CLIENT LEADS ================= -->
+          <section id="sec-orders" class="admin-card-section prestige-card active-section">
+            <div class="section-card-head">
+              <div class="badge-num">00</div>
+              <div>
+                <h2 class="card-sec-title">Commandes & Demandes Clients en Direct (MongoDB Atlas)</h2>
+                <p class="card-sec-desc">Suivi en temps réel des paiements PayDunya, ramassages Yango, photos uploadées et FastPass VIP.</p>
+              </div>
+            </div>
+
+            <div class="live-dashboard-bar">
+              <div class="dash-stat-chip">
+                <span class="chip-label">Commandes PayDunya</span>
+                <strong class="chip-val font-serif" id="stat-orders-count">...</strong>
+              </div>
+              <div class="dash-stat-chip">
+                <span class="chip-label">Demandes Réparations</span>
+                <strong class="chip-val font-serif" id="stat-repairs-count">...</strong>
+              </div>
+              <div class="dash-stat-chip">
+                <span class="chip-label">Photos Laboratoire</span>
+                <strong class="chip-val font-serif" id="stat-photos-count">...</strong>
+              </div>
+              <div class="dash-stat-chip">
+                <span class="chip-label">FastPass VIP Mobile Money</span>
+                <strong class="chip-val font-serif" id="stat-fastpass-count">...</strong>
+              </div>
+              <button type="button" id="btn-refresh-records" class="btn btn-navy-outline btn-sm">
+                🔄 Rafraîchir
+              </button>
+            </div>
+
+            <!-- Orders Table Container -->
+            <div class="records-container-box">
+              <div class="records-tabs" role="tablist">
+                <button type="button" class="rec-tab-btn active" data-rec-tab="orders">Commandes Récentes</button>
+                <button type="button" class="rec-tab-btn" data-rec-tab="repairs">Collectes Réparation & Yango</button>
+                <button type="button" class="rec-tab-btn" data-rec-tab="photos">Photos Téléversées</button>
+                <button type="button" class="rec-tab-btn" data-rec-tab="callbacks">Rappels Gaming</button>
+              </div>
+
+              <div class="rec-tab-panel active" id="rec-panel-orders">
+                <div class="rec-empty-state" id="orders-list-empty">Chargement des commandes depuis MongoDB Atlas...</div>
+                <div class="orders-list-grid" id="orders-list-grid"></div>
+              </div>
+
+              <div class="rec-tab-panel" id="rec-panel-repairs">
+                <div class="rec-empty-state" id="repairs-list-empty">Aucune demande de réparation enregistrée.</div>
+                <div class="repairs-list-grid" id="repairs-list-grid"></div>
+              </div>
+
+              <div class="rec-tab-panel" id="rec-panel-photos">
+                <div class="rec-empty-state" id="photos-list-empty">Aucune photo téléversée pour l'instant.</div>
+                <div class="photos-list-grid" id="photos-list-grid"></div>
+              </div>
+
+              <div class="rec-tab-panel" id="rec-panel-callbacks">
+                <div class="rec-empty-state" id="callbacks-list-empty">Aucune demande de rappel téléphonique.</div>
+                <div class="callbacks-list-grid" id="callbacks-list-grid"></div>
+              </div>
+            </div>
+
+            <div class="section-nav-footer">
+              <span class="step-counter-text">Étape 0 / 7 • Commandes</span>
+              <button type="button" class="btn btn-gold btn-sm btn-nav-step" data-nav-target="sec-general">
+                Section suivante : 1. Général →
+              </button>
+            </div>
+          </section>
 
           <!-- ================= SECTION 1: GENERAL INFO ================= -->
           <section id="sec-general" class="admin-card-section prestige-card">
@@ -157,6 +314,15 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
                 <input type="text" id="adm-ann-text" class="adm-input" value={announcement.text} />
               </div>
             </div>
+
+            <div class="section-nav-footer">
+              <button type="button" class="btn btn-navy-outline btn-sm btn-nav-step" data-nav-target="sec-orders">
+                ← 0. Commandes
+              </button>
+              <button type="button" class="btn btn-gold btn-sm btn-nav-step" data-nav-target="sec-services">
+                Section suivante : 2. Les 5 Pôles →
+              </button>
+            </div>
           </section>
 
           <!-- ================= SECTION 2: 5 SERVICES & BACKGROUNDS ================= -->
@@ -174,13 +340,14 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
             <div class="services-admin-stack" id="services-admin-cards">
               {services.map((svc, idx) => (
                 <div class="service-editor-card" data-service-id={svc.id}>
-                  <div class="svc-editor-head">
+                  <div class="svc-editor-head accordion-toggle-head">
                     <span class="svc-index font-serif">Pôle {svc.number}</span>
                     <h3 class="svc-name">{svc.title}</h3>
                     <span class="svc-badge-tag">{svc.badge}</span>
+                    <span class="accordion-arrow">▼</span>
                   </div>
 
-                  <div class="form-fields-grid">
+                  <div class="form-fields-grid accordion-body folded">
                     <div class="field-item">
                       <label>Titre du Pôle</label>
                       <input type="text" class="adm-input svc-title-input" value={svc.title} />
@@ -201,16 +368,24 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
                       <input type="text" class="adm-input svc-popular-input" value={svc.popularTag} />
                     </div>
 
-                    <!-- Fond d'écran / Image de fond modifiable -->
+                    <!-- Fond d'écran / Image de fond avec Upload File Cloudinary -->
                     <div class="field-item full-width">
-                      <label>Image de Fond du Pôle (URL ou sélection)</label>
-                      <div class="image-picker-row">
-                        <input type="text" class="adm-input svc-image-input" value={svc.image} />
+                      <label>Image de Fond du Pôle (Fichier personnalisé ou URL)</label>
+                      <div class="image-uploader-control">
                         <div class="image-thumb-preview">
                           <img src={getAssetPath(svc.image)} alt={svc.title} class="svc-thumb-img" />
                         </div>
+                        <div class="image-uploader-inputs">
+                          <div class="file-pick-row">
+                            <label class="btn btn-navy-outline btn-xs file-btn-label">
+                              📁 Choisir une image sur mon appareil
+                              <input type="file" accept="image/*" class="svc-file-upload-input" style="display:none;" />
+                            </label>
+                            <span class="file-upload-status">Aucun nouveau fichier</span>
+                          </div>
+                          <input type="text" class="adm-input svc-image-input" value={svc.image} placeholder="Ou saisissez une URL d'image (/images/... ou https://...)" />
+                        </div>
                       </div>
-                      <span class="field-hint">Images prestige incluses : /images/service-studio-photo.jpg, /images/service-tech-repair.jpg, /images/service-gaming-tech.jpg, /images/service-boutique-cadeaux.jpg, /images/service-bureautique-transferts.jpg</span>
                     </div>
 
                     <!-- Prestations / Liste des services détaillée -->
@@ -237,6 +412,15 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div class="section-nav-footer">
+              <button type="button" class="btn btn-navy-outline btn-sm btn-nav-step" data-nav-target="sec-general">
+                ← 1. Informations Générales
+              </button>
+              <button type="button" class="btn btn-gold btn-sm btn-nav-step" data-nav-target="sec-seasons">
+                Section suivante : 3. Vitrine Saisonnière →
+              </button>
             </div>
           </section>
 
@@ -306,31 +490,51 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
                         <img src={prod.image} alt={prod.name} class="prod-admin-img" />
                       </div>
                       <div class="prod-admin-form">
-                        <div class="prod-row-1">
-                          <input type="text" class="adm-input prod-name-input" value={prod.name} placeholder="Nom du produit" />
-                          <select class="adm-select prod-season-select">
-                            <option value="rentree" selected={prod.seasonId === 'rentree'}>Rentrée Scolaire</option>
-                            <option value="noel" selected={prod.seasonId === 'noel'}>Fêtes & Noël</option>
-                            <option value="mariages" selected={prod.seasonId === 'mariages'}>Cérémonies & Mariages</option>
-                            <option value="hightech" selected={prod.seasonId === 'hightech'}>High-Tech & Gaming</option>
-                          </select>
+                        <!-- Compact Preview (Visible when folded) -->
+                        <div class="prod-admin-compact-preview">
+                          <span class="prod-compact-name">{prod.name}</span>
+                          <span class="prod-compact-price">{prod.price.toLocaleString('fr-FR')} FCFA</span>
+                          <span class="field-hint" style="font-size:0.7rem; color:var(--gold-400);">👆 Cliquer pour modifier</span>
                         </div>
-                        <div class="prod-row-2">
-                          <input type="number" class="adm-input prod-price-input" value={prod.price} placeholder="Prix FCFA" />
-                          <input type="text" class="adm-input prod-badge-input" value={prod.badge} placeholder="Badge promo" />
-                          <input type="text" class="adm-input prod-img-input" value={prod.image} placeholder="URL Image" />
-                        </div>
-                        <input type="text" class="adm-input prod-desc-input" value={prod.description} placeholder="Courte description" />
-                        <div class="prod-row-del">
-                          <button type="button" class="btn-del-prod del-seasonal-prod-btn">
-                            🗑️ Supprimer ce produit
-                          </button>
+
+                        <!-- Full Fields (Visible when expanded) -->
+                        <div class="prod-admin-full-fields">
+                          <div class="prod-row-1">
+                            <input type="text" class="adm-input prod-name-input" value={prod.name} placeholder="Nom du produit" />
+                            <select class="adm-select prod-season-select">
+                              <option value="rentree" selected={prod.seasonId === 'rentree'}>Rentrée Scolaire</option>
+                              <option value="noel" selected={prod.seasonId === 'noel'}>Fêtes & Noël</option>
+                              <option value="mariages" selected={prod.seasonId === 'mariages'}>Cérémonies & Mariages</option>
+                              <option value="hightech" selected={prod.seasonId === 'hightech'}>High-Tech & Gaming</option>
+                            </select>
+                          </div>
+                          <div class="prod-row-2">
+                            <input type="number" class="adm-input prod-price-input" value={prod.price} placeholder="Prix FCFA" />
+                            <input type="text" class="adm-input prod-badge-input" value={prod.badge} placeholder="Badge promo" />
+                            <input type="text" class="adm-input prod-img-input" value={prod.image} placeholder="URL Image" />
+                          </div>
+                          <input type="text" class="adm-input prod-desc-input" value={prod.description} placeholder="Courte description" />
+                          <div class="prod-row-del">
+                            <button type="button" class="btn-collapse-card">▲ Réduire</button>
+                            <button type="button" class="btn-del-prod del-seasonal-prod-btn">
+                              🗑️ Supprimer ce produit
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
+            </div>
+
+            <div class="section-nav-footer">
+              <button type="button" class="btn btn-navy-outline btn-sm btn-nav-step" data-nav-target="sec-services">
+                ← 2. Les 5 Pôles & Fonds
+              </button>
+              <button type="button" class="btn btn-gold btn-sm btn-nav-step" data-nav-target="sec-pricing">
+                Section suivante : 4. Tarifs & Formules →
+              </button>
             </div>
           </section>
 
@@ -374,12 +578,24 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
                       <span>Formule la plus populaire (Mise en avant or)</span>
                     </label>
 
-                    <button type="button" class="btn-del-prod del-pricing-pkg-btn">
-                      🗑️ Supprimer cette formule
-                    </button>
+                    <div style="display:flex; gap:0.6rem; align-items:center;">
+                      <button type="button" class="btn-collapse-card">▲ Réduire</button>
+                      <button type="button" class="btn-del-prod del-pricing-pkg-btn">
+                        🗑️ Supprimer cette formule
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
+            </div>
+
+            <div class="section-nav-footer">
+              <button type="button" class="btn btn-navy-outline btn-sm btn-nav-step" data-nav-target="sec-seasons">
+                ← 3. Vitrine Saisonnière
+              </button>
+              <button type="button" class="btn btn-gold btn-sm btn-nav-step" data-nav-target="sec-boutique">
+                Section suivante : 5. Boutique E-Commerce →
+              </button>
             </div>
           </section>
 
@@ -437,19 +653,88 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
                       <span>Article en stock au Super U</span>
                     </label>
 
-                    <button type="button" class="btn-del-prod del-btq-prod-btn">
-                      🗑️ Supprimer
+                    <div style="display:flex; gap:0.6rem; align-items:center;">
+                      <button type="button" class="btn-collapse-card">▲ Réduire</button>
+                      <button type="button" class="btn-del-prod del-btq-prod-btn">
+                        🗑️ Supprimer
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div class="section-nav-footer">
+              <button type="button" class="btn btn-navy-outline btn-sm btn-nav-step" data-nav-target="sec-pricing">
+                ← 4. Tarifs & Formules
+              </button>
+              <button type="button" class="btn btn-gold btn-sm btn-nav-step" data-nav-target="sec-yango">
+                Section suivante : 6. Coursier Yango →
+              </button>
+            </div>
+          </section>
+
+          <!-- ================= SECTION 6: COURSIER YANGO & ZONES ================= -->
+          <section id="sec-yango" class="admin-card-section prestige-card">
+            <div class="section-card-head">
+              <div class="badge-num">06</div>
+              <div>
+                <h2 class="card-sec-title">Grille Tarifaire Coursier Yango (Collecte Réparation & Livraison)</h2>
+                <p class="card-sec-desc">Ajustez les paliers kilométriques et les tarifs des courses Yango depuis le Super U Deux Plateaux.</p>
+              </div>
+            </div>
+
+            <div class="manager-head">
+              <span class="manager-sub">Paliers kilométriques configurés pour le module de réparation et la boutique</span>
+              <button type="button" id="btn-add-yango-tier" class="btn btn-gold btn-sm">
+                ➕ Ajouter une Zone Yango
+              </button>
+            </div>
+
+            <div class="yango-tiers-stack" id="yango-tiers-admin-list">
+              {yangoDelivery.tiers.map((tier) => (
+                <div class="yango-tier-card" data-tier-id={tier.id}>
+                  <div class="yango-tier-row">
+                    <div class="field-item">
+                      <label>Nom de la Zone</label>
+                      <input type="text" class="adm-input tier-zone-input" value={tier.zone} placeholder="Ex: Zone 1 - Proximité" />
+                    </div>
+                    <div class="field-item">
+                      <label>Rayon Max (km)</label>
+                      <input type="number" class="adm-input tier-km-input" value={tier.maxKm} placeholder="3" />
+                    </div>
+                    <div class="field-item">
+                      <label>Frais Yango (FCFA)</label>
+                      <input type="number" class="adm-input tier-fee-input" value={tier.fee} placeholder="1500" />
+                    </div>
+                    <div class="field-item full-width">
+                      <label>Quartiers & Repères inclus</label>
+                      <input type="text" class="adm-input tier-label-input" value={tier.label} placeholder="Deux Plateaux, Vallons, Aghien..." />
+                    </div>
+                  </div>
+                  <div class="tier-card-del">
+                    <button type="button" class="btn-del-prod del-yango-tier-btn">
+                      🗑️ Supprimer ce palier
                     </button>
                   </div>
                 </div>
               ))}
             </div>
+
+            <div class="section-nav-footer">
+              <button type="button" class="btn btn-navy-outline btn-sm btn-nav-step" data-nav-target="sec-boutique">
+                ← 5. Boutique E-Commerce
+              </button>
+              <button type="button" class="btn btn-gold btn-sm btn-nav-step" data-nav-target="sec-wave">
+                Section suivante : 7. Paramètres Wave →
+              </button>
+            </div>
           </section>
 
-          <!-- ================= SECTION 6: WAVE PAYMENT ================= -->
+          <!-- ================= SECTION 7: WAVE PAYMENT ================= -->
           <section id="sec-wave" class="admin-card-section prestige-card">
             <div class="section-card-head">
-              <div class="badge-num">06</div>
+              <div class="badge-num">07</div>
               <div>
                 <h2 class="card-sec-title">Paramètres de Paiement Wave Côte d'Ivoire</h2>
                 <p class="card-sec-desc">Identifiants marchands et montants pré-configurés pour la modale Wave.</p>
@@ -471,6 +756,15 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
                 <label for="adm-wave-banks">Banques Partenaires Agrées affichées</label>
                 <input type="text" id="adm-wave-banks" class="adm-input" value={wavePayment.partnerBanks} />
               </div>
+            </div>
+
+            <div class="section-nav-footer">
+              <button type="button" class="btn btn-navy-outline btn-sm btn-nav-step" data-nav-target="sec-yango">
+                ← 6. Coursier Yango
+              </button>
+              <button type="button" class="btn btn-gold btn-sm btn-admin-quick-save">
+                💾 Sauvegarder dans MongoDB Atlas
+              </button>
             </div>
           </section>
 
@@ -499,6 +793,264 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
   }
 
   /* Topbar */
+  .db-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.8rem;
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    border-radius: var(--radius-full);
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #4ade80;
+  }
+
+  .status-dot-pulse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 8px #22c55e;
+  }
+
+  /* Live Dashboard Bar */
+  .live-dashboard-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: rgba(8, 20, 40, 0.7);
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .dash-stat-chip {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+    background: rgba(14, 34, 64, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 10px;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  .chip-label {
+    font-size: 0.7rem;
+    color: var(--ivory-muted);
+    font-weight: 600;
+  }
+
+  .chip-val {
+    font-size: 1.4rem;
+    color: var(--gold-300);
+  }
+
+  /* Records Tabs & Panels */
+  .records-container-box {
+    background: rgba(8, 18, 36, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 1.25rem;
+  }
+
+  .records-tabs {
+    display: flex;
+    gap: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
+    overflow-x: auto;
+  }
+
+  .rec-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--ivory-muted);
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.5rem 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .rec-tab-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .rec-tab-btn.active {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+  }
+
+  .rec-tab-panel {
+    display: none;
+  }
+
+  .rec-tab-panel.active {
+    display: block;
+  }
+
+  .rec-empty-state {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--ivory-muted);
+    font-size: 0.88rem;
+  }
+
+  .orders-list-grid, .repairs-list-grid, .photos-list-grid, .callbacks-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .record-card {
+    background: rgba(14, 34, 64, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .record-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+  }
+
+  .record-id {
+    font-weight: 700;
+    color: var(--gold-400);
+  }
+
+  .record-status {
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 800;
+  }
+
+  .status-paid {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.4);
+  }
+
+  .status-pending {
+    background: rgba(234, 179, 8, 0.2);
+    color: #facc15;
+    border: 1px solid rgba(234, 179, 8, 0.4);
+  }
+
+  .status-blue {
+    background: rgba(14, 165, 233, 0.2);
+    color: #38bdf8;
+    border: 1px solid rgba(14, 165, 233, 0.4);
+  }
+
+  .status-gold {
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--gold-300);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+  }
+
+  .record-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    margin-top: 0.35rem;
+  }
+
+  .record-items-mini {
+    font-size: 0.76rem;
+    color: #cbd5e1;
+    background: rgba(6, 14, 28, 0.5);
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    margin: 0.4rem 0;
+  }
+
+  .record-addr {
+    font-size: 0.76rem;
+    color: var(--gold-300);
+  }
+
+  .record-yango-badge {
+    font-size: 0.76rem;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+    padding: 0.4rem 0.6rem;
+    border-radius: 8px;
+  }
+
+  .record-card-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.72rem;
+    color: var(--ivory-muted);
+  }
+
+  .record-link {
+    color: var(--gold-400);
+    text-decoration: underline;
+    font-weight: 700;
+  }
+
+  .photo-rec-card {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 0.8rem;
+  }
+
+  .rec-photo-thumb {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  /* Yango Tiers */
+  .yango-tiers-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.25rem;
+  }
+
+  .yango-tier-card {
+    background: rgba(14, 34, 64, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 14px;
+    padding: 1.2rem;
+  }
+
+  .yango-tier-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1.2fr;
+    gap: 0.85rem;
+  }
+
+  .tier-card-del {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.8rem;
+  }
+
   .admin-topbar {
     background: #08162b;
     border-bottom: 1px solid rgba(212, 175, 55, 0.25);
@@ -723,16 +1275,191 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
   }
 
   /* Form & Sections */
+  /* Form & Single-Section View System */
   .global-admin-form {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    position: relative;
+    min-height: 500px;
   }
 
   .admin-card-section {
     padding: 2.2rem;
     border-radius: var(--radius-xl);
-    scroll-margin-top: 100px;
+    display: none;
+    animation: fadeInSection 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .admin-card-section.active-section {
+    display: block;
+  }
+
+  @keyframes fadeInSection {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .section-nav-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .step-counter-text {
+    font-size: 0.82rem;
+    color: var(--gold-400);
+    font-weight: 600;
+  }
+
+  /* Horizontal Section Stepper */
+  .admin-stepper-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.6rem 0.8rem;
+    background: rgba(10, 24, 48, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    backdrop-filter: blur(12px);
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .admin-stepper-bar::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .admin-stepper-bar::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.3);
+    border-radius: 4px;
+  }
+
+  .stepper-step {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--ivory-muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+
+  .stepper-step:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+  }
+
+  .stepper-step.active {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.22), rgba(212, 175, 55, 0.08));
+    border-color: var(--gold-400);
+    color: var(--gold-300);
+    box-shadow: 0 0 14px rgba(212, 175, 55, 0.2);
+  }
+
+  .stepper-step .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    font-size: 0.72rem;
+    font-family: var(--font-serif);
+    font-weight: 800;
+  }
+
+  .stepper-step.active .step-num {
+    background: var(--gold-500);
+    color: #060e1a;
+  }
+
+  /* Admin Security PIN Protection Modal */
+  .admin-auth-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.94);
+    backdrop-filter: blur(16px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .auth-modal-card {
+    background: #0a192f;
+    border: 1px solid var(--gold-400);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 55, 0.25);
+    border-radius: var(--radius-xl);
+    padding: 2.5rem 2rem;
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    animation: fadeInSection 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .auth-crest {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+  }
+
+  .auth-title {
+    font-size: 1.5rem;
+    color: var(--gold-300);
+    margin-bottom: 0.5rem;
+  }
+
+  .auth-sub {
+    font-size: 0.88rem;
+    color: var(--ivory-muted);
+    margin-bottom: 1.8rem;
+    line-height: 1.5;
+  }
+
+  .auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pin-input {
+    text-align: center;
+    font-size: 1.3rem;
+    letter-spacing: 0.25em;
+    padding: 0.8rem 1rem;
+  }
+
+  .pin-error-msg {
+    color: #f87171;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .btn-unlock {
+    padding: 0.85rem;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+
+  .auth-hint {
+    margin-top: 1.5rem;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 1rem;
   }
 
   .section-card-head {
@@ -757,6 +1484,357 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+  }
+
+  /* Accordion styling for Section 2 (5 Pôles) */
+  .accordion-toggle-head {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    background: rgba(14, 34, 64, 0.7);
+  }
+
+  .accordion-toggle-head:hover {
+    background: rgba(20, 46, 84, 0.9);
+  }
+
+  .accordion-arrow {
+    color: var(--gold-400);
+    font-size: 0.9rem;
+    transition: transform 0.25s ease;
+    margin-left: auto;
+  }
+
+  .accordion-toggle-head.expanded .accordion-arrow {
+    transform: rotate(180deg);
+  }
+
+  .accordion-body.folded {
+    display: none;
+  }
+
+  .accordion-body {
+    padding: 1.2rem 0 0.5rem 0;
+    animation: fadeInAccordion 0.25s ease;
+  }
+
+  @keyframes fadeInAccordion {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .image-uploader-control {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+  }
+
+  .image-uploader-inputs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .file-pick-row {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+
+  .file-btn-label {
+    cursor: pointer;
+  }
+
+  .file-upload-status {
+    font-size: 0.78rem;
+    color: var(--ivory-muted);
+  }
+
+  /* Section 3: Seasonal Products Compact (150px) & 100% Full-Width Expansion */
+  .seasonal-prods-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    align-items: start;
+  }
+
+  .prod-admin-card {
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 0.85rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .prod-admin-card:hover {
+    border-color: var(--gold-400);
+    background: rgba(20, 46, 84, 0.75);
+  }
+
+  .prod-admin-card.expanded {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    padding: 1.4rem;
+    border-color: var(--gold-400);
+    background: rgba(10, 26, 52, 0.95);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.2);
+    cursor: default;
+  }
+
+  .prod-admin-media {
+    width: 100%;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  .prod-admin-card.expanded .prod-admin-media {
+    width: 140px;
+    height: 140px;
+  }
+
+  .prod-admin-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .prod-admin-form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .prod-admin-compact-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .prod-compact-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .prod-compact-price {
+    font-size: 0.8rem;
+    color: var(--gold-300);
+    font-weight: 700;
+  }
+
+  .prod-admin-card:not(.expanded) .prod-admin-full-fields {
+    display: none;
+  }
+
+  .prod-row-1, .prod-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .prod-row-2 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .prod-row-del {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.4rem;
+  }
+
+  .btn-collapse-card {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--ivory-muted);
+    font-size: 0.76rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-del-prod {
+    background: none;
+    border: none;
+    color: #f87171;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.2rem 0;
+  }
+
+  .btn-del-prod:hover {
+    text-decoration: underline;
+  }
+
+  /* Section 4: Pricing Packages (Desktop 3 col / Mobile 2 col & 100% Expansion) */
+  .pricing-pkgs-stack {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    align-items: start;
+  }
+
+  @media (max-width: 768px) {
+    .pricing-pkgs-stack {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pricing-pkgs-stack {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pkg-admin-card {
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .pkg-admin-card:hover {
+    border-color: var(--gold-400);
+    background: rgba(20, 46, 84, 0.75);
+  }
+
+  .pkg-admin-card.expanded {
+    grid-column: 1 / -1;
+    border-color: var(--gold-400);
+    background: rgba(10, 26, 52, 0.95);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.2);
+    cursor: default;
+  }
+
+  .pkg-admin-card:not(.expanded) .pkg-admin-features-box,
+  .pkg-admin-card:not(.expanded) .pkg-admin-bottom {
+    display: none;
+  }
+
+  .pkg-admin-row-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .pkg-admin-card.expanded .pkg-admin-row-top {
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+  }
+
+  .pkg-admin-features-box label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #cbd5e1;
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .adm-textarea {
+    width: 100%;
+    resize: vertical;
+  }
+
+  .pkg-admin-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+  }
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--ivory-muted);
+    cursor: pointer;
+  }
+
+  /* Section 5: Boutique E-Commerce (Desktop 4 col / Mobile 2 col & Expansion) */
+  .boutique-admin-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.1rem;
+    align-items: start;
+  }
+
+  @media (max-width: 992px) {
+    .boutique-admin-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 680px) {
+    .boutique-admin-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+  }
+
+  .btq-admin-card {
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .btq-admin-card:hover {
+    border-color: var(--gold-400);
+    background: rgba(20, 46, 84, 0.75);
+  }
+
+  /* Expanded: half-width (span 2) on desktop, full-width on mobile */
+  .btq-admin-card.expanded {
+    grid-column: span 2;
+    border-color: var(--gold-400);
+    background: rgba(10, 26, 52, 0.95);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 175, 55, 0.2);
+    cursor: default;
+  }
+
+  @media (max-width: 680px) {
+    .btq-admin-card.expanded {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .btq-admin-card:not(.expanded) .btq-admin-fields,
+  .btq-admin-card:not(.expanded) .btq-admin-footer {
+    display: none;
+  }
+
+  .btq-admin-top {
+    display: flex;
+    gap: 0.8rem;
   }
 
   .card-sec-title {
@@ -1014,190 +2092,6 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
     color: var(--ivory-muted);
   }
 
-  .seasonal-prods-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .prod-admin-card {
-    background: rgba(14, 32, 60, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 1rem;
-    display: flex;
-    gap: 1rem;
-  }
-
-  @media (max-width: 640px) {
-    .prod-admin-card {
-      flex-direction: column;
-    }
-  }
-
-  .prod-admin-media {
-    width: 90px;
-    height: 90px;
-    border-radius: 8px;
-    overflow: hidden;
-    flex-shrink: 0;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-  }
-
-  .prod-admin-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .prod-admin-form {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .prod-row-1, .prod-row-2 {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.6rem;
-  }
-
-  .prod-row-2 {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-
-  .btn-del-prod {
-    background: none;
-    border: none;
-    color: #f87171;
-    font-size: 0.78rem;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 0.2rem 0;
-    align-self: flex-start;
-  }
-
-  .btn-del-prod:hover {
-    text-decoration: underline;
-  }
-
-  /* Pricing admin */
-  .pricing-pkgs-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 1.2rem;
-  }
-
-  .pkg-admin-card {
-    background: rgba(14, 32, 60, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    padding: 1.4rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .pkg-admin-row-top {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr 1fr 1fr;
-    gap: 0.8rem;
-  }
-
-  @media (max-width: 768px) {
-    .pkg-admin-row-top {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .pkg-admin-features-box label {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: #cbd5e1;
-    display: block;
-    margin-bottom: 0.3rem;
-  }
-
-  .adm-textarea {
-    width: 100%;
-    resize: vertical;
-  }
-
-  .pkg-admin-bottom {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 0.5rem;
-  }
-
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.82rem;
-    color: var(--ivory-muted);
-    cursor: pointer;
-  }
-
-  /* Boutique Admin */
-  .boutique-admin-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.2rem;
-  }
-
-  .btq-admin-card {
-    background: rgba(14, 32, 60, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 14px;
-    padding: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-
-  .btq-admin-top {
-    display: flex;
-    gap: 0.8rem;
-  }
-
-  .btq-admin-thumb {
-    width: 70px;
-    height: 70px;
-    object-fit: cover;
-    border-radius: 8px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    flex-shrink: 0;
-  }
-
-  .btq-admin-main-inputs {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-
-  .btq-row-price-cat {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.4rem;
-  }
-
-  .btq-admin-fields {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-
-  .btq-admin-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-top: 0.4rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.06);
-  }
-
   /* Sticky Bottom Bar */
   .admin-sticky-bottom-bar {
     position: fixed;
@@ -1305,7 +2199,7 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
 
     loadSavedAdminData();
 
-    // Image preview live change
+    // Live image URL preview
     document.querySelectorAll('.svc-image-input').forEach(input => {
       input.addEventListener('input', (e) => {
         const val = (e.target as HTMLInputElement).value;
@@ -1315,7 +2209,107 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
       });
     });
 
-    // Delete service item
+    // Section 2: Accordion toggle for the 5 Pillars
+    document.querySelectorAll('.accordion-toggle-head').forEach(head => {
+      head.addEventListener('click', () => {
+        const card = head.closest('.service-editor-card');
+        const body = card?.querySelector('.accordion-body') as HTMLElement | null;
+        if (body) {
+          const isFolded = body.classList.contains('folded');
+          if (isFolded) {
+            body.classList.remove('folded');
+            head.classList.add('expanded');
+          } else {
+            body.classList.add('folded');
+            head.classList.remove('expanded');
+          }
+        }
+      });
+    });
+
+    // Section 2: Interactive Cloudinary Upload for Service Backgrounds
+    document.querySelectorAll('.svc-file-upload-input').forEach(inputEl => {
+      inputEl.addEventListener('change', async (e) => {
+        const file = (inputEl as HTMLInputElement).files?.[0];
+        if (!file) return;
+
+        const card = inputEl.closest('.service-editor-card');
+        const statusSpan = card?.querySelector('.file-upload-status') as HTMLElement | null;
+        const thumbImg = card?.querySelector('.svc-thumb-img') as HTMLImageElement | null;
+        const imgInput = card?.querySelector('.svc-image-input') as HTMLInputElement | null;
+
+        if (statusSpan) {
+          statusSpan.textContent = '⏳ Téléversement vers Cloudinary...';
+          statusSpan.style.color = 'var(--gold-400)';
+        }
+
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('serviceType', 'pôle_background');
+          formData.append('customerName', 'Admin Studio Super U');
+
+          const res = await fetch('/api/upload/photo', {
+            method: 'POST',
+            body: formData
+          });
+          const data = await res.json();
+
+          if (data.success && data.secureUrl) {
+            if (imgInput) imgInput.value = data.secureUrl;
+            if (thumbImg) thumbImg.src = data.secureUrl;
+            if (statusSpan) {
+              statusSpan.textContent = '✅ Image téléversée sur Cloudinary !';
+              statusSpan.style.color = '#4ade80';
+            }
+          } else {
+            if (statusSpan) {
+              statusSpan.textContent = '❌ Erreur : ' + (data.error || 'Échec');
+              statusSpan.style.color = '#f87171';
+            }
+          }
+        } catch (err: any) {
+          if (statusSpan) {
+            statusSpan.textContent = '❌ Erreur réseau lors du transfert';
+            statusSpan.style.color = '#f87171';
+          }
+        }
+      });
+    });
+
+    // Card In-Place Expansion / Collapse for Sections 3, 4, 5
+    document.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+
+      // Click on collapse button
+      const collapseBtn = target.closest('.btn-collapse-card');
+      if (collapseBtn) {
+        e.stopPropagation();
+        const card = collapseBtn.closest('.prod-admin-card, .pkg-admin-card, .btq-admin-card');
+        card?.classList.remove('expanded');
+        return;
+      }
+
+      // If clicked inside inputs, buttons, selects, or labels of an already expanded card, do not collapse
+      if (target.closest('input, textarea, select, button, a, label')) {
+        return;
+      }
+
+      // Click on a card to expand it
+      const card = target.closest('.prod-admin-card, .pkg-admin-card, .btq-admin-card') as HTMLElement | null;
+      if (card) {
+        if (!card.classList.contains('expanded')) {
+          // Collapse sibling cards in the same container
+          const container = card.parentElement;
+          container?.querySelectorAll('.prod-admin-card.expanded, .pkg-admin-card.expanded, .btq-admin-card.expanded').forEach(sibling => {
+            sibling.classList.remove('expanded');
+          });
+          card.classList.add('expanded');
+        }
+      }
+    });
+
+    // Delete items in cards
     document.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target.classList.contains('del-svc-item-btn')) {
@@ -1339,7 +2333,7 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
       }
     });
 
-    // Add service item
+    // Add service item in Section 2
     document.querySelectorAll('.add-svc-item-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const card = btn.closest('.service-editor-card');
@@ -1357,49 +2351,76 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
       });
     });
 
-    // Add seasonal product
+    // Add seasonal product (Section 3: Compact 150px with in-place expansion)
     document.getElementById('btn-add-seasonal-prod')?.addEventListener('click', () => {
       const list = document.getElementById('seasonal-prods-admin-list');
       if (!list) return;
+
+      // Collapse existing expanded cards
+      list.querySelectorAll('.prod-admin-card.expanded').forEach(c => c.classList.remove('expanded'));
+
       const id = 'prod-' + Date.now();
       const div = document.createElement('div');
-      div.className = 'prod-admin-card';
+      div.className = 'prod-admin-card expanded';
       div.setAttribute('data-prod-id', id);
       div.innerHTML = `
         <div class="prod-admin-media">
           <img src="/images/boutique-gifts.jpg" alt="Nouveau produit" class="prod-admin-img" />
         </div>
         <div class="prod-admin-form">
-          <div class="prod-row-1">
-            <input type="text" class="adm-input prod-name-input" value="Nouveau Produit Saisonnier" placeholder="Nom du produit" />
-            <select class="adm-select prod-season-select">
-              <option value="rentree">Rentrée Scolaire</option>
-              <option value="noel">Fêtes & Noël</option>
-              <option value="mariages">Cérémonies & Mariages</option>
-              <option value="hightech">High-Tech & Gaming</option>
-            </select>
+          <div class="prod-admin-compact-preview">
+            <span class="prod-compact-name">Nouveau Produit Saisonnier</span>
+            <span class="prod-compact-price">10 000 FCFA</span>
+            <span class="field-hint" style="font-size:0.7rem; color:var(--gold-400);">👆 Cliquer pour modifier</span>
           </div>
-          <div class="prod-row-2">
-            <input type="number" class="adm-input prod-price-input" value="10000" placeholder="Prix FCFA" />
-            <input type="text" class="adm-input prod-badge-input" value="Nouveauté" placeholder="Badge promo" />
-            <input type="text" class="adm-input prod-img-input" value="/images/boutique-gifts.jpg" placeholder="URL Image" />
-          </div>
-          <input type="text" class="adm-input prod-desc-input" value="Description courte du produit..." placeholder="Courte description" />
-          <div class="prod-row-del">
-            <button type="button" class="btn-del-prod del-seasonal-prod-btn">🗑️ Supprimer ce produit</button>
+          <div class="prod-admin-full-fields">
+            <div class="prod-row-1">
+              <input type="text" class="adm-input prod-name-input" value="Nouveau Produit Saisonnier" placeholder="Nom du produit" />
+              <select class="adm-select prod-season-select">
+                <option value="rentree">Rentrée Scolaire</option>
+                <option value="noel">Fêtes & Noël</option>
+                <option value="mariages">Cérémonies & Mariages</option>
+                <option value="hightech">High-Tech & Gaming</option>
+              </select>
+            </div>
+            <div class="prod-row-2">
+              <input type="number" class="adm-input prod-price-input" value="10000" placeholder="Prix FCFA" />
+              <input type="text" class="adm-input prod-badge-input" value="Nouveauté" placeholder="Badge promo" />
+              <input type="text" class="adm-input prod-img-input" value="/images/boutique-gifts.jpg" placeholder="URL Image" />
+            </div>
+            <input type="text" class="adm-input prod-desc-input" value="Description courte du produit..." placeholder="Courte description" />
+            <div class="prod-row-del">
+              <button type="button" class="btn-collapse-card">▲ Réduire</button>
+              <button type="button" class="btn-del-prod del-seasonal-prod-btn">🗑️ Supprimer ce produit</button>
+            </div>
           </div>
         </div>
       `;
       list.prepend(div);
+
+      div.querySelector('.prod-name-input')?.addEventListener('input', (e) => {
+        const val = (e.target as HTMLInputElement).value;
+        const nameSpan = div.querySelector('.prod-compact-name');
+        if (nameSpan) nameSpan.textContent = val || 'Nouveau Produit';
+      });
+
+      div.querySelector('.prod-img-input')?.addEventListener('input', (e) => {
+        const val = (e.target as HTMLInputElement).value;
+        const img = div.querySelector('.prod-admin-img') as HTMLImageElement;
+        if (img) img.src = val;
+      });
     });
 
-    // Add pricing package
+    // Add pricing package (Section 4: 3 cols desktop / 2 mobile with 100% expansion)
     document.getElementById('btn-add-pricing-pkg')?.addEventListener('click', () => {
       const list = document.getElementById('pricing-pkgs-admin-list');
       if (!list) return;
+
+      list.querySelectorAll('.pkg-admin-card.expanded').forEach(c => c.classList.remove('expanded'));
+
       const id = 'pkg-' + Date.now();
       const div = document.createElement('div');
-      div.className = 'pkg-admin-card';
+      div.className = 'pkg-admin-card expanded';
       div.setAttribute('data-pkg-id', id);
       div.innerHTML = `
         <div class="pkg-admin-row-top">
@@ -1417,19 +2438,25 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
             <input type="checkbox" class="pkg-popular-checkbox" />
             <span>Formule la plus populaire (Mise en avant or)</span>
           </label>
-          <button type="button" class="btn-del-prod del-pricing-pkg-btn">🗑️ Supprimer cette formule</button>
+          <div style="display:flex; gap:0.6rem; align-items:center;">
+            <button type="button" class="btn-collapse-card">▲ Réduire</button>
+            <button type="button" class="btn-del-prod del-pricing-pkg-btn">🗑️ Supprimer cette formule</button>
+          </div>
         </div>
       `;
       list.prepend(div);
     });
 
-    // Add boutique article
+    // Add boutique article (Section 5: 4 cols desktop / 2 mobile with in-place expansion)
     document.getElementById('btn-add-boutique-prod')?.addEventListener('click', () => {
       const list = document.getElementById('boutique-admin-list');
       if (!list) return;
+
+      list.querySelectorAll('.btq-admin-card.expanded').forEach(c => c.classList.remove('expanded'));
+
       const id = 'btq-' + Date.now();
       const div = document.createElement('div');
-      div.className = 'btq-admin-card';
+      div.className = 'btq-admin-card expanded';
       div.setAttribute('data-btq-id', id);
       div.innerHTML = `
         <div class="btq-admin-top">
@@ -1458,14 +2485,23 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
             <input type="checkbox" class="btq-stock-checkbox" checked />
             <span>Article en stock au Super U</span>
           </label>
-          <button type="button" class="btn-del-prod del-btq-prod-btn">🗑️ Supprimer</button>
+          <div style="display:flex; gap:0.6rem; align-items:center;">
+            <button type="button" class="btn-collapse-card">▲ Réduire</button>
+            <button type="button" class="btn-del-prod del-btq-prod-btn">🗑️ Supprimer</button>
+          </div>
         </div>
       `;
       list.prepend(div);
+
+      div.querySelector('.btq-img-input')?.addEventListener('input', (e) => {
+        const val = (e.target as HTMLInputElement).value;
+        const img = div.querySelector('.btq-admin-thumb') as HTMLImageElement;
+        if (img) img.src = val;
+      });
     });
 
     // Save all form data
-    function saveAllAdminData() {
+    async function saveAllAdminData() {
       const name = (document.getElementById('adm-name') as HTMLInputElement).value;
       const phoneFormatted = (document.getElementById('adm-phone') as HTMLInputElement).value;
       const whatsappFormatted = (document.getElementById('adm-whatsapp') as HTMLInputElement).value;
@@ -1580,6 +2616,17 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
         });
       });
 
+      // Extract Yango Delivery Tiers
+      const yangoTiersCustom: any[] = [];
+      document.querySelectorAll('.yango-tier-card').forEach(card => {
+        const id = card.getAttribute('data-tier-id') || `tier-${Date.now()}`;
+        const zone = (card.querySelector('.tier-zone-input') as HTMLInputElement)?.value || '';
+        const maxKm = parseFloat((card.querySelector('.tier-km-input') as HTMLInputElement)?.value || '0');
+        const fee = parseInt((card.querySelector('.tier-fee-input') as HTMLInputElement)?.value || '0', 10);
+        const label = (card.querySelector('.tier-label-input') as HTMLInputElement)?.value || '';
+        yangoTiersCustom.push({ id, zone, maxKm, fee, label });
+      });
+
       const fullConfig = {
         name,
         phoneFormatted,
@@ -1599,26 +2646,252 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
         servicesCustom,
         seasonalProductsCustom,
         pricingPackagesCustom,
-        boutiqueProductsCustom
+        boutiqueProductsCustom,
+        yangoDelivery: {
+          baseLocation: "Super U Deux Plateaux, Cocody Abidjan",
+          tiers: yangoTiersCustom
+        }
       };
 
       localStorage.setItem('bcps_site_data', JSON.stringify(fullConfig));
 
-      if ((window as any).showToast) {
-        (window as any).showToast('Toutes les modifications ont été enregistrées et appliquées en direct !', '✅');
-      } else {
-        alert('Toutes les modifications ont été enregistrées et appliquées en direct !');
+      // Persist to MongoDB Atlas via /api/site-data
+      try {
+        const res = await fetch('/api/site-data', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fullConfig)
+        });
+        const json = await res.json();
+        if (json.success) {
+          if ((window as any).showToast) {
+            (window as any).showToast('Données enregistrées avec succès dans MongoDB Atlas & en local !', '✅');
+          } else {
+            alert('Données enregistrées avec succès dans MongoDB Atlas & en local !');
+          }
+        } else {
+          alert('Sauvegardé en local (avertissement MongoDB : ' + json.error + ')');
+        }
+      } catch (err: any) {
+        if ((window as any).showToast) {
+          (window as any).showToast('Sauvegardé en local (erreur réseau MongoDB)', '⚠️');
+        }
       }
     }
 
-    form?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      saveAllAdminData();
+    // Yango Tiers CRUD
+    document.getElementById('btn-add-yango-tier')?.addEventListener('click', () => {
+      const list = document.getElementById('yango-tiers-admin-list');
+      if (!list) return;
+      const newId = `tier-${Date.now()}`;
+      const div = document.createElement('div');
+      div.className = 'yango-tier-card';
+      div.setAttribute('data-tier-id', newId);
+      div.innerHTML = `
+        <div class="yango-tier-row">
+          <div class="field-item">
+            <label>Nom de la Zone</label>
+            <input type="text" class="adm-input tier-zone-input" value="Nouvelle Zone" placeholder="Ex: Zone 5" />
+          </div>
+          <div class="field-item">
+            <label>Rayon Max (km)</label>
+            <input type="number" class="adm-input tier-km-input" value="15" placeholder="15" />
+          </div>
+          <div class="field-item">
+            <label>Frais Yango (FCFA)</label>
+            <input type="number" class="adm-input tier-fee-input" value="3500" placeholder="3500" />
+          </div>
+          <div class="field-item full-width">
+            <label>Quartiers & Repères inclus</label>
+            <input type="text" class="adm-input tier-label-input" value="" placeholder="Quartiers desservis..." />
+          </div>
+        </div>
+        <div class="tier-card-del">
+          <button type="button" class="btn-del-prod del-yango-tier-btn">
+            🗑️ Supprimer ce palier
+          </button>
+        </div>
+      `;
+      div.querySelector('.del-yango-tier-btn')?.addEventListener('click', () => div.remove());
+      list.appendChild(div);
     });
 
-    topSaveBtn?.addEventListener('click', () => {
-      saveAllAdminData();
+    document.querySelectorAll('.del-yango-tier-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        (e.target as HTMLElement).closest('.yango-tier-card')?.remove();
+      });
     });
+
+    // Records Dashboard (MongoDB Atlas)
+    async function loadAdminRecords() {
+      try {
+        const res = await fetch('/api/admin/records');
+        const json = await res.json();
+        if (!json.success || !json.data) return;
+
+        const { orders, repairRequests, photoUploads, gamingCallbacks, fastpasses } = json.data;
+
+        const statOrders = document.getElementById('stat-orders-count');
+        const statRepairs = document.getElementById('stat-repairs-count');
+        const statPhotos = document.getElementById('stat-photos-count');
+        const statFastpass = document.getElementById('stat-fastpass-count');
+
+        if (statOrders) statOrders.textContent = (orders?.length || 0).toString();
+        if (statRepairs) statRepairs.textContent = (repairRequests?.length || 0).toString();
+        if (statPhotos) statPhotos.textContent = (photoUploads?.length || 0).toString();
+        if (statFastpass) statFastpass.textContent = (fastpasses?.length || 0).toString();
+
+        // Orders List
+        const ordersGrid = document.getElementById('orders-list-grid');
+        const ordersEmpty = document.getElementById('orders-list-empty');
+        if (ordersGrid && ordersEmpty) {
+          if (!orders || orders.length === 0) {
+            ordersEmpty.textContent = 'Aucune commande PayDunya pour le moment.';
+            ordersEmpty.style.display = 'block';
+            ordersGrid.innerHTML = '';
+          } else {
+            ordersEmpty.style.display = 'none';
+            ordersGrid.innerHTML = orders.map((o: any) => `
+              <div class="record-card">
+                <div class="record-card-head">
+                  <span class="record-id font-mono">${o.orderId || 'BCPS'}</span>
+                  <span class="record-status ${o.status === 'paid' ? 'status-paid' : 'status-pending'}">
+                    ${o.status === 'paid' ? '✅ PAYÉ' : '⏳ EN ATTENTE'}
+                  </span>
+                </div>
+                <div class="record-card-body">
+                  <strong>${o.title || 'Commande Boutique'}</strong>
+                  <div class="record-meta">
+                    <span>Client : <strong>${o.customerName || 'Inconnu'}</strong> (${o.customerPhone || 'N/A'})</span>
+                    <span class="record-amount gold-gradient-text font-serif">${(o.amount || 0).toLocaleString('fr-FR')} FCFA</span>
+                  </div>
+                  <div class="record-items-mini">
+                    ${(o.items || []).map((i: any) => `• ${i.name} (x${i.quantity || 1})`).join('<br/>')}
+                  </div>
+                  ${o.deliveryAddress ? `<div class="record-addr">📍 Adresse : ${o.deliveryAddress}</div>` : ''}
+                </div>
+                <div class="record-card-foot">
+                  <span class="record-date">${new Date(o.createdAt).toLocaleString('fr-FR')}</span>
+                  ${o.paymentToken ? `<a href="/checkout/simulate?token=${o.paymentToken}" target="_blank" class="record-link">Lien PayDunya / Test ›</a>` : ''}
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Repairs List
+        const repairsGrid = document.getElementById('repairs-list-grid');
+        const repairsEmpty = document.getElementById('repairs-list-empty');
+        if (repairsGrid && repairsEmpty) {
+          if (!repairRequests || repairRequests.length === 0) {
+            repairsEmpty.style.display = 'block';
+            repairsGrid.innerHTML = '';
+          } else {
+            repairsEmpty.style.display = 'none';
+            repairsGrid.innerHTML = repairRequests.map((r: any) => `
+              <div class="record-card">
+                <div class="record-card-head">
+                  <span class="record-id font-mono">${r.requestId || 'REP'}</span>
+                  <span class="record-status status-blue">⚡ RÉPARATION</span>
+                </div>
+                <div class="record-card-body">
+                  <strong>${r.brand || ''} ${r.model || ''}</strong>
+                  <p class="record-desc-text">Panne : ${r.issueType || ''} (${r.issueDescription || ''})</p>
+                  <div class="record-meta">
+                    <span>Contact : ${r.customerName} (${r.customerPhone})</span>
+                  </div>
+                  ${r.withYangoPickup ? `
+                    <div class="record-yango-badge">
+                      🛵 Coursier Yango demandé : <strong>${r.pickupAddress || ''}</strong>
+                      <br/>Distance : ${r.estimatedDistanceKm || 0} km • Frais : ${(r.yangoFee || 0).toLocaleString('fr-FR')} F
+                    </div>
+                  ` : '<div class="record-addr">Dépôt par le client au Super U</div>'}
+                </div>
+                <div class="record-card-foot">
+                  <span class="record-date">${new Date(r.createdAt).toLocaleString('fr-FR')}</span>
+                  <a href="https://wa.me/225${r.customerPhone}" target="_blank" class="record-link">Contacter Client WhatsApp ›</a>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Photos List
+        const photosGrid = document.getElementById('photos-list-grid');
+        const photosEmpty = document.getElementById('photos-list-empty');
+        if (photosGrid && photosEmpty) {
+          if (!photoUploads || photoUploads.length === 0) {
+            photosEmpty.style.display = 'block';
+            photosGrid.innerHTML = '';
+          } else {
+            photosEmpty.style.display = 'none';
+            photosGrid.innerHTML = photoUploads.map((p: any) => `
+              <div class="record-card photo-rec-card">
+                ${p.cloudinaryUrl ? `<img src="${p.cloudinaryUrl}" alt="Photo upload" class="rec-photo-thumb" />` : ''}
+                <div class="record-card-body">
+                  <strong>${p.serviceType || 'Tirage Photo'}</strong>
+                  <div class="record-meta">
+                    <span>Client : ${p.customerName || 'N/A'} (${p.customerPhone || 'N/A'})</span>
+                  </div>
+                  ${p.notes ? `<p class="record-desc-text">${p.notes}</p>` : ''}
+                  <a href="${p.cloudinaryUrl || p.originalUrl}" target="_blank" class="record-link">Voir l'image Cloudinary HD ›</a>
+                </div>
+                <div class="record-card-foot">
+                  <span class="record-date">${new Date(p.createdAt).toLocaleString('fr-FR')}</span>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Callbacks List
+        const callbacksGrid = document.getElementById('callbacks-list-grid');
+        const callbacksEmpty = document.getElementById('callbacks-list-empty');
+        if (callbacksGrid && callbacksEmpty) {
+          if (!gamingCallbacks || gamingCallbacks.length === 0) {
+            callbacksEmpty.style.display = 'block';
+            callbacksGrid.innerHTML = '';
+          } else {
+            callbacksEmpty.style.display = 'none';
+            callbacksGrid.innerHTML = gamingCallbacks.map((c: any) => `
+              <div class="record-card">
+                <div class="record-card-head">
+                  <span class="record-id font-mono">RAPPEL</span>
+                  <span class="record-status status-gold">📞 RAPPEL REQUIS</span>
+                </div>
+                <div class="record-card-body">
+                  <strong>${c.phone}</strong>
+                  <p class="record-desc-text">Article recherché : ${c.interest || 'Conseil Gaming / Accessoires'}</p>
+                </div>
+                <div class="record-card-foot">
+                  <span class="record-date">${new Date(c.createdAt).toLocaleString('fr-FR')}</span>
+                  <a href="tel:${c.phone}" class="record-link">Appeler le Client ›</a>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (err) {
+        console.error('Failed to load admin records:', err);
+      }
+    }
+
+    // Records Tab Buttons
+    document.querySelectorAll('.rec-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.rec-tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.rec-tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const tabName = btn.getAttribute('data-rec-tab');
+        const panel = document.getElementById(`rec-panel-${tabName}`);
+        if (panel) panel.classList.add('active');
+      });
+    });
+
+    document.getElementById('btn-refresh-records')?.addEventListener('click', loadAdminRecords);
+
+    // Initial load
+    loadAdminRecords();
 
     // Export JSON
     exportBtn?.addEventListener('click', () => {
@@ -1660,6 +2933,132 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
       }
     });
 
+    // Save Form bindings
+    topSaveBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      saveAllAdminData();
+    });
+
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveAllAdminData();
+    });
+
+    // Step-by-Step Single Section Navigation System
+    const sections = document.querySelectorAll('.admin-card-section');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    const stepperSteps = document.querySelectorAll('.stepper-step');
+
+    function switchSection(targetId: string) {
+      let found = false;
+      sections.forEach(sec => {
+        if (sec.id === targetId) {
+          sec.classList.add('active-section');
+          found = true;
+        } else {
+          sec.classList.remove('active-section');
+        }
+      });
+
+      if (!found && sections.length > 0) {
+        sections[0].classList.add('active-section');
+        targetId = sections[0].id;
+      }
+
+      sidebarLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href === `#${targetId}`) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+
+      stepperSteps.forEach(step => {
+        if (step.getAttribute('data-step-target') === targetId) {
+          step.classList.add('active');
+          step.setAttribute('aria-selected', 'true');
+          step.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        } else {
+          step.classList.remove('active');
+          step.setAttribute('aria-selected', 'false');
+        }
+      });
+
+      try {
+        history.replaceState(null, '', `#${targetId}`);
+      } catch (e) {}
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Sidebar links click
+    sidebarLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        if (href) switchSection(href.replace('#', ''));
+      });
+    });
+
+    // Stepper tab buttons click
+    stepperSteps.forEach(step => {
+      step.addEventListener('click', () => {
+        const targetId = step.getAttribute('data-step-target');
+        if (targetId) switchSection(targetId);
+      });
+    });
+
+    // Footer Next / Previous / Quick Save clicks
+    document.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest('.btn-nav-step') as HTMLElement | null;
+      if (btn) {
+        e.preventDefault();
+        const targetId = btn.getAttribute('data-nav-target');
+        if (targetId) switchSection(targetId);
+      }
+      if ((e.target as HTMLElement).closest('.btn-admin-quick-save')) {
+        e.preventDefault();
+        saveAllAdminData();
+      }
+    });
+
+    // Initial Active Section on Load (support URL hash e.g. #sec-pricing)
+    const initialHash = window.location.hash?.replace('#', '');
+    if (initialHash && document.getElementById(initialHash)) {
+      switchSection(initialHash);
+    } else {
+      switchSection('sec-orders');
+    }
+
+    // Admin Security PIN Unlock Modal
+    const authOverlay = document.getElementById('admin-auth-overlay');
+    const pinForm = document.getElementById('admin-pin-form');
+    const pinInput = document.getElementById('admin-pin-input') as HTMLInputElement | null;
+    const pinError = document.getElementById('pin-error-msg');
+
+    const isUnlocked = sessionStorage.getItem('bcps_admin_unlocked') === 'true';
+    if (!isUnlocked && authOverlay) {
+      authOverlay.style.display = 'flex';
+      setTimeout(() => pinInput?.focus(), 150);
+    }
+
+    pinForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = pinInput?.value.trim() || '';
+      // Support master pin 1234, sococe, or bcps2026
+      if (val === '1234' || val === 'bcps2026' || val === 'sococe') {
+        sessionStorage.setItem('bcps_admin_unlocked', 'true');
+        if (authOverlay) authOverlay.style.display = 'none';
+      } else {
+        if (pinError) pinError.style.display = 'block';
+        if (pinInput) {
+          pinInput.value = '';
+          pinInput.focus();
+        }
+      }
+    });
+
     // Anchor & Fixed Alignment for Left Sidebar
     function alignAdminSidebar() {
       const sidebar = document.querySelector('.admin-nav-sidebar') as HTMLElement;
@@ -1683,29 +3082,6 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
     alignAdminSidebar();
     window.addEventListener('resize', alignAdminSidebar);
     window.addEventListener('scroll', alignAdminSidebar, { passive: true });
-
-    // Scrollspy for sidebar links
-    const sections = document.querySelectorAll('.admin-card-section');
-    const sidebarLinks = document.querySelectorAll('.sidebar-link');
-    
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const secId = entry.target.getAttribute('id');
-            sidebarLinks.forEach(link => {
-              if (link.getAttribute('href') === `#${secId}`) {
-                link.classList.add('active');
-              } else {
-                link.classList.remove('active');
-              }
-            });
-          }
-        });
-      }, { rootMargin: '-20% 0px -65% 0px' });
-
-      sections.forEach(sec => observer.observe(sec));
-    }
   }
 
   if (document.readyState === 'loading') {

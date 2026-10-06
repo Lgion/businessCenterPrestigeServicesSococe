@@ -45,12 +45,20 @@ export interface PricingItem {
 export interface BoutiqueProduct {
   id: string;
   category: string;
+  mainSection?: 'hightech' | 'maroquinerie';
   name: string;
   price: number;
   badge: string;
   description: string;
   image: string;
   inStock: boolean;
+}
+
+export interface YangoTier {
+  id: string;
+  zone: string;
+  distance: string;
+  price: number;
 }
 
 export interface SiteData {
@@ -102,6 +110,10 @@ export interface SiteData {
   };
   pricingPackages: PricingItem[];
   boutiqueProducts: BoutiqueProduct[];
+  yangoDelivery: {
+    enabled: boolean;
+    tiers: YangoTier[];
+  };
   reasonsToChoose: Array<{
     title: string;
     description: string;
@@ -192,61 +204,61 @@ export const defaultSiteData: SiteData = {
       actionMessage: "Bonjour, j'ai besoin d'un devis de réparation pour mon téléphone (marque / modèle / problème) :"
     },
     {
-      id: "electronique-gaming",
+      id: "boutique-produits",
       number: "03",
-      title: "Électronique, Accessoires & Gaming",
-      subtitle: "Le meilleur de la connectique, du son et du divertissement",
-      badge: "Marques Certifiées",
-      popularTag: "Gaming & Accessoires",
+      title: "Boutique Prestige : High-Tech & Maroquinerie",
+      subtitle: "Le meilleur de la connectique, du gaming, des sacs de luxe & montres",
+      badge: "Rayons Certifiés",
+      popularTag: "High-Tech & Maroquinerie",
       image: "/images/service-gaming-tech.jpg",
-      icon: "cpu",
+      icon: "shopping-bag",
       items: [
-        "Smartphones neufs & reconditionnés garantis, tablettes et PC",
-        "Univers Gaming : Manettes PS2, PS3, PS4, PS5, consoles et jeux vidéo",
-        "Câbles blindés haute résistance & chargeurs ultra-rapides smartphone / PC",
-        "Casques audio immersifs, écouteurs sans fil, souris et claviers",
-        "Power banks haute capacité, verres trempés 9D et coques antichoc de luxe"
+        "Produits High-Tech & Gaming : Manettes PS4/PS5, câbles blindés, chargeurs rapides, écouteurs, power banks",
+        "Maroquinerie fine : Sacs à main femmes, sacoches hommes, portefeuilles élégants en cuir véritable",
+        "Horlogerie & Piles : Montres de prestige, service de remplacement immédiat de pile de montre et clé auto",
+        "Bijoux & Idées Cadeaux : Chaînes, gourmettes étincelantes et cadres photo raffinés",
+        "Scolaire & Accessoires : Sacs à dos ergonomiques, calculatrices scientifiques et gourdes isothermes"
       ],
-      actionText: "Consulter la Boutique Tech",
-      actionMessage: "Bonjour, je recherche un accessoire ou une manette de jeu. Avez-vous en stock :"
+      actionText: "Ouvrir la Boutique",
+      actionMessage: "Bonjour, je souhaite commander un article en boutique (High-Tech ou Maroquinerie) :"
     },
     {
-      id: "boutique-cadeaux",
+      id: "bureautique-pao",
       number: "04",
-      title: "Boutique Cadeaux, Montres & Maroquinerie",
-      subtitle: "Élégance du quotidien, maroquinerie soignée et articles cadeaux",
-      badge: "Sélection Exclusive",
-      popularTag: "Idée Cadeau",
-      image: "/images/service-boutique-cadeaux.jpg",
-      icon: "gift",
+      title: "Bureautique, Impression & PAO Professionnelle",
+      subtitle: "Impressions haute fidélité, reliures soignées, création graphique & démarches",
+      badge: "Atelier Pro",
+      popularTag: "Impression Laser HD",
+      image: "/images/service-bureautique-transferts.jpg",
+      icon: "printer",
       items: [
-        "Cadres photo raffinés en bois noble, métal doré et verre biseauté",
-        "Bijoux étincelants pour hommes, femmes et enfants (chaînes, gourmettes)",
-        "Montres de prestige & service de remplacement immédiat de pile de montre et clé auto",
-        "Maroquinerie fine : sacs à main femmes, sacoches hommes, portefeuilles élégants",
-        "Sacs à dos scolaires ergonomiques, gourdes isothermes design, calculatrices"
+        "Photocopies et impressions laser haute fidélité (noir & blanc et couleur)",
+        "PAO & Création Graphique : Conception & impression de flyers, cartes de visite, affiches et bâches",
+        "Saisie de documents, rédaction de CV percutants, mémoires d'études et reliures spirales",
+        "Assistance démarches administratives officielles & inscriptions aux concours (ENA, CAFOP, Police)",
+        "Numérisation haute définition 600 DPI vers email, clé USB ou WhatsApp"
       ],
-      actionText: "Voir les Articles Cadeaux",
-      actionMessage: "Bonjour, j'aimerais voir vos modèles de montres, sacs ou bijoux disponibles en boutique."
+      actionText: "Imprimer / Projet PAO",
+      actionMessage: "Bonjour, j'ai des documents ou un projet d'impression / PAO à réaliser au Super U :"
     },
     {
-      id: "bureautique-transferts",
+      id: "mobile-money",
       number: "05",
-      title: "Bureautique, Démarches & Mobile Money",
-      subtitle: "Vos démarches administratives et opérations financières simplifiées",
-      badge: "Guichet Unique",
-      popularTag: "Mobile Money Intégré",
-      image: "/images/service-bureautique-transferts.jpg",
-      icon: "file-text",
+      title: "Guichet Agréé Mobile Money & Transferts",
+      subtitle: "Dépôts, retraits et transferts d'argent sécurisés sans rupture de liquidité",
+      badge: "Zéro Rupture",
+      popularTag: "Guichet Express VIP",
+      image: "/images/service-mobile-money.jpg",
+      icon: "wallet",
       items: [
-        "Photocopies et impressions haute fidélité (noir & blanc et couleur laser)",
-        "Saisie de documents, rédaction de CV percutants, mémoires et reliures",
-        "Assistance démarches administratives & inscriptions aux concours officiels",
-        "Numérisation haute définition vers email, clé USB ou WhatsApp",
-        "Agence Mobile Money officielle : Dépôts & Retraits Wave, Orange Money, MTN, Push"
+        "Wave Mobile Money : Dépôts et retraits express sécurisés via QR Code",
+        "Orange Money & MTN MoMo : Dépôts, transferts régionaux et retraits instantanés",
+        "Moov Money & Push : Toutes opérations financières et recharges de crédit",
+        "Code Coupe-File VIP en ligne pour un passage prioritaire sans file d'attente au guichet",
+        "Guichet climatisé, confidentiel et sécurisé au sein du Super U avec parking surveillé"
       ],
-      actionText: "Imprimer / Démarche Rapide",
-      actionMessage: "Bonjour, je souhaite imprimer des documents ou faire une démarche administrative."
+      actionText: "Passage Mobile Money Express",
+      actionMessage: "Bonjour, je souhaite effectuer une opération Mobile Money (Wave / Orange / MTN) :"
     }
   ],
   seasonalShowcase: {
@@ -393,42 +405,141 @@ export const defaultSiteData: SiteData = {
       ctaMessage: "Bonjour, je souhaite réserver une séance shooting studio portrait."
     },
     {
-      id: "pack-reparation",
-      title: "Remplacement Écran Smartphone",
-      category: "Réparation",
-      price: "Sur Devis",
-      period: "garantie 3 mois",
+      id: "pack-mariage",
+      title: "Couverture Mariage & Cérémonie",
+      category: "Studio Photo",
+      price: "150 000 FCFA",
+      period: "formule complète",
       features: [
-        "Pièces d'origine & compatibles haut de gamme certifiées",
-        "Intervention en 30 à 45 minutes sur place",
-        "Nettoyage interne & test complet des capteurs",
-        "Pose offerte d'un verre trempé anti-casse",
-        "Garantie 3 mois sur la réparation effectuée"
+        "Couverture mairie, église / mosquée et vin d'honneur",
+        "Photographe et cadreur vidéo professionnels dédiés",
+        "Album livre photo relié grand format prestige",
+        "Clé USB personnalisée avec toutes les photos HD",
+        "Film rétrospective monté et étalonné en 4K"
       ],
-      ctaText: "Demander mon Devis WhatsApp",
-      ctaMessage: "Bonjour, quel est le tarif pour changer l'écran de mon téléphone :"
+      ctaText: "Devis Mariage & Cérémonie",
+      ctaMessage: "Bonjour, je souhaite des informations sur le pack Mariage / Cérémonie."
+    },
+    {
+      id: "pack-reparation-ecran",
+      title: "Remplacement Écran Smartphone",
+      category: "Réparation Tech",
+      price: "Sur Devis",
+      period: "dès 12 000 F • garantie 3 mois",
+      popular: true,
+      features: [
+        "Écrans OLED & LCD d'origine certifiés toutes marques",
+        "Intervention express en 30 minutes sur place",
+        "Nettoyage interne & test complet des capteurs",
+        "Pose offerte d'un verre trempé haute protection 9D",
+        "Option coursier Yango disponible à domicile"
+      ],
+      ctaText: "Demander Devis Écran",
+      ctaMessage: "Bonjour, j'ai besoin d'un devis pour changer l'écran de mon smartphone :"
+    },
+    {
+      id: "pack-reparation-batterie",
+      title: "Changement Batterie Haute Tenue",
+      category: "Réparation Tech",
+      price: "Sur Devis",
+      period: "dès 8 000 F • prêt en 20 min",
+      features: [
+        "Batteries neuves de qualité d'origine certifiées",
+        "Remplacement express en 20 minutes chrono",
+        "Diagnostic complet du circuit de charge offert",
+        "Garantie 3 mois sur la pièce installée",
+        "Possibilité d'enlèvement et retour via Yango"
+      ],
+      ctaText: "Devis Batterie Neuve",
+      ctaMessage: "Bonjour, je souhaite faire remplacer la batterie de mon téléphone :"
+    },
+    {
+      id: "pack-chargeur",
+      title: "Pack Charge Rapide 35W Duo & Câble",
+      category: "Gaming & High-Tech",
+      price: "13 000 FCFA",
+      period: "pack certifié",
+      features: [
+        "Bloc secteur 35W Power Delivery à double port USB-C",
+        "Câble blindé nylon tressé 2 mètres ultra résistant",
+        "Protection anti-surtension & régulation thermique",
+        "Compatible iPhone, Samsung, Xiaomi et consoles",
+        "Garantie remplacement 6 mois au Super U"
+      ],
+      ctaText: "Commander ce Pack Tech",
+      ctaMessage: "Bonjour, je souhaite réserver le Pack Charge Rapide 35W Duo."
+    },
+    {
+      id: "pack-gaming",
+      title: "Manette Sans Fil PS4 / PS5 Gamer Pro",
+      category: "Gaming & High-Tech",
+      price: "25 000 FCFA",
+      period: "manette neuve garantie",
+      features: [
+        "Manette sans fil officielle avec vibrations immersives",
+        "Batterie rechargeable longue tenue & pavé tactile précis",
+        "Testée et vérifiée sur console avant retrait",
+        "Câble de recharge offert inclus",
+        "Retrait comptoir immédiat ou livraison Abidjan"
+      ],
+      ctaText: "Réserver ma Manette",
+      ctaMessage: "Bonjour, je souhaite réserver une manette PS4/PS5 gamer."
+    },
+    {
+      id: "pack-montre",
+      title: "Montre Chronographe & Pile Incluse",
+      category: "Maroquinerie & Montres",
+      price: "32 000 FCFA",
+      period: "coffret cadeau prestige",
+      popular: true,
+      features: [
+        "Boîtier acier inoxydable & bracelet cuir ou maille milanaise",
+        "Mouvement quartz haute précision & cadran soigné",
+        "Remplacement de pile gratuit à vie au magasin",
+        "Écrin velours & emballage cadeau de luxe offerts",
+        "Gravure personnalisée disponible sur demande"
+      ],
+      ctaText: "Voir les Montres Disponibles",
+      ctaMessage: "Bonjour, je souhaite voir les modèles de montres du coffret prestige."
     },
     {
       id: "pack-impressions",
-      title: "Forfait Impression & Reliure",
-      category: "Bureautique",
+      title: "Forfait Impression & Reliure Dossier",
+      category: "Bureautique & Documents",
       price: "Dégressif",
       period: "dès 50 F la page",
       features: [
-        "Laser noir & blanc et couleur haute précision",
-        "Papier 80g à 250g couché ou cartonné",
-        "Reliure spirale plastique ou métallique",
-        "Plastification de documents officiels",
-        "Réductions importantes pour mémoires & gros volumes"
+        "Impression laser haute fidélité noir & blanc et couleur",
+        "Papier 80g à 250g couché ou cartonné de qualité",
+        "Reliure spirale plastique ou métallique avec transparents",
+        "Plastification de documents officiels et diplômes",
+        "Envoi de vos fichiers PDF par WhatsApp avant passage"
       ],
       ctaText: "Envoyer mes fichiers à imprimer",
       ctaMessage: "Bonjour, j'ai des documents PDF à imprimer en volume, voici les détails :"
+    },
+    {
+      id: "pack-pao",
+      title: "Pack 100 Flyers ou Cartes de Visite",
+      category: "Bureautique & Documents",
+      price: "18 000 FCFA",
+      period: "les 100 exemplaires",
+      features: [
+        "Impression offset ou numérique couleur recto/verso",
+        "Papier épais 300g couché brillant ou mat de prestige",
+        "Aide à la mise en page et vérification du fichier offerte",
+        "Livraison sous 24h à 48h au Super U",
+        "Idéal pour commerçants, entreprises et événements"
+      ],
+      ctaText: "Commander Flyers / Cartes",
+      ctaMessage: "Bonjour, je souhaite imprimer des flyers ou cartes de visite."
     }
   ],
   boutiqueProducts: [
     {
       id: "btq-1",
       category: "gaming",
+      mainSection: "hightech",
       name: "Manette Sans Fil PS4 DualShock v2",
       price: 22000,
       badge: "Top Vente Gaming",
@@ -439,6 +550,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-2",
       category: "gaming",
+      mainSection: "hightech",
       name: "Manette Sans Fil PS5 DualSense Pro",
       price: 45000,
       badge: "Next-Gen",
@@ -449,6 +561,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-3",
       category: "accessoires",
+      mainSection: "hightech",
       name: "Câble Blindé Tressé Charge Rapide (Type-C / Lightning)",
       price: 4500,
       badge: "Ultra Résistant",
@@ -459,6 +572,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-4",
       category: "accessoires",
+      mainSection: "hightech",
       name: "Chargeur Secteur Rapide 35W Duo USB-C",
       price: 9500,
       badge: "Charge Rapide",
@@ -469,6 +583,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-5",
       category: "accessoires",
+      mainSection: "hightech",
       name: "Power Bank Fast Charge 20 000 mAh avec Écran LED",
       price: 16000,
       badge: "Haute Autonomie",
@@ -479,6 +594,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-6",
       category: "maroquinerie",
+      mainSection: "maroquinerie",
       name: "Sac à Dos Ergonomique Imperméable Écolier & PC",
       price: 18000,
       badge: "Spécial Rentrée",
@@ -489,6 +605,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-7",
       category: "maroquinerie",
+      mainSection: "maroquinerie",
       name: "Sacoche Homme Cuir Vintage Élégance",
       price: 24000,
       badge: "Cuir Véritable",
@@ -499,6 +616,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-8",
       category: "maroquinerie",
+      mainSection: "maroquinerie",
       name: "Sac à Main Femme Collection Prestige",
       price: 28000,
       badge: "Édition Limitée",
@@ -509,6 +627,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-9",
       category: "montres",
+      mainSection: "maroquinerie",
       name: "Montre Homme Chronographe Acier & Or",
       price: 32000,
       badge: "Pile Incluse + Garantie",
@@ -519,6 +638,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-10",
       category: "montres",
+      mainSection: "maroquinerie",
       name: "Montre Femme Cadran Nacré & Bracelet Maille",
       price: 26000,
       badge: "Finesse & Luxe",
@@ -529,6 +649,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-11",
       category: "cadeaux",
+      mainSection: "maroquinerie",
       name: "Gourde Isotherme Inox 750ml Double Paroi",
       price: 6500,
       badge: "24h Frais / 12h Chaud",
@@ -539,6 +660,7 @@ export const defaultSiteData: SiteData = {
     {
       id: "btq-12",
       category: "cadeaux",
+      mainSection: "maroquinerie",
       name: "Cadre Photo Prestige Bois Doré & Verre Biseauté",
       price: 8500,
       badge: "Fabrication d'Art",
@@ -547,6 +669,15 @@ export const defaultSiteData: SiteData = {
       inStock: true
     }
   ],
+  yangoDelivery: {
+    enabled: true,
+    tiers: [
+      { id: "zone-1", zone: "Cocody Deux Plateaux / Vallon / Aghien", distance: "0 - 3 km", price: 1500 },
+      { id: "zone-2", zone: "Riviera (2, 3, 4, Palmeraie, Bonoumin, Attoban)", distance: "3 - 8 km", price: 2500 },
+      { id: "zone-3", zone: "Plateau / Adjamé / Marcory / Zone 4", distance: "8 - 15 km", price: 3500 },
+      { id: "zone-4", zone: "Yopougon / Koumassi / Port-Bouët / Bingerville", distance: "15+ km", price: 5000 }
+    ]
+  },
   reasonsToChoose: [
     {
       title: "Emplacement Sécurisé & Idéal",

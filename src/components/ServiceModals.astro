@@ -42,31 +42,12 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
       </div>
     </button>
 
-    <!-- 3. Gaming & Tech Button -->
+    <!-- 3. Boutique (High-Tech & Maroquinerie) Button -->
     <button 
       type="button" 
-      class="quick-fab fab-pole open-gaming-trigger" 
-      title="Gaming, Manettes PS4/PS5 & High-Tech"
-      aria-label="Ouvrir Gaming et Tech"
-    >
-      <div class="fab-inner">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="2" y="6" width="20" height="12" rx="6"></rect>
-          <path d="M6 12h4"></path>
-          <path d="M8 10v4"></path>
-          <circle cx="15" cy="13" r="1"></circle>
-          <circle cx="18" cy="11" r="1"></circle>
-        </svg>
-        <span class="fab-tooltip">3. Manettes PS4/PS5 & Gaming</span>
-      </div>
-    </button>
-
-    <!-- 4. Boutique & Maroquinerie Button -->
-    <button 
-      type="button" 
-      class="quick-fab fab-pole open-boutique-trigger" 
-      title="Boutique Cadeaux, Montres & Sacs"
-      aria-label="Ouvrir la Boutique"
+      class="quick-fab fab-pole open-boutique-modal-trigger" 
+      title="Boutique Prestige : High-Tech & Maroquinerie"
+      aria-label="Ouvrir la Boutique High-Tech & Maroquinerie"
     >
       <div class="fab-inner">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -74,26 +55,40 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
           <line x1="3" y1="6" x2="21" y2="6"></line>
           <path d="M16 10a4 4 0 0 1-8 0"></path>
         </svg>
-        <span class="fab-tooltip">4. Boutique Cadeaux & Maroquinerie</span>
+        <span class="fab-tooltip">3. Boutique High-Tech & Maroquinerie</span>
       </div>
     </button>
 
-    <!-- 5. Bureautique & Mobile Money Button -->
+    <!-- 4. Bureautique & PAO Button -->
     <button 
       type="button" 
       class="quick-fab fab-pole open-bureautique-trigger" 
-      title="Bureautique, Démarches & Mobile Money"
-      aria-label="Ouvrir Bureautique et Mobile Money"
+      title="Bureautique, Impression Laser & PAO"
+      aria-label="Ouvrir Bureautique et PAO"
     >
       <div class="fab-inner">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-          <polyline points="14 2 14 8 20 8"></polyline>
-          <line x1="16" y1="13" x2="8" y2="13"></line>
-          <line x1="16" y1="17" x2="8" y2="17"></line>
-          <polyline points="10 9 9 9 8 9"></polyline>
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
         </svg>
-        <span class="fab-tooltip">5. Bureautique & Wave / Mobile Money</span>
+        <span class="fab-tooltip">4. Bureautique, Reliures & PAO</span>
+      </div>
+    </button>
+
+    <!-- 5. Mobile Money Button -->
+    <button 
+      type="button" 
+      class="quick-fab fab-pole open-mobilemoney-trigger" 
+      title="Guichet Agréé Mobile Money (Wave, Orange, MTN)"
+      aria-label="Ouvrir le Guichet Mobile Money"
+    >
+      <div class="fab-inner">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <line x1="2" y1="10" x2="22" y2="10"></line>
+        </svg>
+        <span class="fab-tooltip">5. Mobile Money & Wave / Orange / MTN</span>
       </div>
     </button>
   </div>
@@ -462,15 +457,15 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
   </div>
 </dialog>
 
-<!-- ================= MODAL 4: BUREAUTIQUE, DÉMARCHES & MOBILE MONEY ================= -->
+<!-- ================= MODAL 4: BUREAUTIQUE, IMPRESSION & PAO ================= -->
 <dialog id="modal-service-bureautique" class="service-dialog" aria-labelledby="bureautique-modal-title">
   <div class="service-modal-wrap">
     <div class="service-modal-header">
       <div class="modal-brand-head">
-        <span class="modal-head-icon">📱</span>
+        <span class="modal-head-icon">🖨️</span>
         <div>
-          <h3 id="bureautique-modal-title" class="modal-head-title font-serif">Bureautique, Démarches & Guichet Mobile Money</h3>
-          <p class="modal-head-sub">Super U Deux Plateaux • Impressions laser, saisie de documents & transferts Wave, Orange, MTN</p>
+          <h3 id="bureautique-modal-title" class="modal-head-title font-serif">Bureautique, Impression & PAO Professionnelle</h3>
+          <p class="modal-head-sub">Super U Deux Plateaux • Impressions laser, reliures, création graphique (flyers/cartes) & démarches</p>
         </div>
       </div>
       <button type="button" class="service-modal-close close-bureautique-btn" aria-label="Fermer la fenêtre">
@@ -486,8 +481,8 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
       <div class="service-banner-box">
         <span class="banner-icon">💼</span>
         <div>
-          <strong>Comptoir bureautique & agence financière agréée au sein du Super U</strong>
-          <p>Un guichet climatisé, confidentiel et sécurisé avec parking surveillé. Zéro rupture de liquidité pour vos dépôts et retraits.</p>
+          <strong>Atelier d'impression laser haute résolution & conception PAO au sein du Super U</strong>
+          <p>Formats A4, A3, papier couché, reliures express et conception graphique de supports commerciaux.</p>
         </div>
       </div>
 
@@ -514,6 +509,24 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
         <!-- Bureau 2 -->
         <div class="modal-feature-card prestige-card">
           <div class="feat-top-row">
+            <span class="feat-badge-pill">Création PAO</span>
+            <span class="feat-price font-serif">Pack dès 15 000 F</span>
+          </div>
+          <h4 class="feat-card-title">PAO : Flyers, Affiches & Cartes de Visite</h4>
+          <p class="feat-card-desc">Conception graphique sur-mesure et impression express de vos supports marketing pour votre entreprise ou événement.</p>
+          <ul class="feat-bullets">
+            <li>Pack 100 Cartes de visite 300g pelliculées</li>
+            <li>Pack 100 Flyers A5 couleur éclatante</li>
+            <li>Conception de maquettes et logos par notre graphiste</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite un devis PAO pour concevoir/imprimer des flyers ou cartes de visite.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Demander un projet PAO
+          </a>
+        </div>
+
+        <!-- Bureau 3 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
             <span class="feat-badge-pill">Aide Administrative</span>
             <span class="feat-price font-serif">Service Rapide</span>
           </div>
@@ -526,24 +539,6 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
           </ul>
           <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, j\'ai besoin d\'aide pour une inscription à un concours / rédaction de CV.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
             Demander une assistance démarche
-          </a>
-        </div>
-
-        <!-- Bureau 3 -->
-        <div class="modal-feature-card prestige-card">
-          <div class="feat-top-row">
-            <span class="feat-badge-pill">Agence Agréée</span>
-            <span class="feat-price font-serif">Sans Rupture</span>
-          </div>
-          <h4 class="feat-card-title">Guichet Dépôts & Retraits : Wave, Orange & MTN</h4>
-          <p class="feat-card-desc">Effectuez toutes vos transactions Mobile Money en toute sécurité au cœur du centre commercial Super U Deux Plateaux.</p>
-          <ul class="feat-bullets">
-            <li>Wave : Dépôts et retraits rapides au QR Code</li>
-            <li>Orange Money & MTN MoMo : Dépôts et transferts</li>
-            <li>Push & Recharges de crédit de communication</li>
-          </ul>
-          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite me renseigner sur une opération de transfert Mobile Money / Wave.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
-            Contacter le guichet Mobile Money
           </a>
         </div>
 
@@ -576,8 +571,129 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
         Paiement Wave
       </button>
 
-      <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, j\'ai une question concernant vos services d\'impression / Mobile Money :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+      <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, j\'ai une question concernant vos services d\'impression & PAO :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
         Échanger sur WhatsApp
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<!-- ================= MODAL 5: MOBILE MONEY DISTINCT ================= -->
+<dialog id="modal-service-mobilemoney" class="service-dialog" aria-labelledby="mobilemoney-modal-title">
+  <div class="service-modal-wrap">
+    <div class="service-modal-header">
+      <div class="modal-brand-head">
+        <span class="modal-head-icon">📱</span>
+        <div>
+          <h3 id="mobilemoney-modal-title" class="modal-head-title font-serif">Guichet Agréé Mobile Money</h3>
+          <p class="modal-head-sub">Super U Deux Plateaux • Dépôts & retraits Wave, Orange Money, MTN MoMo, Moov & Push</p>
+        </div>
+      </div>
+      <button type="button" class="service-modal-close close-mobilemoney-btn" aria-label="Fermer la fenêtre">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <div class="service-modal-body">
+      <!-- Notice Banner -->
+      <div class="service-banner-box">
+        <span class="banner-icon">🛡️</span>
+        <div>
+          <strong>Guichet officiel agréé sans rupture de liquidité au Super U Deux Plateaux</strong>
+          <p>Transactions financières sécurisées et confidentielles dans un environnement climatisé avec parking gardé.</p>
+        </div>
+      </div>
+
+      <!-- Prestations Cards Grid -->
+      <div class="service-features-grid">
+        <!-- MM 1 -->
+        <div class="modal-feature-card prestige-card highlight-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill gold">QR Code Instantané</span>
+            <span class="feat-price font-serif">0% Frais Dépôt</span>
+          </div>
+          <h4 class="feat-card-title">Wave Mobile Money (Dépôts & Retraits)</h4>
+          <p class="feat-card-desc">Scannez directement notre QR Code officiel Wave pour vos dépôts et retraits en quelques secondes sans manipulation d'espèces prolongée.</p>
+          <ul class="feat-bullets">
+            <li>Liquidité permanente garantie sans plafond contraignant</li>
+            <li>Terminal officiel certifié Wave Côte d'Ivoire</li>
+            <li>Reçu électronique immédiat sur votre application</li>
+          </ul>
+          <button type="button" class="btn btn-wave open-wave-modal-trigger w-100">
+            Faire un paiement / transfert Wave
+          </button>
+        </div>
+
+        <!-- MM 2 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Réseau National</span>
+            <span class="feat-price font-serif">Dépôt / Retrait</span>
+          </div>
+          <h4 class="feat-card-title">Orange Money & Transferts Régionaux</h4>
+          <p class="feat-card-desc">Effectuez vos retraits et dépôts Orange Money, ainsi que vos transferts sous-régionaux (Burkina, Mali, Sénégal) en toute sérénité.</p>
+          <ul class="feat-bullets">
+            <li>Opérations sécurisées par code OTP client</li>
+            <li>Achat de pass internet et crédit de communication</li>
+            <li>Assistance en cas d'erreur de numéro</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite effectuer une opération Orange Money au guichet du Super U.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Contacter le guichet Orange
+          </a>
+        </div>
+
+        <!-- MM 3 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">MTN MoMo</span>
+            <span class="feat-price font-serif">Disponible</span>
+          </div>
+          <h4 class="feat-card-title">MTN Mobile Money & Moov Money</h4>
+          <p class="feat-card-desc">Guichet multi-opérateurs complet : rechargez votre compte MTN ou Moov ou retirez vos fonds dès réception d'un virement.</p>
+          <ul class="feat-bullets">
+            <li>Dépôts et retraits MTN MoMo et Moov Money</li>
+            <li>Recharges de crédit et forfaits d'appels</li>
+            <li>Transactions enregistrées et sécurisées</li>
+          </ul>
+          <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite faire une opération MTN MoMo ou Moov Money au Super U.')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm w-100">
+            Contacter le guichet MTN / Moov
+          </a>
+        </div>
+
+        <!-- MM 4 -->
+        <div class="modal-feature-card prestige-card">
+          <div class="feat-top-row">
+            <span class="feat-badge-pill">Service VIP</span>
+            <span class="feat-price font-serif">Coupe-File</span>
+          </div>
+          <h4 class="feat-card-title">Code Coupe-File VIP en Ligne</h4>
+          <p class="feat-card-desc">Préparez votre montant et bénéficiaire à distance sur notre site, obtenez votre code numérique et passez en priorité au guichet.</p>
+          <ul class="feat-bullets">
+            <li>Zéro file d'attente aux heures de pointe</li>
+            <li>Traitement immédiat par l'agent de caisse</li>
+            <li>Disponible du Lundi au Samedi de 09h à 20h</li>
+          </ul>
+          <a href="#service-hub" class="btn btn-gold btn-sm w-100" onclick="document.getElementById('modal-service-mobilemoney')?.close()">
+            ⚡ Générer un Code Coupe-File
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer Actions -->
+    <div class="service-modal-footer">
+      <button type="button" class="btn btn-wave open-wave-modal-trigger">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
+        </svg>
+        Paiement Wave Direct
+      </button>
+
+      <a href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent('Bonjour, je souhaite me renseigner sur une opération Mobile Money au Super U :')}`} target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+        Échanger avec le Caissier sur WhatsApp
       </a>
     </div>
   </div>
@@ -915,6 +1031,7 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
     const repModal = document.getElementById('modal-service-reparation') as HTMLDialogElement;
     const gamingModal = document.getElementById('modal-service-gaming') as HTMLDialogElement;
     const bureauModal = document.getElementById('modal-service-bureautique') as HTMLDialogElement;
+    const mobileMoneyModal = document.getElementById('modal-service-mobilemoney') as HTMLDialogElement;
     const boutiqueModal = document.getElementById('boutique-modal') as HTMLDialogElement;
 
     // Helper to setup open and close
@@ -944,30 +1061,33 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
       });
     }
 
-    // Connect the 4 new modals
+    // Connect modals
     setupModal(photoModal, 'open-photo-trigger', 'close-photo-btn');
     setupModal(repModal, 'open-reparation-trigger', 'close-reparation-btn');
     setupModal(gamingModal, 'open-gaming-trigger', 'close-gaming-btn');
     setupModal(bureauModal, 'open-bureautique-trigger', 'close-bureautique-btn');
+    setupModal(mobileMoneyModal, 'open-mobilemoney-trigger', 'close-mobilemoney-btn');
+
+    function openModalForCat(cat: string | null) {
+      if (cat === 'studio-photo') photoModal?.showModal();
+      else if (cat === 'reparation-express') repModal?.showModal();
+      else if (cat === 'boutique-produits' || cat === 'electronique-gaming' || cat === 'boutique-cadeaux') boutiqueModal?.showModal();
+      else if (cat === 'bureautique-pao' || cat === 'bureautique-transferts') bureauModal?.showModal();
+      else if (cat === 'mobile-money') mobileMoneyModal?.showModal();
+    }
 
     // Connect Hero Chips and Services Cards to open the corresponding modal directly!
     const heroChips = document.querySelectorAll('.hero-service-chip');
     heroChips.forEach(chip => {
       chip.addEventListener('click', (e) => {
         e.preventDefault();
-        const cat = chip.getAttribute('data-category');
-        if (cat === 'studio-photo') photoModal?.showModal();
-        else if (cat === 'reparation-express') repModal?.showModal();
-        else if (cat === 'electronique-gaming') gamingModal?.showModal();
-        else if (cat === 'boutique-cadeaux') boutiqueModal?.showModal();
-        else if (cat === 'bureautique-transferts') bureauModal?.showModal();
+        openModalForCat(chip.getAttribute('data-category'));
       });
     });
 
     // Also connect clicking in ServicesGrid cards
     document.querySelectorAll('.service-card').forEach(card => {
       const cat = card.getAttribute('data-category');
-      const actionBtn = card.querySelector('.service-action-btn');
       
       // Add a quick "Détails & Tarifs" trigger button on each card
       const topRow = card.querySelector('.service-top-row');
@@ -979,11 +1099,7 @@ const isFullAdmin = Astro.url.pathname.startsWith('/admin');
         btn.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          if (cat === 'studio-photo') photoModal?.showModal();
-          else if (cat === 'reparation-express') repModal?.showModal();
-          else if (cat === 'electronique-gaming') gamingModal?.showModal();
-          else if (cat === 'boutique-cadeaux') boutiqueModal?.showModal();
-          else if (cat === 'bureautique-transferts') bureauModal?.showModal();
+          openModalForCat(cat);
         });
         topRow.prepend(btn);
       }

@@ -14,15 +14,50 @@ const { boutiqueProducts, business } = defaultSiteData;
         <div>
           <h3 id="boutique-modal-title" class="boutique-title font-serif">La Boutique du Super U</h3>
           <p class="boutique-sub">
-            Articles neufs garantis en stock au magasin • Retrait comptoir & Livraison partout à Abidjan
+            Articles neufs garantis en stock au magasin • Retrait comptoir & Paiement sécurisé PayDunya
           </p>
         </div>
       </div>
-      <button type="button" id="close-boutique-btn" class="boutique-close-btn" aria-label="Fermer la boutique">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
+
+      <div class="boutique-head-actions">
+        <!-- Cart Toggle Button -->
+        <button type="button" id="btq-cart-toggle-btn" class="btq-cart-btn" aria-label="Ouvrir le panier">
+          <span class="cart-icon">🛒</span>
+          <span class="cart-label">Panier</span>
+          <span class="cart-count-badge" id="cart-count-badge">0</span>
+        </button>
+
+        <!-- Close Button -->
+        <button type="button" id="close-boutique-btn" class="boutique-close-btn" aria-label="Fermer la boutique">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2 Distinct Rayons / Sections Switcher -->
+    <div class="boutique-pillars-bar" role="tablist" aria-label="Choisir le rayon">
+      <button type="button" class="pillar-tab active" data-pillar="all" role="tab" aria-selected="true">
+        <span class="tab-icon">🌟</span>
+        <span>Tous les Articles ({boutiqueProducts.length})</span>
+      </button>
+
+      <button type="button" class="pillar-tab" data-pillar="hightech" role="tab" aria-selected="false">
+        <span class="tab-icon">⚡</span>
+        <div class="tab-texts">
+          <span class="tab-main">Rayon 1 : High-Tech & Gaming</span>
+          <span class="tab-sub">Manettes PS4/PS5, Câbles, 35W, Power Banks</span>
+        </div>
+      </button>
+
+      <button type="button" class="pillar-tab" data-pillar="maroquinerie" role="tab" aria-selected="false">
+        <span class="tab-icon">👜</span>
+        <div class="tab-texts">
+          <span class="tab-main">Rayon 2 : Maroquinerie & Montres</span>
+          <span class="tab-sub">Sacs de luxe, Sacoches, Montres, Cadres</span>
+        </div>
       </button>
     </div>
 
@@ -37,25 +72,31 @@ const { boutiqueProducts, business } = defaultSiteData;
           type="text" 
           id="boutique-search-input" 
           class="boutique-search-input" 
-          placeholder="Rechercher une manette, sac, montre, chargeur..." 
+          placeholder="Rechercher manette, sac, montre, chargeur..." 
         />
       </div>
 
       <div class="boutique-categories-bar" role="tablist">
-        <button type="button" class="btq-cat-btn active" data-cat="all">Tous</button>
-        <button type="button" class="btq-cat-btn" data-cat="gaming">Gaming & PS5</button>
-        <button type="button" class="btq-cat-btn" data-cat="accessoires">High-Tech</button>
-        <button type="button" class="btq-cat-btn" data-cat="maroquinerie">Sacs & Cuir</button>
-        <button type="button" class="btq-cat-btn" data-cat="montres">Montres</button>
-        <button type="button" class="btq-cat-btn" data-cat="cadeaux">Cadeaux</button>
+        <button type="button" class="btq-cat-btn active" data-cat="all">Tous sous-types</button>
+        <button type="button" class="btq-cat-btn" data-cat="gaming">Gaming & Consoles</button>
+        <button type="button" class="btq-cat-btn" data-cat="accessoires">Connectique & Chargeurs</button>
+        <button type="button" class="btq-cat-btn" data-cat="maroquinerie">Sacs & Maroquinerie</button>
+        <button type="button" class="btq-cat-btn" data-cat="montres">Montres & Piles</button>
+        <button type="button" class="btq-cat-btn" data-cat="cadeaux">Cadeaux & Cadres</button>
       </div>
     </div>
 
-    <!-- Products Grid -->
+    <!-- Main Container: Products Grid OR Cart View -->
     <div class="boutique-body">
+      <!-- Products Grid View -->
       <div class="boutique-products-grid" id="boutique-items-grid">
         {boutiqueProducts.map((prod) => (
-          <article class="btq-item-card prestige-card" data-cat={prod.category}>
+          <article 
+            class="btq-item-card prestige-card" 
+            data-cat={prod.category} 
+            data-pillar={prod.mainSection || 'hightech'}
+            data-id={prod.id}
+          >
             <div class="btq-item-media">
               <img 
                 src={getAssetPath(prod.image)} 
@@ -66,6 +107,9 @@ const { boutiqueProducts, business } = defaultSiteData;
                 height="200"
               />
               <span class="btq-badge-tag">{prod.badge}</span>
+              <span class="btq-pillar-tag">
+                {prod.mainSection === 'maroquinerie' ? '👜 Maroquinerie' : '⚡ High-Tech'}
+              </span>
             </div>
 
             <div class="btq-item-content">
@@ -80,34 +124,133 @@ const { boutiqueProducts, business } = defaultSiteData;
               <p class="btq-item-desc">{prod.description}</p>
 
               <div class="btq-actions-row">
-                <a 
-                  href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent(`Bonjour Business Center Prestige Services, je souhaite commander l'article : ${prod.name} à ${prod.price} FCFA vu dans votre boutique.`)}`}
-                  class="btn btn-whatsapp btq-order-btn"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                  </svg>
-                  <span>Commander</span>
-                </a>
-
+                <!-- Add to Cart (PayDunya) -->
                 <button 
                   type="button" 
-                  class="btn btn-wave btq-wave-btn open-wave-modal-trigger"
-                  data-amount={prod.price}
-                  title="Payer cet article par Wave"
+                  class="btn btn-gold btq-add-cart-btn"
+                  data-prod-id={prod.id}
+                  data-prod-name={prod.name}
+                  data-prod-price={prod.price}
+                  data-prod-img={getAssetPath(prod.image)}
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l6 4.5-6 4.5z"/>
-                  </svg>
-                  <span>Wave</span>
+                  <span class="btn-icon">🛒</span>
+                  <span>Ajouter au Panier</span>
                 </button>
+
+                <!-- WhatsApp fallback -->
+                <a 
+                  href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent(`Bonjour Business Center Prestige Services, je souhaite commander l'article : ${prod.name} à ${prod.price} FCFA vu dans votre boutique.`)}`}
+                  class="btn btn-whatsapp-icon btq-wa-btn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Commander sur WhatsApp"
+                >
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                  </svg>
+                </a>
               </div>
             </div>
           </article>
         ))}
       </div>
+
+      <!-- Slide-in Cart Drawer View (Hidden by default) -->
+      <div class="boutique-cart-panel hidden" id="boutique-cart-panel">
+        <div class="cart-panel-head">
+          <div class="cart-head-title">
+            <span class="cart-icon">🛒</span>
+            <h4 class="font-serif">Mon Panier d'Achat</h4>
+          </div>
+          <button type="button" class="btn btn-navy-outline btn-sm" id="cart-back-to-shop-btn">
+            ← Continuer mes achats
+          </button>
+        </div>
+
+        <!-- Cart Items List Container -->
+        <div class="cart-items-scroll" id="cart-items-container">
+          <!-- Injected via JavaScript -->
+        </div>
+
+        <!-- Checkout Form & Totals -->
+        <div class="cart-checkout-box prestige-card">
+          <div class="cart-summary-row">
+            <span class="summary-label">Sous-total :</span>
+            <span class="summary-val font-serif" id="cart-subtotal-val">0 FCFA</span>
+          </div>
+
+          <div class="cart-delivery-selector">
+            <label class="delivery-opt">
+              <input type="radio" name="btq_delivery" value="comptoir" checked />
+              <div class="delivery-opt-text">
+                <strong>Retrait Gratuit au Magasin</strong>
+                <span>Comptoir Super U Deux Plateaux (prêt en 15 min)</span>
+              </div>
+              <span class="delivery-cost">0 F</span>
+            </label>
+
+            <label class="delivery-opt">
+              <input type="radio" name="btq_delivery" value="yango" />
+              <div class="delivery-opt-text">
+                <strong>Livraison Express Abidjan</strong>
+                <span>Coursier Yango à domicile ou bureau</span>
+              </div>
+              <span class="delivery-cost">+2 000 F</span>
+            </label>
+          </div>
+
+          <div class="cart-total-row">
+            <span class="total-label">Total à Régler :</span>
+            <span class="total-val gold-gradient-text font-serif" id="cart-total-val">0 FCFA</span>
+          </div>
+
+          <!-- Customer info -->
+          <div class="checkout-fields-grid">
+            <div class="form-group">
+              <label>Votre Nom complet *</label>
+              <input type="text" id="cart-cust-name" class="hub-input" placeholder="Ex: Jean Kouassi" required />
+            </div>
+
+            <div class="form-group">
+              <label>Numéro de Téléphone (Wave / Orange / MTN) *</label>
+              <input type="tel" id="cart-cust-phone" class="hub-input" placeholder="Ex: 0707070707" required />
+            </div>
+
+            <div class="form-group full-width delivery-address-group hidden" id="delivery-address-group">
+              <label>Adresse de livraison précise à Abidjan</label>
+              <input type="text" id="cart-cust-address" class="hub-input" placeholder="Commune, quartier, repère..." />
+            </div>
+          </div>
+
+          <!-- Checkout actions -->
+          <div class="checkout-actions-row">
+            <button type="button" id="cart-pay-paydunya-btn" class="btn btn-gold w-100 checkout-btn">
+              <span class="btn-lock">🔒</span>
+              <span>Payer en ligne via PayDunya</span>
+              <span class="payment-methods-mini">(Wave, Orange, MTN, CB)</span>
+            </button>
+
+            <button type="button" id="cart-pay-whatsapp-btn" class="btn btn-whatsapp w-100">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              <span>Finaliser ma Commande sur WhatsApp</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sticky Bottom Bar when Cart has items (Only shown if cart > 0) -->
+    <div class="btq-sticky-cart-bar hidden" id="btq-sticky-cart-bar">
+      <div class="sticky-cart-info">
+        <span class="sticky-count-pill" id="sticky-cart-count">0 article</span>
+        <span class="sticky-total font-serif" id="sticky-cart-total">0 FCFA</span>
+      </div>
+      <button type="button" class="btn btn-gold btn-sm" id="sticky-view-cart-btn">
+        <span>Voir mon Panier & Payer</span>
+        <span>→</span>
+      </button>
     </div>
 
     <!-- Footer Note -->
@@ -131,6 +274,32 @@ const { boutiqueProducts, business } = defaultSiteData;
     </div>
   </div>
 </dialog>
+
+<!-- Floating Boutique Trigger (Bottom-Left) -->
+<div class="floating-boutique-container">
+  <button 
+    type="button" 
+    class="fixed-boutique-btn open-boutique-trigger" 
+    id="open-boutique-btn"
+    aria-label="Ouvrir la boutique du Super U"
+  >
+    <div class="boutique-btn-inner">
+      <div class="boutique-icon-wrap">
+        <svg class="bag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span class="stock-pulse-dot"></span>
+        <span class="floating-cart-count hidden" id="floating-cart-badge">0</span>
+      </div>
+      <div class="boutique-btn-texts">
+        <span class="btn-main-label">Boutique Super U</span>
+        <span class="btn-sub-label">High-Tech & Maroquinerie</span>
+      </div>
+    </div>
+  </button>
+</div>
 
 <style>
   /* Fixed Floating Button in Bottom-Left */
@@ -206,6 +375,23 @@ const { boutiqueProducts, business } = defaultSiteData;
     animation: stockPulse 2s infinite;
   }
 
+  .floating-cart-count {
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  }
+
   @keyframes stockPulse {
     0%, 100% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.3); opacity: 0.7; }
@@ -230,50 +416,27 @@ const { boutiqueProducts, business } = defaultSiteData;
     line-height: 1.2;
   }
 
-  .boutique-tag-pill {
-    background: rgba(212, 175, 55, 0.18);
-    border: 1px solid rgba(212, 175, 55, 0.4);
-    color: var(--gold-300);
-    font-size: 0.68rem;
-    font-weight: 800;
-    padding: 0.2rem 0.6rem;
-    border-radius: var(--radius-full);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
-  @media (max-width: 580px) {
-    .btn-sub-label {
-      display: none;
-    }
-    .boutique-tag-pill {
-      display: none;
-    }
-  }
-
   /* Modal Dialog */
   .boutique-dialog {
-    margin: auto;
     border: none;
-    border-radius: 24px;
-    padding: 0;
     background: transparent;
-    max-width: 860px;
-    width: 95%;
-    max-height: 90vh;
-    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.25);
+    padding: 0;
+    max-width: 1100px;
+    width: 95vw;
+    margin: auto;
+    border-radius: 24px;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.2);
     overflow: hidden;
   }
 
   .boutique-dialog::backdrop {
-    background: rgba(4, 11, 22, 0.82);
+    background: rgba(4, 10, 20, 0.82);
     backdrop-filter: blur(10px);
   }
 
   .boutique-modal-wrapper {
-    background: #08162b;
-    color: #e2e8f0;
-    border: 1px solid rgba(212, 175, 55, 0.35);
+    background: linear-gradient(180deg, #0b1c36 0%, #061122 100%);
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
     border-radius: 24px;
     display: flex;
     flex-direction: column;
@@ -281,14 +444,15 @@ const { boutiqueProducts, business } = defaultSiteData;
     overflow: hidden;
   }
 
-  /* Header */
+  /* Modal Header */
   .boutique-modal-header {
-    background: linear-gradient(90deg, #07152a 0%, #0d223f 100%);
-    padding: 1.2rem 1.6rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    padding: 1.25rem 1.6rem;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    background: rgba(10, 24, 48, 0.95);
+    backdrop-filter: blur(12px);
   }
 
   .boutique-head-brand {
@@ -298,117 +462,242 @@ const { boutiqueProducts, business } = defaultSiteData;
   }
 
   .boutique-head-icon {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
   }
 
   .boutique-title {
     font-size: 1.35rem;
-    font-weight: 700;
     color: #ffffff;
+    margin: 0;
   }
 
   .boutique-sub {
     font-size: 0.8rem;
-    color: var(--gold-400);
+    color: var(--ivory-muted);
+    margin: 0.2rem 0 0;
+  }
+
+  .boutique-head-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .btq-cart-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #ffffff;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius-full);
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btq-cart-btn:hover {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    border-color: #ffe082;
+  }
+
+  .cart-count-badge {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    border-radius: 999px;
+    padding: 0.1rem 0.45rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+
+  .btq-cart-btn:hover .cart-count-badge {
+    background: var(--navy-950);
+    color: var(--gold-300);
   }
 
   .boutique-close-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s;
+    cursor: pointer;
+    transition: all 0.2s ease;
   }
 
   .boutique-close-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: rotate(90deg);
+    background: rgba(239, 68, 68, 0.25);
+    border-color: #ef4444;
+    color: #ef4444;
+  }
+
+  /* 2 Distinct Pillars Bar */
+  .boutique-pillars-bar {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    gap: 0.6rem;
+    padding: 0.75rem 1.6rem;
+    background: rgba(8, 18, 36, 0.9);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  @media (max-width: 768px) {
+    .boutique-pillars-bar {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pillar-tab {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    border-radius: 12px;
+    background: rgba(14, 34, 64, 0.6);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    color: var(--ivory-muted);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.25s ease;
+  }
+
+  .pillar-tab .tab-icon {
+    font-size: 1.3rem;
+  }
+
+  .pillar-tab .tab-texts {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pillar-tab .tab-main {
+    font-weight: 800;
+    font-size: 0.88rem;
+    color: #ffffff;
+  }
+
+  .pillar-tab .tab-sub {
+    font-size: 0.7rem;
+    color: var(--ivory-muted);
+  }
+
+  .pillar-tab:hover {
+    border-color: rgba(212, 175, 55, 0.5);
+    background: rgba(18, 44, 82, 0.8);
+  }
+
+  .pillar-tab.active {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.18) 0%, rgba(14, 34, 64, 0.85) 100%);
+    border-color: var(--gold-400);
+    box-shadow: 0 0 14px rgba(212, 175, 55, 0.25);
+  }
+
+  .pillar-tab.active .tab-main {
+    color: var(--gold-300);
   }
 
   /* Toolbar */
   .boutique-toolbar {
-    padding: 1rem 1.6rem;
-    background: rgba(6, 14, 26, 0.65);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
     gap: 0.8rem;
+    padding: 0.75rem 1.6rem;
+    background: rgba(6, 14, 28, 0.6);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   }
 
   .boutique-search-box {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    background: rgba(14, 32, 60, 0.8);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 12px;
-    padding: 0.5rem 1rem;
-    color: #94a3b8;
+    background: rgba(14, 34, 64, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: var(--radius-full);
+    padding: 0.45rem 1rem;
+    flex: 1;
+    min-width: 240px;
+    max-width: 380px;
+    color: var(--gold-400);
   }
 
   .boutique-search-input {
-    flex: 1;
     background: transparent;
     border: none;
-    outline: none;
     color: #ffffff;
-    font-size: 0.9rem;
+    font-size: 0.84rem;
+    width: 100%;
+    outline: none;
   }
 
   .boutique-categories-bar {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    gap: 0.45rem;
     overflow-x: auto;
     padding-bottom: 0.2rem;
   }
 
   .btq-cat-btn {
-    padding: 0.4rem 0.9rem;
-    border-radius: var(--radius-full);
-    font-size: 0.78rem;
-    font-weight: 700;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     color: var(--ivory-muted);
-    background: rgba(14, 32, 60, 0.7);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+    font-size: 0.75rem;
+    padding: 0.35rem 0.8rem;
+    border-radius: var(--radius-full);
+    cursor: pointer;
     white-space: nowrap;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
   }
 
   .btq-cat-btn:hover {
-    border-color: var(--gold-400);
+    border-color: rgba(212, 175, 55, 0.4);
     color: #ffffff;
   }
 
   .btq-cat-btn.active {
     background: var(--gold-gradient);
     color: var(--navy-950);
-    border-color: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    border-color: transparent;
+    font-weight: 700;
   }
 
-  /* Body & Grid */
+  /* Body Content */
   .boutique-body {
-    padding: 1.4rem 1.6rem;
+    padding: 1.5rem 1.6rem;
     overflow-y: auto;
     flex: 1;
+    position: relative;
   }
 
+  /* Products Grid */
   .boutique-products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1.4rem;
+    gap: 1.25rem;
   }
 
   .btq-item-card {
     display: flex;
     flex-direction: column;
+    border-radius: 16px;
     overflow: hidden;
-    transition: all 0.25s ease;
+    background: rgba(12, 28, 54, 0.65);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    transition: all 0.3s ease;
+  }
+
+  .btq-item-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(212, 175, 55, 0.6);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.2);
   }
 
   .btq-item-card.hidden {
@@ -417,8 +706,10 @@ const { boutiqueProducts, business } = defaultSiteData;
 
   .btq-item-media {
     position: relative;
+    width: 100%;
     height: 150px;
     overflow: hidden;
+    background: #040914;
   }
 
   .btq-item-img {
@@ -429,21 +720,32 @@ const { boutiqueProducts, business } = defaultSiteData;
   }
 
   .btq-item-card:hover .btq-item-img {
-    transform: scale(1.06);
+    transform: scale(1.08);
   }
 
   .btq-badge-tag {
     position: absolute;
-    top: 0.6rem;
-    left: 0.6rem;
+    top: 10px;
+    right: 10px;
+    background: var(--gold-gradient);
+    color: var(--navy-950);
     font-size: 0.68rem;
     font-weight: 800;
-    padding: 0.2rem 0.6rem;
-    border-radius: var(--radius-full);
-    background: rgba(6, 14, 26, 0.85);
-    border: 1px solid var(--gold-500);
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+  }
+
+  .btq-pillar-tag {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(6, 17, 34, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.35);
     color: var(--gold-300);
-    backdrop-filter: blur(8px);
+    font-size: 0.66rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
   }
 
   .btq-item-content {
@@ -455,18 +757,18 @@ const { boutiqueProducts, business } = defaultSiteData;
 
   .btq-meta-row {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    margin-bottom: 0.45rem;
+    align-items: center;
+    margin-bottom: 0.4rem;
   }
 
   .btq-stock-indicator {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: #4ade80;
     display: flex;
     align-items: center;
     gap: 0.35rem;
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .stock-dot {
@@ -477,14 +779,13 @@ const { boutiqueProducts, business } = defaultSiteData;
   }
 
   .btq-price-tag {
-    font-size: 1.15rem;
+    font-size: 1.05rem;
     font-weight: 800;
-    color: var(--gold-400);
+    color: var(--gold-300);
   }
 
   .btq-item-title {
-    font-size: 0.95rem;
-    font-weight: 700;
+    font-size: 0.92rem;
     color: #ffffff;
     margin-bottom: 0.35rem;
     line-height: 1.3;
@@ -501,17 +802,324 @@ const { boutiqueProducts, business } = defaultSiteData;
   .btq-actions-row {
     display: flex;
     gap: 0.5rem;
+    margin-top: auto;
   }
 
-  .btq-order-btn {
+  .btq-add-cart-btn {
     flex: 1;
-    padding: 0.55rem 0.75rem;
-    font-size: 0.82rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.8rem;
   }
 
-  .btq-wave-btn {
-    padding: 0.55rem 0.85rem;
-    font-size: 0.82rem;
+  .btq-wa-btn {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #25d366;
+    color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .btq-wa-btn:hover {
+    background: #1eb956;
+    transform: scale(1.05);
+  }
+
+  /* Cart Panel */
+  .boutique-cart-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .boutique-cart-panel.hidden {
+    display: none;
+  }
+
+  .cart-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .cart-head-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .cart-head-title h4 {
+    font-size: 1.3rem;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  .cart-items-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    max-height: 320px;
+    overflow-y: auto;
+  }
+
+  .cart-item-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(14, 34, 64, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+  }
+
+  .cart-item-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+
+  .cart-item-details {
+    flex: 1;
+  }
+
+  .cart-item-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #ffffff;
+    display: block;
+  }
+
+  .cart-item-price {
+    font-size: 0.8rem;
+    color: var(--gold-300);
+  }
+
+  .cart-qty-ctrls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .cart-qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .cart-qty-btn:hover {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+  }
+
+  .cart-qty-val {
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: #ffffff;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .cart-item-remove-btn {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0.4rem;
+  }
+
+  .cart-empty-message {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--ivory-muted);
+  }
+
+  /* Cart Checkout Box */
+  .cart-checkout-box {
+    background: rgba(10, 24, 48, 0.8);
+    border: 1.5px solid rgba(212, 175, 55, 0.35);
+    border-radius: 18px;
+    padding: 1.5rem;
+  }
+
+  .cart-summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--ivory-muted);
+    margin-bottom: 1rem;
+  }
+
+  .cart-delivery-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .delivery-opt {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(14, 34, 64, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+  }
+
+  .delivery-opt input:checked ~ .delivery-opt-text strong {
+    color: var(--gold-300);
+  }
+
+  .delivery-opt-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .delivery-opt-text strong {
+    font-size: 0.88rem;
+    color: #ffffff;
+  }
+
+  .delivery-opt-text span {
+    font-size: 0.72rem;
+    color: var(--ivory-muted);
+  }
+
+  .delivery-cost {
+    font-weight: 800;
+    font-size: 0.85rem;
+    color: var(--gold-400);
+  }
+
+  .cart-total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 1.25rem;
+  }
+
+  .total-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .total-val {
+    font-size: 1.6rem;
+    font-weight: 800;
+  }
+
+  .checkout-fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .checkout-fields-grid .full-width {
+    grid-column: 1 / -1;
+  }
+
+  .checkout-fields-grid .hidden {
+    display: none;
+  }
+
+  .checkout-fields-grid label {
+    font-size: 0.8rem;
+    color: var(--ivory-muted);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .checkout-actions-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .checkout-btn {
+    padding: 0.95rem 1.25rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .payment-methods-mini {
+    font-size: 0.75rem;
+    opacity: 0.85;
+    font-weight: 600;
+  }
+
+  /* Sticky Cart Bar */
+  .btq-sticky-cart-bar {
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(90deg, #0e223f 0%, #061120 100%);
+    border-top: 1.5px solid var(--gold-400);
+    padding: 0.75rem 1.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 10;
+  }
+
+  .btq-sticky-cart-bar.hidden {
+    display: none;
+  }
+
+  .sticky-cart-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .sticky-count-pill {
+    background: rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-300);
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+  }
+
+  .sticky-total {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
   }
 
   /* Footer */
@@ -549,30 +1157,374 @@ const { boutiqueProducts, business } = defaultSiteData;
     color: #ffffff;
   }
 
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
   @media (max-width: 640px) {
     .boutique-modal-footer {
       flex-direction: column;
       align-items: flex-start;
       gap: 0.6rem;
     }
+    .checkout-fields-grid {
+      grid-template-columns: 1fr;
+    }
+    .cart-label {
+      display: none;
+    }
   }
 </style>
 
 <script>
+  interface CartItem {
+    id: string;
+    name: string;
+    price: number;
+    img: string;
+    quantity: number;
+  }
+
   function setupBoutiqueModal() {
-    const dialog = document.getElementById('boutique-modal') as HTMLDialogElement;
-    const openBtn = document.getElementById('open-boutique-btn');
+    const dialog = document.getElementById('boutique-modal') as HTMLDialogElement | null;
     const closeBtn = document.getElementById('close-boutique-btn');
-    const searchInput = document.getElementById('boutique-search-input') as HTMLInputElement;
+    const searchInput = document.getElementById('boutique-search-input') as HTMLInputElement | null;
+    const pillarTabs = document.querySelectorAll('.pillar-tab');
     const catBtns = document.querySelectorAll('.btq-cat-btn');
     const cards = document.querySelectorAll('.btq-item-card');
 
+    // Cart Elements
+    const cartToggleBtn = document.getElementById('btq-cart-toggle-btn');
+    const cartPanel = document.getElementById('boutique-cart-panel');
+    const productsGrid = document.getElementById('boutique-items-grid');
+    const backToShopBtn = document.getElementById('cart-back-to-shop-btn');
+    const cartItemsContainer = document.getElementById('cart-items-container');
+    const cartCountBadge = document.getElementById('cart-count-badge');
+    const floatingCartBadge = document.getElementById('floating-cart-badge');
+    const cartSubtotalVal = document.getElementById('cart-subtotal-val');
+    const cartTotalVal = document.getElementById('cart-total-val');
+    const stickyCartBar = document.getElementById('btq-sticky-cart-bar');
+    const stickyCartCount = document.getElementById('sticky-cart-count');
+    const stickyCartTotal = document.getElementById('sticky-cart-total');
+    const stickyViewCartBtn = document.getElementById('sticky-view-cart-btn');
+
+    // Delivery & Form Elements
+    const deliveryRadios = document.querySelectorAll('input[name="btq_delivery"]');
+    const deliveryAddressGroup = document.getElementById('delivery-address-group');
+    const custNameInput = document.getElementById('cart-cust-name') as HTMLInputElement | null;
+    const custPhoneInput = document.getElementById('cart-cust-phone') as HTMLInputElement | null;
+    const custAddressInput = document.getElementById('cart-cust-address') as HTMLInputElement | null;
+    const payPaydunyaBtn = document.getElementById('cart-pay-paydunya-btn') as HTMLButtonElement | null;
+    const payWhatsappBtn = document.getElementById('cart-pay-whatsapp-btn');
+
     if (!dialog) return;
+
+    // Cart state
+    let cart: CartItem[] = [];
+    try {
+      const saved = localStorage.getItem('bcps_boutique_cart');
+      if (saved) cart = JSON.parse(saved);
+    } catch (_) {}
+
+    function saveCart() {
+      try {
+        localStorage.setItem('bcps_boutique_cart', JSON.stringify(cart));
+        window.dispatchEvent(new CustomEvent('cart-updated'));
+      } catch (_) {}
+      updateCartUI();
+    }
+
+    function getSelectedDeliveryFee(): number {
+      const selected = document.querySelector('input[name="btq_delivery"]:checked') as HTMLInputElement | null;
+      return selected?.value === 'yango' ? 2000 : 0;
+    }
+
+    function updateCartUI() {
+      const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const deliveryFee = totalCount > 0 ? getSelectedDeliveryFee() : 0;
+      const total = subtotal + deliveryFee;
+
+      // Badges
+      if (cartCountBadge) cartCountBadge.textContent = totalCount.toString();
+      if (floatingCartBadge) {
+        floatingCartBadge.textContent = totalCount.toString();
+        floatingCartBadge.classList.toggle('hidden', totalCount === 0);
+      }
+
+      // Sticky bar
+      if (stickyCartBar) {
+        stickyCartBar.classList.toggle('hidden', totalCount === 0 || !cartPanel?.classList.contains('hidden'));
+        if (stickyCartCount) stickyCartCount.textContent = `${totalCount} article${totalCount > 1 ? 's' : ''}`;
+        if (stickyCartTotal) stickyCartTotal.textContent = `${total.toLocaleString('fr-FR')} FCFA`;
+      }
+
+      // Totals
+      if (cartSubtotalVal) cartSubtotalVal.textContent = `${subtotal.toLocaleString('fr-FR')} FCFA`;
+      if (cartTotalVal) cartTotalVal.textContent = `${total.toLocaleString('fr-FR')} FCFA`;
+
+      // Render cart items
+      if (cartItemsContainer) {
+        if (cart.length === 0) {
+          cartItemsContainer.innerHTML = `
+            <div class="cart-empty-message">
+              <p style="font-size: 2.2rem; margin-bottom: 0.5rem;">🛍️</p>
+              <p>Votre panier est vide pour le moment.</p>
+              <p style="font-size: 0.8rem; opacity: 0.7;">Découvrez nos articles High-Tech et Maroquinerie et ajoutez vos coups de cœur !</p>
+            </div>
+          `;
+        } else {
+          cartItemsContainer.innerHTML = cart.map(item => `
+            <div class="cart-item-row" data-id="${item.id}">
+              <img src="${item.img}" alt="${item.name}" class="cart-item-img" />
+              <div class="cart-item-details">
+                <span class="cart-item-name">${item.name}</span>
+                <span class="cart-item-price">${(item.price * item.quantity).toLocaleString('fr-FR')} FCFA (${item.price.toLocaleString('fr-FR')} F/u)</span>
+              </div>
+              <div class="cart-qty-ctrls">
+                <button type="button" class="cart-qty-btn btn-minus" data-id="${item.id}">-</button>
+                <span class="cart-qty-val">${item.quantity}</span>
+                <button type="button" class="cart-qty-btn btn-plus" data-id="${item.id}">+</button>
+              </div>
+              <button type="button" class="cart-item-remove-btn" data-id="${item.id}" title="Supprimer">🗑️</button>
+            </div>
+          `).join('');
+
+          // Bind qty buttons
+          cartItemsContainer.querySelectorAll('.btn-minus').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.getAttribute('data-id');
+              const item = cart.find(i => i.id === id);
+              if (item) {
+                if (item.quantity > 1) {
+                  item.quantity--;
+                } else {
+                  cart = cart.filter(i => i.id !== id);
+                }
+                saveCart();
+              }
+            });
+          });
+
+          cartItemsContainer.querySelectorAll('.btn-plus').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.getAttribute('data-id');
+              const item = cart.find(i => i.id === id);
+              if (item) {
+                item.quantity++;
+                saveCart();
+              }
+            });
+          });
+
+          cartItemsContainer.querySelectorAll('.cart-item-remove-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+              const id = btn.getAttribute('data-id');
+              cart = cart.filter(i => i.id !== id);
+              saveCart();
+            });
+          });
+        }
+      }
+    }
+
+    const toolbar = document.querySelector('.boutique-toolbar') as HTMLElement | null;
+    const pillarsBar = document.querySelector('.boutique-pillars-bar') as HTMLElement | null;
+
+    // Toggle Cart View vs Products View
+    function showCartView() {
+      productsGrid?.classList.add('hidden');
+      cartPanel?.classList.remove('hidden');
+      stickyCartBar?.classList.add('hidden');
+      if (toolbar) toolbar.style.display = 'none';
+      if (pillarsBar) pillarsBar.style.display = 'none';
+      updateCartUI();
+    }
+
+    function showProductsView() {
+      cartPanel?.classList.add('hidden');
+      productsGrid?.classList.remove('hidden');
+      if (toolbar) toolbar.style.display = '';
+      if (pillarsBar) pillarsBar.style.display = '';
+      updateCartUI();
+    }
+
+    cartToggleBtn?.addEventListener('click', () => {
+      if (cartPanel?.classList.contains('hidden')) {
+        showCartView();
+      } else {
+        showProductsView();
+      }
+    });
+
+    backToShopBtn?.addEventListener('click', showProductsView);
+    stickyViewCartBtn?.addEventListener('click', showCartView);
+
+    window.addEventListener('render-cart-view', () => {
+      showCartView();
+    });
+
+    // Delivery radio change
+    deliveryRadios.forEach(radio => {
+      radio.addEventListener('change', () => {
+        const isYango = (radio as HTMLInputElement).value === 'yango';
+        deliveryAddressGroup?.classList.toggle('hidden', !isYango);
+        updateCartUI();
+      });
+    });
+
+    // Add to cart buttons
+    document.querySelectorAll('.btq-add-cart-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-prod-id') || '';
+        const name = btn.getAttribute('data-prod-name') || '';
+        const price = parseInt(btn.getAttribute('data-prod-price') || '0', 10);
+        const img = btn.getAttribute('data-prod-img') || '';
+
+        const existing = cart.find(i => i.id === id);
+        if (existing) {
+          existing.quantity++;
+        } else {
+          cart.push({ id, name, price, img, quantity: 1 });
+        }
+        saveCart();
+
+        // Feedback
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span>✅ Ajouté !</span>';
+        btn.classList.add('btn-success');
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('btn-success');
+        }, 1200);
+      });
+    });
+
+    // PayDunya Checkout Button
+    payPaydunyaBtn?.addEventListener('click', async () => {
+      if (cart.length === 0) {
+        alert('Votre panier est vide.');
+        return;
+      }
+
+      const name = custNameInput?.value.trim() || '';
+      const phone = custPhoneInput?.value.trim() || '';
+      const deliveryMode = (document.querySelector('input[name="btq_delivery"]:checked') as HTMLInputElement)?.value || 'comptoir';
+      const address = custAddressInput?.value.trim() || '';
+
+      if (!name) {
+        alert('Veuillez renseigner votre nom complet.');
+        custNameInput?.focus();
+        return;
+      }
+
+      if (!phone) {
+        alert('Veuillez renseigner votre numéro de téléphone.');
+        custPhoneInput?.focus();
+        return;
+      }
+
+      if (deliveryMode === 'yango' && !address) {
+        alert('Veuillez préciser votre adresse de livraison.');
+        custAddressInput?.focus();
+        return;
+      }
+
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const deliveryFee = deliveryMode === 'yango' ? 2000 : 0;
+      const total = subtotal + deliveryFee;
+
+      const orderItems = cart.map(i => ({
+        name: i.name,
+        unitPrice: i.price,
+        quantity: i.quantity,
+        total: i.price * i.quantity
+      }));
+
+      if (deliveryFee > 0) {
+        orderItems.push({
+          name: 'Frais de livraison coursier Yango Abidjan',
+          unitPrice: deliveryFee,
+          quantity: 1,
+          total: deliveryFee
+        });
+      }
+
+      payPaydunyaBtn.disabled = true;
+      const originalBtnText = payPaydunyaBtn.innerHTML;
+      payPaydunyaBtn.innerHTML = '<span>⏳ Connexion au tunnel PayDunya...</span>';
+
+      try {
+        const response = await fetch('/api/checkout/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            category: 'boutique',
+            title: `Achat Boutique (${cart.length} articles)`,
+            amount: total,
+            items: orderItems,
+            customerName: name,
+            customerPhone: phone,
+            customerEmail: '',
+            deliveryAddress: address,
+            pickupType: deliveryMode,
+            metadata: {
+              articleCount: cart.length,
+              source: 'boutique_modal'
+            }
+          })
+        });
+
+        const data = await response.json();
+        if (data.success && data.paymentUrl) {
+          // Clear cart on successful checkout redirect
+          localStorage.removeItem('bcps_boutique_cart');
+          window.location.href = data.paymentUrl;
+        } else {
+          alert('Erreur d\'initialisation du paiement: ' + (data.error || 'Veuillez réessayer.'));
+          payPaydunyaBtn.disabled = false;
+          payPaydunyaBtn.innerHTML = originalBtnText;
+        }
+      } catch (err: any) {
+        alert('Erreur réseau : ' + err.message);
+        payPaydunyaBtn.disabled = false;
+        payPaydunyaBtn.innerHTML = originalBtnText;
+      }
+    });
+
+    // WhatsApp Checkout Fallback
+    payWhatsappBtn?.addEventListener('click', () => {
+      if (cart.length === 0) {
+        alert('Votre panier est vide.');
+        return;
+      }
+      const name = custNameInput?.value.trim() || 'Client';
+      const deliveryMode = (document.querySelector('input[name="btq_delivery"]:checked') as HTMLInputElement)?.value || 'comptoir';
+      const address = custAddressInput?.value.trim() || 'Comptoir Super U';
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const deliveryFee = deliveryMode === 'yango' ? 2000 : 0;
+      const total = subtotal + deliveryFee;
+
+      let msg = `Bonjour Business Center Prestige Services,\nJe souhaite valider ma commande boutique :\n\n`;
+      cart.forEach((item, idx) => {
+        msg += `${idx + 1}. ${item.name} x${item.quantity} = ${(item.price * item.quantity).toLocaleString('fr-FR')} FCFA\n`;
+      });
+      if (deliveryFee > 0) {
+        msg += `+ Livraison Coursier Yango : 2 000 FCFA\n`;
+      }
+      msg += `\n*TOTAL : ${total.toLocaleString('fr-FR')} FCFA*\n`;
+      msg += `Nom : ${name}\nMode : ${deliveryMode === 'yango' ? 'Livraison à domicile' : 'Retrait comptoir Super U'}\n`;
+      if (deliveryMode === 'yango') msg += `Adresse : ${address}\n`;
+
+      window.open(`https://wa.me/2250707338575?text=${encodeURIComponent(msg)}`, '_blank');
+    });
 
     // Open triggers
     document.querySelectorAll('.open-boutique-trigger').forEach(trigger => {
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
+        showProductsView();
         dialog.showModal();
       });
     });
@@ -592,19 +1544,22 @@ const { boutiqueProducts, business } = defaultSiteData;
     });
 
     // Filtering & Search
+    let activePillar = 'all';
     let activeCat = 'all';
     let searchQuery = '';
 
     function filterItems() {
       cards.forEach(card => {
+        const pillar = card.getAttribute('data-pillar') || 'hightech';
         const cat = card.getAttribute('data-cat') || '';
         const title = card.querySelector('.btq-item-title')?.textContent?.toLowerCase() || '';
         const desc = card.querySelector('.btq-item-desc')?.textContent?.toLowerCase() || '';
 
+        const matchesPillar = (activePillar === 'all' || pillar === activePillar);
         const matchesCat = (activeCat === 'all' || cat === activeCat);
         const matchesSearch = !searchQuery || title.includes(searchQuery) || desc.includes(searchQuery);
 
-        if (matchesCat && matchesSearch) {
+        if (matchesPillar && matchesCat && matchesSearch) {
           card.classList.remove('hidden');
         } else {
           card.classList.add('hidden');
@@ -612,34 +1567,39 @@ const { boutiqueProducts, business } = defaultSiteData;
       });
     }
 
+    pillarTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        pillarTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        activePillar = tab.getAttribute('data-pillar') || 'all';
+        showProductsView();
+        filterItems();
+      });
+    });
+
     catBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         catBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         activeCat = btn.getAttribute('data-cat') || 'all';
+        showProductsView();
         filterItems();
       });
     });
 
     searchInput?.addEventListener('input', (e) => {
       searchQuery = (e.target as HTMLInputElement).value.toLowerCase().trim();
+      showProductsView();
       filterItems();
     });
 
-    // Wave pay button inside boutique: updates Wave amount and opens Wave modal
-    document.querySelectorAll('.btq-wave-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const amt = btn.getAttribute('data-amount');
-        if (amt) {
-          const waveInput = document.getElementById('wave-amount-input') as HTMLInputElement;
-          if (waveInput) {
-            waveInput.value = amt;
-            waveInput.dispatchEvent(new Event('input'));
-          }
-        }
-      });
-    });
+    // Initial cart load
+    updateCartUI();
   }
 
-  document.addEventListener('DOMContentLoaded', setupBoutiqueModal);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupBoutiqueModal);
+  } else {
+    setupBoutiqueModal();
+  }
 </script>

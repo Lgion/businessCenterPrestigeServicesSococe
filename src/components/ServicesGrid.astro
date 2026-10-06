@@ -21,9 +21,9 @@ const { services, business } = defaultSiteData;
         <button type="button" class="filter-btn active" data-filter="all">Tous nos Pôles (5)</button>
         <button type="button" class="filter-btn" data-filter="studio-photo">Studio Photo</button>
         <button type="button" class="filter-btn" data-filter="reparation-express">Réparation</button>
-        <button type="button" class="filter-btn" data-filter="electronique-gaming">High-Tech & Gaming</button>
-        <button type="button" class="filter-btn" data-filter="boutique-cadeaux">Boutique & Montres</button>
-        <button type="button" class="filter-btn" data-filter="bureautique-transferts">Bureautique & Wave</button>
+        <button type="button" class="filter-btn" data-filter="boutique-produits">Boutique High-Tech & Maroquinerie</button>
+        <button type="button" class="filter-btn" data-filter="bureautique-pao">Bureautique & PAO</button>
+        <button type="button" class="filter-btn" data-filter="mobile-money">Mobile Money</button>
       </div>
     </div>
 
@@ -211,17 +211,20 @@ const { services, business } = defaultSiteData;
     top: 1rem;
     left: 1rem;
     font-family: var(--font-serif);
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--navy-950);
-    background: var(--gold-gradient);
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #ffffff;
+    background: linear-gradient(135deg, #102647 0%, #061120 100%);
     width: 38px;
     height: 38px;
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border: 1.5px solid #f6d365;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), 0 0 10px rgba(212, 175, 55, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+    letter-spacing: -0.02em;
   }
 
   .service-tag-pill {
@@ -229,15 +232,17 @@ const { services, business } = defaultSiteData;
     top: 1rem;
     right: 1rem;
     font-size: 0.72rem;
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    color: #ffffff;
-    background: rgba(6, 14, 26, 0.75);
-    border: 1px solid rgba(212, 175, 55, 0.4);
-    padding: 0.25rem 0.75rem;
+    color: #fef9c3;
+    background: rgba(6, 17, 32, 0.9);
+    border: 1.5px solid rgba(246, 211, 101, 0.85);
+    padding: 0.3rem 0.8rem;
     border-radius: var(--radius-full);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 8px rgba(212, 175, 55, 0.25);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
   }
 
   /* Body */

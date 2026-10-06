@@ -84,6 +84,19 @@ const { business, announcement } = defaultSiteData;
           <span>Ouvert • Super U</span>
         </div>
 
+        <!-- Global Cart Trigger Button -->
+        <button 
+          type="button" 
+          class="btn-header-cart" 
+          id="header-cart-btn"
+          aria-label="Mon Panier d'achat"
+          title="Consulter mon panier"
+        >
+          <span class="header-cart-icon">🛒</span>
+          <span class="header-cart-label">Panier</span>
+          <span class="header-cart-badge" id="header-cart-count">0</span>
+        </button>
+
         <!-- Wave Payment Button (Audio requirement) -->
         <button 
           type="button" 
@@ -157,6 +170,12 @@ const { business, announcement } = defaultSiteData;
       </nav>
 
       <div class="mobile-drawer-footer">
+        <!-- Cart Mobile CTA -->
+        <button type="button" class="btn btn-gold w-100 mobile-header-cart-btn" id="mobile-header-cart-btn">
+          <span>🛒 Accéder à mon Panier</span>
+          <span class="mobile-cart-badge" id="mobile-header-cart-count">0</span>
+        </button>
+
         <!-- Wave Pay Mobile CTA -->
         <button type="button" class="btn btn-wave w-100 open-wave-modal-trigger">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -391,6 +410,79 @@ const { business, announcement } = defaultSiteData;
     display: flex;
     align-items: center;
     gap: 0.75rem;
+  }
+
+  .btn-header-cart {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(14, 34, 64, 0.8) 100%);
+    color: #ffffff;
+    font-size: 0.88rem;
+    font-weight: 700;
+    padding: 0.55rem 0.95rem;
+    border-radius: var(--radius-full);
+    border: 1.5px solid rgba(212, 175, 55, 0.5);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .btn-header-cart:hover {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    border-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.45);
+  }
+
+  .btn-header-cart:hover .header-cart-badge {
+    background: var(--navy-950);
+    color: #f6d365;
+    border-color: var(--navy-900);
+  }
+
+  .header-cart-icon {
+    font-size: 1.05rem;
+  }
+
+  .header-cart-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 10px;
+    background: var(--gold-400);
+    color: var(--navy-950);
+    font-size: 0.72rem;
+    font-weight: 900;
+    line-height: 1;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: all 0.2s ease;
+  }
+
+  .mobile-header-cart-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    font-weight: 800;
+  }
+
+  .mobile-cart-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: var(--navy-950);
+    color: #f6d365;
+    font-size: 0.76rem;
+    font-weight: 900;
   }
 
   .btn-header-wave {
@@ -633,9 +725,50 @@ const { business, announcement } = defaultSiteData;
     drawerClose?.addEventListener('click', closeMenu);
     backdrop?.addEventListener('click', closeMenu);
 
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', closeMenu);
+    // Cart synchronisation & drawer trigger
+    function updateHeaderCartCount() {
+      try {
+        const stored = localStorage.getItem('bcps_boutique_cart');
+        const cart = stored ? JSON.parse(stored) : [];
+        const count = cart.reduce((sum: number, item: any) => sum + (item.quantity || 1), 0);
+        
+        const desktopBadge = document.getElementById('header-cart-count');
+        const mobileBadge = document.getElementById('mobile-header-cart-count');
+        if (desktopBadge) desktopBadge.textContent = count.toString();
+        if (mobileBadge) mobileBadge.textContent = count.toString();
+      } catch (e) {
+        console.error('Error updating cart count', e);
+      }
+    }
+
+    function openCartDrawer() {
+      const boutiqueModal = document.getElementById('boutique-modal') as HTMLDialogElement | null;
+      if (boutiqueModal) {
+        boutiqueModal.showModal();
+        const cartPanel = document.getElementById('boutique-cart-panel');
+        const itemsGrid = document.getElementById('boutique-items-grid');
+        const toolbar = document.querySelector('.boutique-toolbar') as HTMLElement | null;
+        const pillarsBar = document.querySelector('.boutique-pillars-bar') as HTMLElement | null;
+
+        if (cartPanel && itemsGrid) {
+          cartPanel.classList.remove('hidden');
+          itemsGrid.classList.add('hidden');
+          if (toolbar) toolbar.style.display = 'none';
+          if (pillarsBar) pillarsBar.style.display = 'none';
+        }
+        window.dispatchEvent(new CustomEvent('render-cart-view'));
+      }
+    }
+
+    document.getElementById('header-cart-btn')?.addEventListener('click', openCartDrawer);
+    document.getElementById('mobile-header-cart-btn')?.addEventListener('click', () => {
+      closeMenu();
+      openCartDrawer();
     });
+
+    window.addEventListener('storage', updateHeaderCartCount);
+    window.addEventListener('cart-updated', updateHeaderCartCount);
+    updateHeaderCartCount();
   }
 
   document.addEventListener('DOMContentLoaded', setupHeader);

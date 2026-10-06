@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const orderId = Astro.url.searchParams.get('order_id') || '';
+---
+
+<Layout title="Paiement Non Finalisé | Business Center Prestige Services">
+  <div class="cancel-container">
+    <div class="cancel-card prestige-card">
+      <div class="cancel-icon">⚠️</div>
+      <h1 class="cancel-title font-serif">Paiement Non Finalisé</h1>
+      <p class="cancel-desc">
+        La transaction n'a pas été débitée. Si vous avez rencontré un problème ou souhaitez utiliser un autre moyen de paiement (Wave direct, espèces au comptoir), nous sommes à votre disposition.
+      </p>
+
+      {orderId && (
+        <div class="ref-badge">
+          <span>Réf commande : {orderId}</span>
+        </div>
+      )}
+
+      <div class="cancel-actions">
+        <a href="/" class="btn btn-gold btn-lg w-100">
+          Retourner au site et recommencer
+        </a>
+        <a href="https://wa.me/2250544263245" class="btn btn-whatsapp w-100" target="_blank" rel="noopener noreferrer">
+          Contacter l'Assistance sur WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .cancel-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background: var(--navy-950);
+  }
+
+  .cancel-card {
+    max-width: 520px;
+    width: 100%;
+    padding: 2.5rem;
+    text-align: center;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(10, 24, 46, 0.95);
+  }
+
+  .cancel-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .cancel-title {
+    font-size: 1.8rem;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+  }
+
+  .cancel-desc {
+    font-size: 0.92rem;
+    color: var(--ivory-muted);
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+  }
+
+  .ref-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 0.35rem 0.85rem;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    color: var(--gold-400);
+    margin-bottom: 1.75rem;
+  }
+
+  .cancel-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+</style>

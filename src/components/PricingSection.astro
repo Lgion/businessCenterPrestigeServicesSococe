@@ -15,8 +15,24 @@ const { pricingPackages, business } = defaultSiteData;
       </p>
     </div>
 
-    <!-- Pricing Cards Grid -->
-    <div class="pricing-grid">
+    <!-- Pricing Carousel Controls & Header -->
+    <div class="pricing-carousel-top-bar">
+      <div class="pricing-carousel-hint">
+        <span class="hint-icon">👉</span>
+        <span>Faites défiler horizontalement pour découvrir nos 10 formules ({pricingPackages.length})</span>
+      </div>
+      <div class="pricing-carousel-controls">
+        <button type="button" class="pricing-nav-btn prev-btn" id="pricing-carousel-prev" aria-label="Tarif précédent">
+          ‹
+        </button>
+        <button type="button" class="pricing-nav-btn next-btn" id="pricing-carousel-next" aria-label="Tarif suivant">
+          ›
+        </button>
+      </div>
+    </div>
+
+    <!-- Pricing Cards Carousel Track -->
+    <div class="pricing-carousel-track" id="pricing-carousel-track" tabindex="0" role="region" aria-label="Carrousel des formules tarifaires">
       {pricingPackages.map((pkg) => (
         <div class={`pricing-card prestige-card ${pkg.popular ? 'popular-card' : ''}`}>
           {pkg.popular && (
@@ -67,6 +83,13 @@ const { pricingPackages, business } = defaultSiteData;
             </button>
           </div>
         </div>
+      ))}
+    </div>
+
+    <!-- Carousel Dots Indicator -->
+    <div class="pricing-carousel-dots" id="pricing-carousel-dots" aria-hidden="true">
+      {pricingPackages.map((_, i) => (
+        <button type="button" class={`pricing-dot ${i === 0 ? 'active' : ''}`} data-index={i} aria-label={`Tarif ${i + 1}`}></button>
       ))}
     </div>
 
@@ -142,19 +165,129 @@ const { pricingPackages, business } = defaultSiteData;
     margin-bottom: 3.5rem;
   }
 
-  /* Grid */
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.8rem;
-    margin-bottom: 4rem;
+  /* Pricing Carousel Track */
+  .pricing-carousel-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    gap: 1rem;
+  }
+
+  .pricing-carousel-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--gold-300);
+    font-weight: 600;
+  }
+
+  .pricing-carousel-controls {
+    display: flex;
+    gap: 0.6rem;
+  }
+
+  .pricing-nav-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(14, 34, 64, 0.85);
+    border: 1.5px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-300);
+    font-size: 1.6rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(8px);
+  }
+
+  .pricing-nav-btn:hover {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    border-color: #ffe082;
+    transform: scale(1.08);
+    box-shadow: 0 0 16px rgba(212, 175, 55, 0.4);
+  }
+
+  .pricing-carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.75rem 0.25rem 1.75rem;
+    margin-bottom: 1.25rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(212, 175, 55, 0.3) transparent;
+  }
+
+  .pricing-carousel-track::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .pricing-carousel-track::-webkit-scrollbar-thumb {
+    background: rgba(212, 175, 55, 0.35);
+    border-radius: 999px;
   }
 
   .pricing-card {
-    padding: 2rem 1.6rem 1.6rem;
+    flex: 0 0 calc(33.333% - 1rem);
+    min-width: 290px;
+    max-width: 360px;
+    scroll-snap-align: start;
+    padding: 2.2rem 1.6rem 1.6rem;
     display: flex;
     flex-direction: column;
     position: relative;
+    border-radius: 18px;
+    background: rgba(12, 28, 54, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    transition: all 0.3s ease;
+  }
+
+  @media (max-width: 1024px) {
+    .pricing-card {
+      flex: 0 0 calc(50% - 0.75rem);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .pricing-card {
+      flex: 0 0 88%;
+      min-width: 260px;
+    }
+    .pricing-carousel-hint span:last-child {
+      font-size: 0.78rem;
+    }
+  }
+
+  .pricing-carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .pricing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+  }
+
+  .pricing-dot.active {
+    width: 24px;
+    background: var(--gold-400);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
   }
 
   .popular-card {
@@ -395,9 +528,59 @@ const { pricingPackages, business } = defaultSiteData;
 </style>
 
 <script>
+  function setupPricingCarousel() {
+    const track = document.getElementById('pricing-carousel-track') as HTMLElement | null;
+    const prevBtn = document.getElementById('pricing-carousel-prev') as HTMLButtonElement | null;
+    const nextBtn = document.getElementById('pricing-carousel-next') as HTMLButtonElement | null;
+    const dots = document.querySelectorAll('#pricing-carousel-dots .pricing-dot');
+
+    if (!track) return;
+
+    function getCardWidth(): number {
+      const card = track?.querySelector('.pricing-card') as HTMLElement | null;
+      return card ? card.offsetWidth + 24 : 320;
+    }
+
+    prevBtn?.addEventListener('click', () => {
+      track?.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      track?.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+    });
+
+    // Keyboard support
+    track.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        track.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+      } else if (e.key === 'ArrowRight') {
+        track.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+      }
+    });
+
+    // Scroll listener for dots
+    track.addEventListener('scroll', () => {
+      const cardWidth = getCardWidth();
+      const activeIdx = Math.min(
+        dots.length - 1,
+        Math.max(0, Math.round((track?.scrollLeft || 0) / cardWidth))
+      );
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === activeIdx);
+      });
+    }, { passive: true });
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const idx = parseInt(dot.getAttribute('data-index') || '0', 10);
+        track?.scrollTo({ left: idx * getCardWidth(), behavior: 'smooth' });
+      });
+    });
+  }
+
   function setupQuoteSimulator() {
-    const select = document.getElementById('sim-service-select') as HTMLSelectElement;
-    const input = document.getElementById('sim-quantity-input') as HTMLInputElement;
+    const select = document.getElementById('sim-service-select') as HTMLSelectElement | null;
+    const input = document.getElementById('sim-quantity-input') as HTMLInputElement | null;
     const display = document.getElementById('sim-estimate-display');
     const sendBtn = document.getElementById('sim-whatsapp-send-btn');
 
@@ -423,15 +606,25 @@ const { pricingPackages, business } = defaultSiteData;
     select?.addEventListener('change', updateEstimate);
 
     sendBtn?.addEventListener('click', () => {
+      if (!select) return;
       const val = select.value;
       const serviceInfo = ratesMap[val] || { label: select.options[select.selectedIndex]?.text, est: '' };
-      const detail = input.value.trim() || 'Non précisé';
+      const detail = input?.value.trim() || 'Non précisé';
       const msg = `Bonjour Business Center Prestige Services, je souhaite obtenir un devis pour : ${serviceInfo.label}. Précision : ${detail}. Merci de me recontacter !`;
       
-      const whatsappUrl = `https://wa.me/2250544263245?text=${encodeURIComponent(msg)}`;
+      const whatsappUrl = `https://wa.me/2250707338575?text=${encodeURIComponent(msg)}`;
       window.open(whatsappUrl, '_blank');
     });
   }
 
-  document.addEventListener('DOMContentLoaded', setupQuoteSimulator);
+  function initPricing() {
+    setupPricingCarousel();
+    setupQuoteSimulator();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPricing);
+  } else {
+    initPricing();
+  }
 </script>
