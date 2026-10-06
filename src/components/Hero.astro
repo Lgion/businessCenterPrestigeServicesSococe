@@ -1,5 +1,6 @@
 ---
 import { defaultSiteData } from '../data/siteData';
+import { getAssetPath } from '../utils/assets';
 const { business } = defaultSiteData;
 ---
 
@@ -157,7 +158,7 @@ const { business } = defaultSiteData;
       <div class="visual-card-wrapper">
         <div class="image-frame-gold">
           <img 
-            src="/images/hero-store.jpg" 
+            src={getAssetPath("/images/hero-store.jpg")} 
             alt="Intérieur boutique Business Center Prestige Services au Super U Deux Plateaux Abidjan" 
             class="hero-store-img"
             width="800"

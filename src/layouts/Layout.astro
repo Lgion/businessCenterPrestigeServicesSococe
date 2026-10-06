@@ -6,6 +6,7 @@ import BoutiqueModal from '../components/BoutiqueModal.astro';
 import ServiceModals from '../components/ServiceModals.astro';
 import AdminDrawer from '../components/AdminDrawer.astro';
 import { defaultSiteData } from '../data/siteData';
+import { getAssetPath } from '../utils/assets';
 
 interface Props {
   title?: string;
@@ -60,7 +61,7 @@ const schemaData = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={getAssetPath("/favicon.svg")} />
     
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -171,6 +172,9 @@ const schemaData = {
             });
 
             // 2. Hydrate 5 Services (background images, titles, items list)
+            const basePrefix = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+            const resolveClientAsset = (src: string) => (!src || src.startsWith('http') || src.startsWith('data:') || (basePrefix && src.startsWith(basePrefix))) ? src : (basePrefix + (src.startsWith('/') ? src : '/' + src));
+
             if (parsed.servicesCustom && Array.isArray(parsed.servicesCustom)) {
               parsed.servicesCustom.forEach((customSvc: any) => {
                 const card = document.querySelector(`.service-card[data-category="${customSvc.id}"]`);
@@ -181,7 +185,7 @@ const schemaData = {
                   const badge = card.querySelector('.service-tag-pill');
                   const checklist = card.querySelector('.service-checklist');
 
-                  if (img && customSvc.image) img.src = customSvc.image;
+                  if (img && customSvc.image) img.src = resolveClientAsset(customSvc.image);
                   if (title && customSvc.title) title.textContent = customSvc.title;
                   if (sub && customSvc.subtitle) sub.textContent = customSvc.subtitle;
                   if (badge && customSvc.badge) badge.textContent = customSvc.badge;

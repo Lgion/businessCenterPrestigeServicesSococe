@@ -1,5 +1,6 @@
 ---
 import { defaultSiteData } from '../data/siteData';
+import { getAssetPath } from '../utils/assets';
 const { business, announcement } = defaultSiteData;
 ---
 
@@ -19,7 +20,7 @@ const { business, announcement } = defaultSiteData;
             </svg>
             <span data-admin-bind="phoneFormatted">{business.phoneFormatted}</span>
           </a>
-          <a href="/admin" class="admin-gear-btn" title="Accéder à la console d'administration" aria-label="Console d'administration">
+          <a href={getAssetPath('/admin')} class="admin-gear-btn" title="Accéder à la console d'administration" aria-label="Console d'administration">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -35,7 +36,7 @@ const { business, announcement } = defaultSiteData;
   <div class="main-navbar">
     <div class="container nav-content">
       <!-- Brand Logo -->
-      <a href="/" class="brand-logo" aria-label="Accueil Business Center Prestige Services">
+      <a href={getAssetPath('/')} class="brand-logo" aria-label="Accueil Business Center Prestige Services">
         <div class="logo-crest">
           <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
             <rect width="44" height="44" rx="12" fill="url(#navyGrad)"/>
@@ -173,7 +174,7 @@ const { business, announcement } = defaultSiteData;
           Discuter sur WhatsApp
         </a>
 
-        <a href="/admin" class="btn btn-navy-outline w-100">
+        <a href={getAssetPath('/admin')} class="btn btn-navy-outline w-100">
           ⚙️ Espace Paramètres Admin
         </a>
       </div>

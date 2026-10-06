@@ -1,5 +1,6 @@
 ---
 import { defaultSiteData } from '../data/siteData';
+import { getAssetPath } from '../utils/assets';
 const { seasonalShowcase, business } = defaultSiteData;
 ---
 
@@ -58,7 +59,7 @@ const { seasonalShowcase, business } = defaultSiteData;
         <div class="product-card prestige-card" data-season={product.seasonId}>
           <div class="product-media">
             <img 
-              src={product.image} 
+              src={getAssetPath(product.image)} 
               alt={product.name} 
               class="product-img" 
               loading="lazy"

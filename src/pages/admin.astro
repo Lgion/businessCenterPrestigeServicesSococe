@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { defaultSiteData } from '../data/siteData';
+import { getAssetPath } from '../utils/assets';
 
 const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts, wavePayment, announcement } = defaultSiteData;
 ---
@@ -11,7 +12,7 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
     <header class="admin-topbar">
       <div class="container admin-topbar-inner">
         <div class="admin-brand">
-          <a href="/" class="admin-logo-link" title="Retourner au site vitrine">
+          <a href={getAssetPath('/')} class="admin-logo-link" title="Retourner au site vitrine">
             <div class="admin-crest">
               <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
                 <rect width="44" height="44" rx="10" fill="#0E223F"/>
@@ -206,10 +207,10 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
                       <div class="image-picker-row">
                         <input type="text" class="adm-input svc-image-input" value={svc.image} />
                         <div class="image-thumb-preview">
-                          <img src={svc.image} alt={svc.title} class="svc-thumb-img" />
+                          <img src={getAssetPath(svc.image)} alt={svc.title} class="svc-thumb-img" />
                         </div>
                       </div>
-                      <span class="field-hint">Images locales suggérées : /images/photo-studio.jpg, /images/tech-repair.jpg, /images/hero-store.jpg, /images/boutique-gifts.jpg</span>
+                      <span class="field-hint">Images prestige incluses : /images/service-studio-photo.jpg, /images/service-tech-repair.jpg, /images/service-gaming-tech.jpg, /images/service-boutique-cadeaux.jpg, /images/service-bureautique-transferts.jpg</span>
                     </div>
 
                     <!-- Prestations / Liste des services détaillée -->

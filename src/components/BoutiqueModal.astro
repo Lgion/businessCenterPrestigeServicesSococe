@@ -1,5 +1,6 @@
 ---
 import { defaultSiteData } from '../data/siteData';
+import { getAssetPath } from '../utils/assets';
 const { boutiqueProducts, business } = defaultSiteData;
 ---
 
@@ -57,7 +58,7 @@ const { boutiqueProducts, business } = defaultSiteData;
           <article class="btq-item-card prestige-card" data-cat={prod.category}>
             <div class="btq-item-media">
               <img 
-                src={prod.image} 
+                src={getAssetPath(prod.image)} 
                 alt={prod.name} 
                 class="btq-item-img" 
                 loading="lazy"

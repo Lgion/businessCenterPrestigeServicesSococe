@@ -145,3 +145,49 @@
 {"message":"docs/admin/index.html","label":"watch","level":"info"}
 {"message":"docs/admin/index.html","label":"watch","level":"info"}
 {"message":"docs/index.html","label":"watch","level":"info"}
+{"message":"[200] / 83ms","label":null,"level":"info"}
+{"message":"/src/components/AboutLocation.astro?astro&type=style&index=0&lang.css","label":"watch","level":"info"}
+{"message":"[200] / 69ms","label":null,"level":"info"}
+{"message":"/src/components/AboutLocation.astro?astro&type=style&index=0&lang.css","label":"watch","level":"info"}
+{"message":"[200] / 62ms","label":null,"level":"info"}
+{"message":"[200] / 132ms","label":null,"level":"info"}
+{"message":"src/components/ServicesGrid.astro","label":"watch","level":"info"}
+{"message":"[200] / 162ms","label":null,"level":"info"}
+{"message":"/src/components/Hero.astro?astro&type=style&index=0&lang.css","label":"watch","level":"info"}
+{"message":"[200] / 102ms","label":null,"level":"info"}
+{"message":"/src/components/Hero.astro?astro&type=style&index=0&lang.css","label":"watch","level":"info"}
+{"message":"[200] / 157ms","label":null,"level":"info"}
+{"message":"src/components/SeasonalShowcase.astro","label":"watch","level":"info"}
+{"message":"[200] / 131ms","label":null,"level":"info"}
+{"message":"src/components/SeasonalShowcase.astro","label":"watch","level":"info"}
+{"message":"[200] / 97ms","label":null,"level":"info"}
+{"message":"src/components/BoutiqueModal.astro","label":"watch","level":"info"}
+{"message":"[200] / 143ms","label":null,"level":"info"}
+{"message":"src/components/BoutiqueModal.astro","label":"watch","level":"info"}
+{"message":"[200] / 78ms","label":null,"level":"info"}
+{"message":"src/layouts/Layout.astro","label":"watch","level":"info"}
+{"message":"[200] / 144ms","label":null,"level":"info"}
+{"message":"docs/admin/index.html","label":"watch","level":"info"}
+{"message":"docs/index.html","label":"watch","level":"info"}
+{"message":"docs/admin/index.html","label":"watch","level":"info"}
+{"message":"docs/index.html","label":"watch","level":"info"}
+{"message":"docs/index.html","label":"watch","level":"info"}
+{"message":"src/components/Header.astro","label":"watch","level":"info"}
+{"message":"[200] / 97ms","label":null,"level":"info"}
+{"message":"src/components/Header.astro","label":"watch","level":"info"}
+{"message":"[200] / 69ms","label":null,"level":"info"}
+{"message":"src/components/Header.astro","label":"watch","level":"info"}
+{"message":"[200] / 117ms","label":null,"level":"info"}
+{"message":"src/layouts/Layout.astro","label":"watch","level":"info"}
+{"message":"[200] / 147ms","label":null,"level":"info"}
+{"message":"src/layouts/Layout.astro","label":"watch","level":"info"}
+{"message":"[200] / 70ms","label":null,"level":"info"}
+{"message":"docs/admin/index.html","label":"watch","level":"info"}
+{"message":"docs/index.html","label":"watch","level":"info"}
+{"message":"docs/admin/index.html","label":"watch","level":"info"}
+{"message":"docs/index.html","label":"watch","level":"info"}
+{"message":"[200] / 130ms","label":null,"level":"info"}
+{"message":"[200] / 60ms","label":null,"level":"info"}
+{"message":"[200] / 21ms","label":null,"level":"info"}
+{"message":"[200] / 132ms","label":null,"level":"info"}
+{"message":"[200] /admin 56ms","label":null,"level":"info"}

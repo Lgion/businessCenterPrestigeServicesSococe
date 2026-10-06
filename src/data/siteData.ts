@@ -160,7 +160,7 @@ export const defaultSiteData: SiteData = {
       subtitle: "Capturer vos émotions avec un éclairage et une finition de maître",
       badge: "Signature Prestige",
       popularTag: "Service n°1",
-      image: "/images/photo-studio.jpg",
+      image: "/images/service-studio-photo.jpg",
       icon: "camera",
       items: [
         "Shooting photo studio solo, couple, famille & portraits corporate",
@@ -179,7 +179,7 @@ export const defaultSiteData: SiteData = {
       subtitle: "Diagnostic précis et remise en état rapide de vos appareils",
       badge: "Prêt en 30 min",
       popularTag: "Pièces Garanties",
-      image: "/images/tech-repair.jpg",
+      image: "/images/service-tech-repair.jpg",
       icon: "wrench",
       items: [
         "Remplacement écran fissuré (iPhone, Samsung, Xiaomi, Tecno, Infinix)",
@@ -198,7 +198,7 @@ export const defaultSiteData: SiteData = {
       subtitle: "Le meilleur de la connectique, du son et du divertissement",
       badge: "Marques Certifiées",
       popularTag: "Gaming & Accessoires",
-      image: "/images/hero-store.jpg",
+      image: "/images/service-gaming-tech.jpg",
       icon: "cpu",
       items: [
         "Smartphones neufs & reconditionnés garantis, tablettes et PC",
@@ -217,7 +217,7 @@ export const defaultSiteData: SiteData = {
       subtitle: "Élégance du quotidien, maroquinerie soignée et articles cadeaux",
       badge: "Sélection Exclusive",
       popularTag: "Idée Cadeau",
-      image: "/images/boutique-gifts.jpg",
+      image: "/images/service-boutique-cadeaux.jpg",
       icon: "gift",
       items: [
         "Cadres photo raffinés en bois noble, métal doré et verre biseauté",
@@ -236,7 +236,7 @@ export const defaultSiteData: SiteData = {
       subtitle: "Vos démarches administratives et opérations financières simplifiées",
       badge: "Guichet Unique",
       popularTag: "Mobile Money Intégré",
-      image: "/images/hero-store.jpg",
+      image: "/images/service-bureautique-transferts.jpg",
       icon: "file-text",
       items: [
         "Photocopies et impressions haute fidélité (noir & blanc et couleur laser)",
