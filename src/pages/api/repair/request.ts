@@ -1,7 +1,9 @@
 import type { APIRoute } from 'astro';
 import { getDb } from '../../../lib/mongodb';
+import { createClerkClient } from '@clerk/astro/server';
+import { getUserRole } from '../../../utils/roles';
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const body = await request.json();
     const {
@@ -28,8 +30,27 @@ export const POST: APIRoute = async ({ request }) => {
       return new Response(JSON.stringify({ error: 'Marque, modèle et numéro de téléphone requis' }), { status: 400 });
     }
 
+    const auth = (locals as any)?.auth?.();
+    const callerId = auth?.userId;
+    let isVip = false;
+    let userRole = 'anonymous';
+    let userEmail = '';
+
+    if (callerId) {
+      try {
+        const clerk = createClerkClient({ secretKey: ((typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.CLERK_SECRET_KEY) || process.env.CLERK_SECRET_KEY) });
+        const user = await clerk.users.getUser(callerId);
+        userEmail = (user.emailAddresses.find((e: any) => e.id === user.primaryEmailAddressId)?.emailAddress 
+          || user.emailAddresses[0]?.emailAddress || '').toLowerCase();
+        const roleInfo = await getUserRole(userEmail, callerId);
+        userRole = roleInfo.role;
+        isVip = roleInfo.role === 'vip' || roleInfo.role === 'admin';
+      } catch (e) {}
+    }
+
     const db = await getDb();
-    const orderRef = `REP-${Date.now().toString(36).toUpperCase()}`;
+    const prefix = isVip ? 'REP-VIP' : 'REP';
+    const orderRef = `${prefix}-${Date.now().toString(36).toUpperCase()}`;
 
     const totalYangoFee = (withPickup ? yangoFee : 0) + (withReturn ? yangoFee : 0);
 
@@ -53,6 +74,11 @@ export const POST: APIRoute = async ({ request }) => {
       customerPhone,
       estimatedPrice,
       totalToPay: estimatedPrice + totalYangoFee,
+      isVip,
+      userRole,
+      userEmail,
+      userId: callerId || null,
+      priority: isVip ? 'urgent-vip' : 'standard',
       status: 'pending',
       createdAt: new Date()
     };

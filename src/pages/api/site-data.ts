@@ -1,6 +1,14 @@
 import type { APIRoute } from 'astro';
 import { getDb } from '../../lib/mongodb';
 import { defaultSiteData } from '../../data/siteData';
+import { createClerkClient } from '@clerk/astro/server';
+import { getUserRole, canAccessAdmin } from '../../utils/roles';
+
+function getClerk() {
+  const secretKey = ((typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.CLERK_SECRET_KEY) || process.env.CLERK_SECRET_KEY);
+  if (!secretKey) throw new Error('CLERK_SECRET_KEY non configuré');
+  return createClerkClient({ secretKey });
+}
 
 export const GET: APIRoute = async () => {
   try {
@@ -29,15 +37,39 @@ export const GET: APIRoute = async () => {
   }
 };
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
+    const auth = (locals as any).auth?.();
+    const callerId = auth?.userId;
+
+    if (!callerId) {
+      return new Response(JSON.stringify({ success: false, error: 'Non authentifié. Connexion requise.' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
+    const clerk = getClerk();
+    const caller = await clerk.users.getUser(callerId);
+    const callerEmail = (caller.emailAddresses.find((e: any) => e.id === caller.primaryEmailAddressId)?.emailAddress
+      || caller.emailAddresses[0]?.emailAddress || '').toLowerCase();
+
+    const callerRoleInfo = await getUserRole(callerEmail, callerId);
+    if (!canAccessAdmin(callerRoleInfo.role)) {
+      return new Response(JSON.stringify({ success: false, error: 'Accès refusé. Rôle administrateur ou responsable pôle requis.' }), {
+        status: 403,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     const body = await request.json();
     const db = await getDb();
     const collection = db.collection('site_data');
 
     const updateDoc = {
       ...body,
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      lastUpdatedBy: callerEmail
     };
     delete (updateDoc as any)._id;
 

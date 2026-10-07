@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SignIn } from '@clerk/astro/components';
+import { getAssetPath } from '../utils/assets';
+---
+
+<Layout title="Connexion Sécurisée | Business Center Prestige Services">
+  <div class="signin-page-wrapper">
+    <div class="signin-card-container">
+      <div class="signin-brand-header text-center">
+        <a href={getAssetPath('/')} class="signin-logo-link">
+          <div class="signin-crest">
+            <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
+              <rect width="44" height="44" rx="10" fill="#0E223F"/>
+              <rect x="1.5" y="1.5" width="41" height="41" rx="8.5" stroke="#D4AF37" stroke-width="1.5"/>
+              <text x="22" y="28" font-family="serif" font-weight="800" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
+            </svg>
+          </div>
+          <h1 class="signin-title font-serif">Business Center Prestige Services</h1>
+        </a>
+        <p class="signin-subtitle">Espace Privé Membres & Administration • Super U Deux Plateaux</p>
+      </div>
+
+      <div class="clerk-signin-embed">
+        <SignIn routing="path" path="/sign-in" fallbackRedirectUrl="/" />
+      </div>
+
+      <div class="signin-footer text-center">
+        <a href={getAssetPath('/')} class="back-link">← Retourner à l'accueil</a>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .signin-page-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    background: radial-gradient(circle at 50% 20%, rgba(14, 34, 63, 0.45) 0%, rgba(4, 9, 18, 0.98) 100%);
+  }
+
+  .signin-card-container {
+    max-width: 480px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .signin-brand-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .signin-logo-link {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+  }
+
+  .signin-crest {
+    width: 52px;
+    height: 52px;
+  }
+
+  .crest-svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .signin-title {
+    font-size: 1.35rem;
+    color: var(--gold-300);
+    margin: 0;
+  }
+
+  .signin-subtitle {
+    font-size: 0.85rem;
+    color: var(--ivory-muted);
+    margin-top: 0.4rem;
+  }
+
+  .clerk-signin-embed {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .signin-footer {
+    margin-top: 1.75rem;
+  }
+
+  .back-link {
+    color: var(--gold-400);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover {
+    color: #ffffff;
+  }
+</style>

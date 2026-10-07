@@ -30,6 +30,26 @@ export const POST: APIRoute = async ({ request }) => {
     const sanitizedName = file.name.replace(/[^a-zA-Z0-9_-]/g, '_');
     const uploaded = await uploadFileBuffer(buffer, 'bcps_documents_pao', sanitizedName);
 
+    const auth = (locals as any)?.auth?.();
+    const callerId = auth?.userId;
+    let isVip = false;
+    let userRole = 'anonymous';
+    let userEmail = '';
+
+    if (callerId) {
+      try {
+        const { createClerkClient } = await import('@clerk/astro/server');
+        const { getUserRole } = await import('../../../utils/roles');
+        const clerk = createClerkClient({ secretKey: ((typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.CLERK_SECRET_KEY) || process.env.CLERK_SECRET_KEY) });
+        const user = await clerk.users.getUser(callerId);
+        userEmail = (user.emailAddresses.find((e: any) => e.id === user.primaryEmailAddressId)?.emailAddress 
+          || user.emailAddresses[0]?.emailAddress || '').toLowerCase();
+        const roleInfo = await getUserRole(userEmail, callerId);
+        userRole = roleInfo.role;
+        isVip = roleInfo.role === 'vip' || roleInfo.role === 'admin';
+      } catch (e) {}
+    }
+
     // 2. Persist in MongoDB
     const db = await getDb();
     const doc = {
@@ -43,6 +63,11 @@ export const POST: APIRoute = async ({ request }) => {
       serviceType,
       instructions,
       copies,
+      isVip,
+      userRole,
+      userEmail,
+      userId: callerId || null,
+      priority: isVip ? 'urgent-vip' : 'standard',
       delivery: {
         withDelivery,
         address: deliveryAddress,

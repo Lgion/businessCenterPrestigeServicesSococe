@@ -2,95 +2,199 @@
 import Layout from '../layouts/Layout.astro';
 import { defaultSiteData } from '../data/siteData';
 import { getAssetPath } from '../utils/assets';
+import { Show, SignInButton, UserButton, SignIn } from '@clerk/astro/components';
+import { createClerkClient } from '@clerk/astro/server';
+import { getUserRole, canAccessAdmin, canManageRoles, ROLE_DEFINITIONS, POLE_OPTIONS } from '../utils/roles';
 
 const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts, wavePayment, announcement, yangoDelivery } = defaultSiteData;
+
+// Clerk SSR Auth verification & Role Resolution
+const auth = (Astro.locals as any).auth?.();
+const userId = auth?.userId;
+const isAuthenticated = !!userId;
+let userEmail = '';
+let userFullName = '';
+let userImageUrl = '';
+let userRole: 'admin' | 'poles' | 'vip' | 'clients' = 'clients';
+let assignedPoles: string[] = [];
+let hasAdminAccess = false;
+let canEditRoles = false;
+let roleMeta = ROLE_DEFINITIONS.clients;
+
+if (userId) {
+  try {
+    const user = await Astro.locals.currentUser();
+    if (user) {
+      userEmail = (user.emailAddresses.find((e: any) => e.id === user.primaryEmailAddressId)?.emailAddress 
+        || user.emailAddresses[0]?.emailAddress || '').toLowerCase();
+      userFullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.username || userEmail;
+      userImageUrl = user.imageUrl || '';
+    }
+
+    const roleInfo = await getUserRole(userEmail, userId);
+    userRole = roleInfo.role;
+    assignedPoles = roleInfo.assignedPoles || [];
+    hasAdminAccess = canAccessAdmin(userRole);
+    canEditRoles = canManageRoles(userRole);
+    roleMeta = ROLE_DEFINITIONS[userRole] || ROLE_DEFINITIONS.clients;
+  } catch (err) {
+    console.error('Erreur vérification utilisateur Clerk dans admin.astro:', err);
+  }
+}
 ---
 
 <Layout title="Administration | Business Center Prestige Services">
   <div class="admin-page-container">
-    <!-- Admin Security Protection Modal (PIN or Clerk) -->
-    <div id="admin-auth-overlay" class="admin-auth-overlay" style="display: none;">
-      <div class="auth-modal-card prestige-card">
-        <div class="auth-crest">
-          <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
-            <rect width="44" height="44" rx="10" fill="#0E223F"/>
-            <rect x="1.5" y="1.5" width="41" height="41" rx="8.5" stroke="#D4AF37" stroke-width="1.5"/>
-            <text x="22" y="28" font-family="serif" font-weight="800" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
-          </svg>
-        </div>
-        <h2 class="auth-title font-serif">Espace Sécurisé Administration</h2>
-        <p class="auth-sub">Veuillez saisir votre code d'accès administrateur pour accéder à la console de gestion.</p>
 
-        <form id="admin-pin-form" class="auth-form">
-          <div class="pin-input-group">
-            <input 
-              type="password" 
-              id="admin-pin-input" 
-              class="adm-input pin-input" 
-              placeholder="Code PIN (par défaut: 1234)" 
-              autocomplete="current-password"
-              maxlength="20"
-              required 
-            />
+    {!isAuthenticated ? (
+      <!-- 1. CLERK GATEKEEPER : NON AUTHENTIFIÉ -->
+      <div class="admin-gatekeeper-wrapper">
+        <div class="admin-gatekeeper-card prestige-card">
+          <div class="auth-crest">
+            <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
+              <rect width="44" height="44" rx="10" fill="#0E223F"/>
+              <rect x="1.5" y="1.5" width="41" height="41" rx="8.5" stroke="#D4AF37" stroke-width="1.5"/>
+              <text x="22" y="28" font-family="serif" font-weight="800" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
+            </svg>
           </div>
-          <div id="pin-error-msg" class="pin-error-msg" style="display: none;">
-            ⚠️ Code d'accès incorrect. Veuillez réessayer.
+          <div class="security-shield-badge">
+            <span class="shield-icon">🛡️</span>
+            <span class="shield-text">Accès Protégé • Super U Deux Plateaux</span>
           </div>
-          <button type="submit" class="btn btn-gold w-100 btn-unlock">
-            🔓 Déverrouiller la Console
-          </button>
-        </form>
+          <h1 class="auth-title font-serif">Console d'Administration</h1>
+          <p class="auth-sub">
+            L'accès à cet espace est strictement réservé aux membres habilités de l'équipe. Veuillez vous identifier via <strong>Clerk</strong> (Google SSO ou Email).
+          </p>
 
-        <div class="auth-hint">
-          <span>💡 <em>Code maître par défaut : <strong>1234</strong>. La session reste déverrouillée sur votre navigateur.</em></span>
+          <div class="gatekeeper-clerk-box">
+            <SignIn routing="hash" fallbackRedirectUrl="/admin" />
+          </div>
+
+          <div class="gatekeeper-footer">
+            <a href={getAssetPath('/')} class="btn btn-navy-outline btn-sm">← Retourner au site vitrine</a>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Top Global Header -->
-    <header class="admin-topbar">
-      <div class="container admin-topbar-inner">
-        <div class="admin-brand">
-          <a href={getAssetPath('/')} class="admin-logo-link" title="Retourner au site vitrine">
-            <div class="admin-crest">
-              <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
-                <rect width="44" height="44" rx="10" fill="#0E223F"/>
-                <rect x="1.5" y="1.5" width="41" height="41" rx="8.5" stroke="#D4AF37" stroke-width="1.5"/>
-                <text x="22" y="28" font-family="serif" font-weight="800" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
-              </svg>
-            </div>
-            <div>
-              <h1 class="admin-heading">Console d'Administration Globale</h1>
-              <p class="admin-tag">Business Center Prestige Services • Super U Deux Plateaux</p>
-            </div>
-          </a>
-        </div>
-
-        <div class="admin-topbar-actions">
-          <span class="db-status-pill" id="db-status-pill">
-            <span class="status-dot-pulse"></span>
-            <span>MongoDB Atlas Persisté</span>
-          </span>
-
-          <a href="/" class="btn btn-navy-outline btn-sm">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-              <circle cx="12" cy="12" r="3"></circle>
+    ) : !hasAdminAccess ? (
+      <!-- 2. ACCÈS RESTREINT : AUTHENTIFIÉ MAIS RÔLE INSUFFISANT (CLIENT OU VIP) -->
+      <div class="admin-gatekeeper-wrapper">
+        <div class="admin-gatekeeper-card prestige-card restricted-card">
+          <div class="auth-crest">
+            <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
+              <rect width="44" height="44" rx="10" fill="#0E223F"/>
+              <rect x="1.5" y="1.5" width="41" height="41" rx="8.5" stroke="#D4AF37" stroke-width="1.5"/>
+              <text x="22" y="28" font-family="serif" font-weight="800" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
             </svg>
-            <span>Voir le Site en Direct</span>
-          </a>
+          </div>
+          <div class="security-shield-badge error-shield">
+            <span class="shield-icon">🚫</span>
+            <span class="shield-text">Permissions Insuffisantes</span>
+          </div>
+          <h1 class="auth-title font-serif">Accès Non Autorisé</h1>
 
-          <button type="button" id="admin-page-save-btn" class="btn btn-gold btn-sm">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
-              <polyline points="17 21 17 13 7 13 7 21"></polyline>
-              <polyline points="7 3 7 8 15 8"></polyline>
-            </svg>
-            <span>Enregistrer dans MongoDB</span>
-          </button>
+          <div class="current-user-info-box">
+            {userImageUrl ? (
+              <img src={userImageUrl} alt={userFullName} class="user-info-avatar" />
+            ) : (
+              <div class="user-info-placeholder">{roleMeta.icon}</div>
+            )}
+            <div class="user-info-meta">
+              <strong class="user-info-name">{userFullName}</strong>
+              <span class="user-info-email">{userEmail}</span>
+            </div>
+            <span class="role-pill-badge" style={`background:${roleMeta.badgeBg}; border:1px solid ${roleMeta.badgeBorder}; color:${roleMeta.badgeText};`}>
+              <span>{roleMeta.icon}</span>
+              <span>{roleMeta.label}</span>
+            </span>
+          </div>
+
+          <div class="restricted-explanation">
+            <p>
+              Votre compte est actuellement configuré avec le statut <strong>{roleMeta.label}</strong>.
+            </p>
+            <p class="restricted-hint">
+              L'administration de la plateforme est réservée aux comptes disposant du rôle <strong>Administrateur</strong> ou <strong>Responsable de Pôle</strong>.
+              Si vous êtes membre de l'équipe, contactez un administrateur pour attribuer les permissions à votre adresse email (<strong>{userEmail}</strong>).
+            </p>
+          </div>
+
+          <div class="restricted-actions-row">
+            <a href={getAssetPath('/')} class="btn btn-gold">
+              <span>🏠 Retourner à l'Accueil</span>
+            </a>
+            <div class="restricted-user-btn" title="Changer de compte ou se déconnecter">
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          </div>
         </div>
       </div>
-    </header>
+    ) : (
+      <!-- 3. ESPACE D'ADMINISTRATION OPÉRATIONNEL -->
+      <div class="admin-authenticated-workspace">
+        <!-- Top Global Header -->
+        <header class="admin-topbar">
+          <div class="container admin-topbar-inner">
+            <div class="admin-brand">
+              <a href={getAssetPath('/')} class="admin-logo-link" title="Retourner au site vitrine">
+                <div class="admin-crest">
+                  <svg viewBox="0 0 44 44" fill="none" class="crest-svg" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="44" height="44" rx="10" fill="#0E223F"/>
+                    <rect x="1.5" y="1.5" width="41" height="41" rx="8.5" stroke="#D4AF37" stroke-width="1.5"/>
+                    <text x="22" y="28" font-family="serif" font-weight="800" font-size="14" fill="#D4AF37" text-anchor="middle">BCPS</text>
+                  </svg>
+                </div>
+                <div>
+                  <h1 class="admin-heading">Console d'Administration Globale</h1>
+                  <p class="admin-tag">Business Center Prestige Services • Super U Deux Plateaux</p>
+                </div>
+              </a>
+            </div>
+
+            <div class="admin-topbar-actions">
+              <span class="db-status-pill" id="db-status-pill">
+                <span class="status-dot-pulse"></span>
+                <span>MongoDB Atlas Persisté</span>
+              </span>
+
+              <!-- User Role Pill in Topbar -->
+              <div class="admin-topbar-profile" title={`Connecté en tant que ${userFullName} (${userEmail})`}>
+                {userImageUrl ? (
+                  <img src={userImageUrl} alt={userFullName} class="topbar-user-avatar" />
+                ) : (
+                  <span class="topbar-avatar-icon">{roleMeta.icon}</span>
+                )}
+                <div class="topbar-user-texts">
+                  <span class="topbar-user-name">{userFullName}</span>
+                  <span class="topbar-role-badge" style={`background:${roleMeta.badgeBg}; border:1px solid ${roleMeta.badgeBorder}; color:${roleMeta.badgeText};`}>
+                    <span>{roleMeta.icon}</span>
+                    <span>{roleMeta.label}</span>
+                  </span>
+                </div>
+              </div>
+
+              <div class="admin-topbar-user" title="Mon Compte Clerk">
+                <UserButton afterSignOutUrl="/" />
+              </div>
+
+              <a href="/" class="btn btn-navy-outline btn-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <span>Voir le Site en Direct</span>
+              </a>
+
+              <button type="button" id="admin-page-save-btn" class="btn btn-gold btn-sm">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                <span>Enregistrer dans MongoDB</span>
+              </button>
+            </div>
+          </div>
+        </header>
 
     <!-- Main Admin Workspace Layout -->
     <div class="container admin-main-layout">
@@ -131,6 +235,12 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
               <span class="link-icon">💙</span>
               <span>7. Paramètres Wave</span>
             </a>
+            {canEditRoles && (
+              <a href="#sec-roles" class="sidebar-link">
+                <span class="link-icon">🛡️</span>
+                <span>8. Rôles & Accès (Clerk)</span>
+              </a>
+            )}
           </nav>
 
           <div class="sidebar-tools-box">
@@ -185,6 +295,12 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
             <span class="step-num">7</span>
             <span class="step-label">Paiement Wave</span>
           </button>
+          {canEditRoles && (
+            <button type="button" class="stepper-step" data-step-target="sec-roles" role="tab" aria-selected="false">
+              <span class="step-num">8</span>
+              <span class="step-label">Rôles & Accès</span>
+            </button>
+          )}
         </div>
 
         <form id="global-admin-form" class="global-admin-form">
@@ -223,9 +339,11 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
             <!-- Orders Table Container -->
             <div class="records-container-box">
               <div class="records-tabs" role="tablist">
-                <button type="button" class="rec-tab-btn active" data-rec-tab="orders">Commandes Récentes</button>
+                <button type="button" class="rec-tab-btn active" data-rec-tab="orders">Commandes Boutique</button>
                 <button type="button" class="rec-tab-btn" data-rec-tab="repairs">Collectes Réparation & Yango</button>
-                <button type="button" class="rec-tab-btn" data-rec-tab="photos">Photos Téléversées</button>
+                <button type="button" class="rec-tab-btn" data-rec-tab="photos">Photos Studio</button>
+                <button type="button" class="rec-tab-btn" data-rec-tab="documents">Documents & PAO</button>
+                <button type="button" class="rec-tab-btn" data-rec-tab="fastpasses">Coupe-File FastPass Mobile</button>
                 <button type="button" class="rec-tab-btn" data-rec-tab="callbacks">Rappels Gaming</button>
               </div>
 
@@ -242,6 +360,16 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
               <div class="rec-tab-panel" id="rec-panel-photos">
                 <div class="rec-empty-state" id="photos-list-empty">Aucune photo téléversée pour l'instant.</div>
                 <div class="photos-list-grid" id="photos-list-grid"></div>
+              </div>
+
+              <div class="rec-tab-panel" id="rec-panel-documents">
+                <div class="rec-empty-state" id="documents-list-empty">Aucun document téléversé pour l'instant.</div>
+                <div class="orders-list-grid" id="documents-list-grid"></div>
+              </div>
+
+              <div class="rec-tab-panel" id="rec-panel-fastpasses">
+                <div class="rec-empty-state" id="fastpasses-list-empty">Aucun coupe-file FastPass généré pour l'instant.</div>
+                <div class="orders-list-grid" id="fastpasses-list-grid"></div>
               </div>
 
               <div class="rec-tab-panel" id="rec-panel-callbacks">
@@ -779,8 +907,173 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
           </div>
 
         </form>
+
+        {canEditRoles && (
+          <!-- ================= 8. GESTION DES RÔLES & PERMISSIONS CLERK ================= -->
+          <section id="sec-roles" class="admin-card-section prestige-card">
+            <div class="section-card-head">
+              <div class="badge-num">08</div>
+              <div>
+                <h2 class="card-sec-title">Gestion des Rôles & Accès Sécurisés (Clerk & MongoDB)</h2>
+                <p class="card-sec-desc">
+                  Attribuez et configurez les droits d'accès : <strong>Administrateurs</strong> (accès total), <strong>Responsables Pôles</strong> (opérations atelier), <strong>Clients VIP</strong> (priorités) et <strong>Clients Standards</strong>. Persisté dans MongoDB Atlas et synchronisé avec Clerk.
+                </p>
+              </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="roles-metrics-grid">
+              <div class="role-stat-card admin-stat">
+                <div class="stat-icon">👑</div>
+                <div class="stat-content">
+                  <span class="stat-count" id="count-admins">0</span>
+                  <span class="stat-label">Administrateurs</span>
+                  <span class="stat-sub">Accès total à la console</span>
+                </div>
+              </div>
+              <div class="role-stat-card poles-stat">
+                <div class="stat-icon">🏢</div>
+                <div class="stat-content">
+                  <span class="stat-count" id="count-poles">0</span>
+                  <span class="stat-label">Responsables Pôles</span>
+                  <span class="stat-sub">Gestion atelier & commandes</span>
+                </div>
+              </div>
+              <div class="role-stat-card vip-stat">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-content">
+                  <span class="stat-count" id="count-vip">0</span>
+                  <span class="stat-label">Clients VIP</span>
+                  <span class="stat-sub">Priorités & Coupe-File</span>
+                </div>
+              </div>
+              <div class="role-stat-card clients-stat">
+                <div class="stat-icon">👤</div>
+                <div class="stat-content">
+                  <span class="stat-count" id="count-clients">0</span>
+                  <span class="stat-label">Clients Standards</span>
+                  <span class="stat-sub">Utilisateurs inscrits</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Formulaire d'attribution de rôle -->
+            <div class="role-assign-box">
+              <div class="assign-box-header">
+                <h3 class="assign-box-title">➕ Attribuer ou Modifier un Rôle Utilisateur</h3>
+                <p class="assign-box-subtitle">Saisissez l'email d'un utilisateur existant ou nouveau pour configurer ses permissions.</p>
+              </div>
+
+              <form id="form-assign-role" class="assign-role-form">
+                <div class="form-fields-grid">
+                  <div class="field-item">
+                    <label for="assign-email">Email utilisateur (Compte Google / Clerk) *</label>
+                    <input 
+                      type="email" 
+                      id="assign-email" 
+                      class="adm-input" 
+                      placeholder="Ex: collaborateur@gmail.com" 
+                      required 
+                      list="clerk-emails-datalist" 
+                    />
+                    <datalist id="clerk-emails-datalist"></datalist>
+                    <span class="field-hint">💡 Vous pouvez choisir un email existant parmi les comptes Clerk inscrits.</span>
+                  </div>
+
+                  <div class="field-item">
+                    <label for="assign-role-select">Niveau d'habilitation *</label>
+                    <select id="assign-role-select" class="adm-select" required>
+                      <option value="admin">👑 Administrateur (Accès Total)</option>
+                      <option value="poles" selected>🏢 Responsable de Pôle (Opérations)</option>
+                      <option value="vip">⭐ Client VIP (Statut Privilégié)</option>
+                      <option value="clients">👤 Client Standard (Accès Client)</option>
+                    </select>
+                    <span class="field-hint" id="assign-role-hint">Accès opérationnel aux formulaires et commandes des pôles choisis.</span>
+                  </div>
+
+                  <div class="field-item full-width" id="assign-poles-subfield">
+                    <label>Pôles Assignés (si Responsable Pôle)</label>
+                    <div class="poles-checkbox-group">
+                      {POLE_OPTIONS.map(pole => (
+                        <label class="pole-checkbox-label">
+                          <input type="checkbox" name="assignedPoles" value={pole.id} checked />
+                          <span>{pole.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div class="field-item full-width">
+                    <label for="assign-notes">Note interne (optionnelle)</label>
+                    <input 
+                      type="text" 
+                      id="assign-notes" 
+                      class="adm-input" 
+                      placeholder="Ex: Responsable atelier réparation Super U / Partenaire commercial" 
+                    />
+                  </div>
+                </div>
+
+                <div class="assign-actions-row">
+                  <button type="submit" id="btn-submit-role" class="btn btn-gold">
+                    <span>💾 Enregistrer & Synchroniser le Rôle</span>
+                  </button>
+                  <div id="role-feedback-msg" class="role-feedback-msg" style="display: none;"></div>
+                </div>
+              </form>
+            </div>
+
+            <!-- Annuaire des Utilisateurs & Rôles -->
+            <div class="roles-table-container">
+              <div class="table-filter-bar">
+                <div class="filter-search-box">
+                  <input type="search" id="users-search-input" class="adm-input" placeholder="🔍 Rechercher par email, nom ou rôle..." />
+                </div>
+                <div class="filter-pills" id="role-filter-pills">
+                  <button type="button" class="filter-pill active" data-role-filter="all">Tous (<span id="pill-all-count">0</span>)</button>
+                  <button type="button" class="filter-pill" data-role-filter="admin">👑 Admins (<span id="pill-admin-count">0</span>)</button>
+                  <button type="button" class="filter-pill" data-role-filter="poles">🏢 Pôles (<span id="pill-poles-count">0</span>)</button>
+                  <button type="button" class="filter-pill" data-role-filter="vip">⭐ VIP (<span id="pill-vip-count">0</span>)</button>
+                  <button type="button" class="filter-pill" data-role-filter="clients">👤 Clients (<span id="pill-clients-count">0</span>)</button>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="adm-users-table" id="users-roles-table">
+                  <thead>
+                    <tr>
+                      <th>Utilisateur (Clerk / Email)</th>
+                      <th>Rôle Attribué</th>
+                      <th>Pôles Autorisés</th>
+                      <th>Notes & Source</th>
+                      <th class="text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-roles-tbody">
+                    <tr>
+                      <td colspan="5" class="text-center py-4 text-muted">
+                        Chargement des utilisateurs et des rôles...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="section-nav-footer">
+              <button type="button" class="btn btn-navy-outline btn-sm btn-nav-step" data-nav-target="sec-wave">
+                ← 7. Paramètres Wave
+              </button>
+              <button type="button" class="btn btn-gold btn-sm" id="btn-refresh-roles">
+                🔄 Actualiser les Rôles
+              </button>
+            </div>
+          </section>
+        )}
       </main>
     </div>
+    </div>
+    )}
   </div>
 </Layout>
 
@@ -960,6 +1253,33 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
     background: rgba(212, 175, 55, 0.2);
     color: var(--gold-300);
     border: 1px solid rgba(212, 175, 55, 0.4);
+  }
+
+  .status-vip {
+    background: rgba(168, 85, 247, 0.25);
+    color: #d8b4fe;
+    border: 1px solid rgba(168, 85, 247, 0.55);
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 9999px;
+    letter-spacing: 0.03em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .record-vip-card {
+    border-color: rgba(168, 85, 247, 0.45) !important;
+    background: linear-gradient(135deg, rgba(20, 10, 36, 0.85) 0%, rgba(8, 22, 43, 0.85) 100%) !important;
+    box-shadow: 0 4px 20px rgba(168, 85, 247, 0.15);
+  }
+
+  .head-tags {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
   }
 
   .record-meta {
@@ -1385,73 +1705,613 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
     color: #060e1a;
   }
 
-  /* Admin Security PIN Protection Modal */
-  .admin-auth-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(3, 7, 18, 0.94);
-    backdrop-filter: blur(16px);
-    z-index: 99999;
+  /* =======================================================
+     Gatekeeper Screen (Unauthenticated or Restricted Role)
+     ======================================================= */
+  .admin-gatekeeper-wrapper {
+    min-height: 85vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 3rem 1.5rem;
+    background: radial-gradient(circle at 50% 25%, rgba(14, 34, 63, 0.45) 0%, rgba(4, 9, 18, 0.98) 100%);
   }
 
-  .auth-modal-card {
-    background: #0a192f;
-    border: 1px solid var(--gold-400);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px rgba(212, 175, 55, 0.25);
+  .admin-gatekeeper-card {
+    background: rgba(10, 25, 47, 0.95);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(212, 175, 55, 0.2);
     border-radius: var(--radius-xl);
-    padding: 2.5rem 2rem;
-    max-width: 440px;
+    padding: 3rem 2.5rem;
+    max-width: 520px;
     width: 100%;
     text-align: center;
-    animation: fadeInSection 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    backdrop-filter: blur(16px);
+  }
+
+  .admin-gatekeeper-card.restricted-card {
+    border-color: rgba(239, 68, 68, 0.4);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(239, 68, 68, 0.15);
+  }
+
+  .security-shield-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: var(--gold-300);
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .security-shield-badge.error-shield {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.4);
+    color: #f87171;
   }
 
   .auth-crest {
     display: flex;
     justify-content: center;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1.25rem;
   }
 
   .auth-title {
-    font-size: 1.5rem;
+    font-size: 1.65rem;
     color: var(--gold-300);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
   }
 
   .auth-sub {
-    font-size: 0.88rem;
+    font-size: 0.9rem;
     color: var(--ivory-muted);
-    margin-bottom: 1.8rem;
-    line-height: 1.5;
+    margin-bottom: 2rem;
+    line-height: 1.6;
   }
 
-  .auth-form {
+  .gatekeeper-clerk-box {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .gatekeeper-footer {
+    margin-top: 1.5rem;
+  }
+
+  /* Current User Info Box in Restricted Access */
+  .current-user-info-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    padding: 1rem 1.25rem;
+    background: rgba(14, 32, 60, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+
+  .user-info-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold-400);
+  }
+
+  .user-info-placeholder {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+
+  .user-info-meta {
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
+  }
+
+  .user-info-name {
+    font-size: 0.95rem;
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-info-email {
+    font-size: 0.78rem;
+    color: var(--ivory-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .role-pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .restricted-explanation {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+    color: #fca5a5;
+    line-height: 1.6;
+    margin-bottom: 1.75rem;
+  }
+
+  .restricted-hint {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--ivory-muted);
+  }
+
+  .restricted-actions-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 1rem;
   }
 
-  .pin-input {
-    text-align: center;
-    font-size: 1.3rem;
-    letter-spacing: 0.25em;
-    padding: 0.8rem 1rem;
+  /* Topbar User Profile */
+  .admin-topbar-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.3rem 0.65rem;
+    background: rgba(14, 32, 60, 0.75);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 999px;
   }
 
-  .pin-error-msg {
-    color: #f87171;
+  .topbar-user-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid var(--gold-400);
+  }
+
+  .topbar-avatar-icon {
+    font-size: 1.1rem;
+  }
+
+  .topbar-user-texts {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+  }
+
+  .topbar-user-name {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #ffffff;
+    max-width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .topbar-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.45rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  .admin-topbar-user {
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+  }
+
+  /* =======================================================
+     Section 08 : RBAC & Clerk Roles Management
+     ======================================================= */
+  .roles-metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 860px) {
+    .roles-metrics-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .roles-metrics-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .role-stat-card {
+    background: rgba(14, 32, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .role-stat-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .role-stat-card.admin-stat {
+    border-color: rgba(212, 175, 55, 0.4);
+    background: rgba(212, 175, 55, 0.08);
+  }
+
+  .role-stat-card.poles-stat {
+    border-color: rgba(0, 150, 255, 0.4);
+    background: rgba(0, 150, 255, 0.08);
+  }
+
+  .role-stat-card.vip-stat {
+    border-color: rgba(168, 85, 247, 0.4);
+    background: rgba(168, 85, 247, 0.08);
+  }
+
+  .role-stat-card.clients-stat {
+    border-color: rgba(16, 185, 129, 0.4);
+    background: rgba(16, 185, 129, 0.08);
+  }
+
+  .role-stat-card .stat-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .role-stat-card .stat-content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .role-stat-card .stat-count {
+    font-size: 1.65rem;
+    font-family: var(--font-serif);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  .role-stat-card .stat-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold-300);
+    margin-top: 0.2rem;
+  }
+
+  .role-stat-card .stat-sub {
+    font-size: 0.72rem;
+    color: var(--ivory-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Formulaire d'attribution */
+  .role-assign-box {
+    background: rgba(10, 24, 46, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: var(--radius-xl);
+    padding: 1.75rem 2rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .assign-box-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .assign-box-title {
+    font-size: 1.15rem;
+    color: var(--gold-300);
+    margin: 0;
+  }
+
+  .assign-box-subtitle {
     font-size: 0.82rem;
+    color: var(--ivory-muted);
+    margin-top: 0.25rem;
+  }
+
+  .poles-checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+  }
+
+  .pole-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: rgba(14, 32, 60, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-md);
+    padding: 0.45rem 0.75rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .pole-checkbox-label:hover {
+    border-color: var(--gold-400);
+    background: rgba(22, 50, 90, 0.85);
+  }
+
+  .assign-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+
+  .role-feedback-msg {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.84rem;
     font-weight: 600;
   }
 
-  .btn-unlock {
-    padding: 0.85rem;
-    font-size: 1rem;
+  .role-feedback-msg.success {
+    background: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    color: #4ade80;
+  }
+
+  .role-feedback-msg.error {
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    color: #f87171;
+  }
+
+  /* Roles Table */
+  .roles-table-container {
+    background: rgba(8, 20, 40, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    overflow: hidden;
+  }
+
+  .table-filter-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-search-box {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  .filter-pills {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-pill {
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(14, 32, 60, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--ivory-muted);
+    font-size: 0.76rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-pill:hover {
+    border-color: var(--gold-400);
+    color: #ffffff;
+  }
+
+  .filter-pill.active {
+    background: var(--gold-500);
+    color: #060e1a;
+    border-color: var(--gold-400);
+    font-weight: 800;
+  }
+
+  .adm-users-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .adm-users-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    color: var(--gold-300);
+    font-size: 0.75rem;
     font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  .adm-users-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    vertical-align: middle;
+  }
+
+  .user-row-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .user-row-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1.5px solid rgba(212, 175, 55, 0.5);
+  }
+
+  .user-row-placeholder {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(212, 175, 55, 0.2);
+    color: var(--gold-300);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+  }
+
+  .user-row-texts {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .user-row-email {
+    font-size: 0.75rem;
+    color: var(--ivory-muted);
+  }
+
+  .quick-role-select {
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-md);
+    background: rgba(14, 32, 60, 0.9);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .quick-role-select:focus {
+    outline: none;
+    border-color: var(--gold-400);
+  }
+
+  .pole-pill-all {
+    display: inline-block;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    color: var(--gold-300);
+    font-size: 0.72rem;
+    font-weight: 700;
+  }
+
+  .pole-pill {
+    display: inline-block;
+    padding: 0.18rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(0, 150, 255, 0.15);
+    border: 1px solid rgba(0, 150, 255, 0.35);
+    color: #60a5fa;
+    font-size: 0.7rem;
+    font-weight: 600;
+    margin: 2px;
+  }
+
+  .user-row-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .note-text {
+    font-size: 0.78rem;
+    color: var(--ivory-muted);
+  }
+
+  .source-tag {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .source-tag.env {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+  }
+
+  .source-tag.db {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    border: 1px solid rgba(34, 197, 94, 0.4);
+  }
+
+  .source-tag.clerk {
+    background: rgba(99, 102, 241, 0.2);
+    color: #818cf8;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+  }
+
+  .user-row-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4rem;
+  }
+
+  .btn-user-action {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-user-action:hover {
+    background: rgba(212, 175, 55, 0.2);
+    border-color: var(--gold-400);
   }
 
   .auth-hint {
@@ -2729,7 +3589,7 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
         const json = await res.json();
         if (!json.success || !json.data) return;
 
-        const { orders, repairRequests, photoUploads, gamingCallbacks, fastpasses } = json.data;
+        const { orders, repairRequests, photoUploads, documentOrders, gamingCallbacks, fastpasses } = json.data;
 
         const statOrders = document.getElementById('stat-orders-count');
         const statRepairs = document.getElementById('stat-repairs-count');
@@ -2752,12 +3612,15 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
           } else {
             ordersEmpty.style.display = 'none';
             ordersGrid.innerHTML = orders.map((o: any) => `
-              <div class="record-card">
+              <div class="record-card ${o.isVip ? 'record-vip-card' : ''}">
                 <div class="record-card-head">
                   <span class="record-id font-mono">${o.orderId || 'BCPS'}</span>
-                  <span class="record-status ${o.status === 'paid' ? 'status-paid' : 'status-pending'}">
-                    ${o.status === 'paid' ? '✅ PAYÉ' : '⏳ EN ATTENTE'}
-                  </span>
+                  <div class="head-tags">
+                    ${o.isVip ? '<span class="status-vip">💎 VIP</span>' : ''}
+                    <span class="record-status ${o.status === 'paid' ? 'status-paid' : 'status-pending'}">
+                      ${o.status === 'paid' ? '✅ PAYÉ' : '⏳ EN ATTENTE'}
+                    </span>
+                  </div>
                 </div>
                 <div class="record-card-body">
                   <strong>${o.title || 'Commande Boutique'}</strong>
@@ -2789,21 +3652,25 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
           } else {
             repairsEmpty.style.display = 'none';
             repairsGrid.innerHTML = repairRequests.map((r: any) => `
-              <div class="record-card">
+              <div class="record-card ${r.isVip ? 'record-vip-card' : ''}">
                 <div class="record-card-head">
-                  <span class="record-id font-mono">${r.requestId || 'REP'}</span>
-                  <span class="record-status status-blue">⚡ RÉPARATION</span>
+                  <span class="record-id font-mono">${r.orderRef || r.requestId || 'REP'}</span>
+                  <div class="head-tags">
+                    ${r.isVip ? '<span class="status-vip">💎 VIP</span>' : ''}
+                    <span class="record-status status-blue">⚡ RÉPARATION</span>
+                  </div>
                 </div>
                 <div class="record-card-body">
                   <strong>${r.brand || ''} ${r.model || ''}</strong>
-                  <p class="record-desc-text">Panne : ${r.issueType || ''} (${r.issueDescription || ''})</p>
+                  <p class="record-desc-text">Panne : ${r.issue || r.issueType || ''} (${r.deviceType || ''})</p>
                   <div class="record-meta">
-                    <span>Contact : ${r.customerName} (${r.customerPhone})</span>
+                    <span>Contact : ${r.customerName || 'N/A'} (${r.customerPhone || 'N/A'})</span>
+                    ${r.totalToPay ? `<span class="record-amount gold-gradient-text font-serif">${r.totalToPay.toLocaleString('fr-FR')} FCFA</span>` : ''}
                   </div>
-                  ${r.withYangoPickup ? `
+                  ${r.withYangoPickup || r.withPickup ? `
                     <div class="record-yango-badge">
                       🛵 Coursier Yango demandé : <strong>${r.pickupAddress || ''}</strong>
-                      <br/>Distance : ${r.estimatedDistanceKm || 0} km • Frais : ${(r.yangoFee || 0).toLocaleString('fr-FR')} F
+                      <br/>Frais : ${(r.yangoFee || 0).toLocaleString('fr-FR')} F
                     </div>
                   ` : '<div class="record-addr">Dépôt par le client au Super U</div>'}
                 </div>
@@ -2826,18 +3693,96 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
           } else {
             photosEmpty.style.display = 'none';
             photosGrid.innerHTML = photoUploads.map((p: any) => `
-              <div class="record-card photo-rec-card">
-                ${p.cloudinaryUrl ? `<img src="${p.cloudinaryUrl}" alt="Photo upload" class="rec-photo-thumb" />` : ''}
+              <div class="record-card photo-rec-card ${p.isVip ? 'record-vip-card' : ''}">
+                ${p.secureUrl || p.cloudinaryUrl ? `<img src="${p.secureUrl || p.cloudinaryUrl}" alt="Photo upload" class="rec-photo-thumb" />` : ''}
                 <div class="record-card-body">
-                  <strong>${p.serviceType || 'Tirage Photo'}</strong>
+                  <div class="d-flex justify-between align-center mb-1">
+                    <strong>${p.serviceType || 'Tirage Photo'}</strong>
+                    ${p.isVip ? '<span class="status-vip">💎 VIP</span>' : ''}
+                  </div>
                   <div class="record-meta">
                     <span>Client : ${p.customerName || 'N/A'} (${p.customerPhone || 'N/A'})</span>
                   </div>
-                  ${p.notes ? `<p class="record-desc-text">${p.notes}</p>` : ''}
-                  <a href="${p.cloudinaryUrl || p.originalUrl}" target="_blank" class="record-link">Voir l'image Cloudinary HD ›</a>
+                  ${p.instructions || p.notes ? `<p class="record-desc-text">${p.instructions || p.notes}</p>` : ''}
+                  <a href="${p.secureUrl || p.cloudinaryUrl || p.originalUrl}" target="_blank" class="record-link">Voir l'image Cloudinary HD ›</a>
                 </div>
                 <div class="record-card-foot">
                   <span class="record-date">${new Date(p.createdAt).toLocaleString('fr-FR')}</span>
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        // Documents List
+        const docsGrid = document.getElementById('documents-list-grid');
+        const docsEmpty = document.getElementById('documents-list-empty');
+        if (docsGrid && docsEmpty) {
+          if (!documentOrders || documentOrders.length === 0) {
+            docsEmpty.style.display = 'block';
+            docsGrid.innerHTML = '';
+          } else {
+            docsEmpty.style.display = 'none';
+            docsGrid.innerHTML = documentOrders.map((d: any) => `
+              <div class="record-card ${d.isVip ? 'record-vip-card' : ''}">
+                <div class="record-card-head">
+                  <span class="record-id font-mono">DOC</span>
+                  <div class="head-tags">
+                    ${d.isVip ? '<span class="status-vip">💎 VIP</span>' : ''}
+                    <span class="record-status status-blue">🖨️ ${d.serviceType || 'Impression'}</span>
+                  </div>
+                </div>
+                <div class="record-card-body">
+                  <strong>${d.originalFileName || 'Document'}</strong>
+                  <div class="record-meta">
+                    <span>Client : ${d.customerName || 'N/A'} (${d.customerPhone || 'N/A'})</span>
+                    <span>Copies : <strong>${d.copies || 1}</strong></span>
+                  </div>
+                  ${d.instructions ? `<p class="record-desc-text">Consignes : ${d.instructions}</p>` : ''}
+                  ${d.delivery?.withDelivery ? `
+                    <div class="record-yango-badge">
+                      🛵 Livraison Yango : <strong>${d.delivery.address || ''}</strong> (${d.delivery.yangoZone || ''})
+                    </div>
+                  ` : ''}
+                </div>
+                <div class="record-card-foot">
+                  <span class="record-date">${new Date(d.createdAt).toLocaleString('fr-FR')}</span>
+                  ${d.fileUrl || d.secureUrl ? `<a href="${d.fileUrl || d.secureUrl}" target="_blank" class="record-link">Télécharger le document ›</a>` : ''}
+                </div>
+              </div>
+            `).join('');
+          }
+        }
+
+        // FastPass Mobile Money List
+        const fastpassGrid = document.getElementById('fastpasses-list-grid');
+        const fastpassEmpty = document.getElementById('fastpasses-list-empty');
+        if (fastpassGrid && fastpassEmpty) {
+          if (!fastpasses || fastpasses.length === 0) {
+            fastpassEmpty.style.display = 'block';
+            fastpassGrid.innerHTML = '';
+          } else {
+            fastpassEmpty.style.display = 'none';
+            fastpassGrid.innerHTML = fastpasses.map((f: any) => `
+              <div class="record-card ${f.isVip ? 'record-vip-card' : ''}">
+                <div class="record-card-head">
+                  <span class="record-id font-mono">${f.fastpassCode}</span>
+                  <div class="head-tags">
+                    ${f.isVip ? '<span class="status-vip">💎 VIP COUPE-FILE</span>' : '<span class="status-gold">⚡ FASTPASS</span>'}
+                    <span class="record-status status-blue">${(f.operator || 'wave').toUpperCase()}</span>
+                  </div>
+                </div>
+                <div class="record-card-body">
+                  <div class="record-meta">
+                    <span>Client : <strong>${f.customerName || 'Client Guichet'}</strong> (${f.customerPhone})</span>
+                    <span class="record-amount gold-gradient-text font-serif">${(f.amount || 0).toLocaleString('fr-FR')} FCFA</span>
+                  </div>
+                  ${f.recipientPhone ? `<div class="record-addr">Destinataire : ${f.recipientPhone}</div>` : ''}
+                  ${f.notes ? `<p class="record-desc-text">Note : ${f.notes}</p>` : ''}
+                </div>
+                <div class="record-card-foot">
+                  <span class="record-date">${new Date(f.createdAt).toLocaleString('fr-FR')}</span>
+                  <span class="record-link">Guichet Super U</span>
                 </div>
               </div>
             `).join('');
@@ -3031,33 +3976,377 @@ const { business, services, seasonalShowcase, pricingPackages, boutiqueProducts,
       switchSection('sec-orders');
     }
 
-    // Admin Security PIN Unlock Modal
-    const authOverlay = document.getElementById('admin-auth-overlay');
-    const pinForm = document.getElementById('admin-pin-form');
-    const pinInput = document.getElementById('admin-pin-input') as HTMLInputElement | null;
-    const pinError = document.getElementById('pin-error-msg');
+    // ==========================================================
+    // 8. RBAC & Clerk Roles Management Controller
+    // ==========================================================
+    let cachedUsers: any[] = [];
+    let currentRoleFilter = 'all';
+    let searchQuery = '';
 
-    const isUnlocked = sessionStorage.getItem('bcps_admin_unlocked') === 'true';
-    if (!isUnlocked && authOverlay) {
-      authOverlay.style.display = 'flex';
-      setTimeout(() => pinInput?.focus(), 150);
+    const roleSelect = document.getElementById('assign-role-select') as HTMLSelectElement | null;
+    const polesSubfield = document.getElementById('assign-poles-subfield');
+    const roleHint = document.getElementById('assign-role-hint');
+
+    const roleHints: Record<string, string> = {
+      admin: '👑 Accès total : gestion du site, prix, commandes, et configuration des rôles utilisateurs.',
+      poles: '🏢 Accès opérationnel aux commandes, réparations, fastpass et téléversements des pôles choisis.',
+      vip: '⭐ Client VIP : priorités au Super U, tarifs préférentiels (accès client standard, pas d\'accès console).',
+      clients: '👤 Client Standard : accès boutique, démarches en ligne et suivi (pas d\'accès console).'
+    };
+
+    roleSelect?.addEventListener('change', () => {
+      const val = roleSelect.value;
+      if (polesSubfield) {
+        polesSubfield.style.display = val === 'poles' ? 'block' : 'none';
+      }
+      if (roleHint && roleHints[val]) {
+        roleHint.textContent = roleHints[val];
+      }
+    });
+
+    async function loadRolesAndUsers() {
+      const tbody = document.getElementById('users-roles-tbody');
+      const datalist = document.getElementById('clerk-emails-datalist');
+      if (!tbody) return;
+
+      try {
+        const res = await fetch('/api/admin/roles');
+        if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || 'Erreur lors du chargement des rôles');
+
+        cachedUsers = data.users || [];
+        updateRoleMetrics(cachedUsers);
+        updateDatalist(cachedUsers, datalist);
+        renderUsersTable();
+      } catch (err: any) {
+        if (tbody) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4" style="color: #f87171;">⚠️ Impossible de charger les rôles: ${err.message}</td></tr>`;
+        }
+      }
     }
 
-    pinForm?.addEventListener('submit', (e) => {
+    function updateRoleMetrics(users: any[]) {
+      const counts: Record<string, number> = { admin: 0, poles: 0, vip: 0, clients: 0 };
+      users.forEach(u => {
+        if (counts[u.role] !== undefined) {
+          counts[u.role]++;
+        } else {
+          counts.clients++;
+        }
+      });
+
+      const elAdmin = document.getElementById('count-admins');
+      const elPoles = document.getElementById('count-poles');
+      const elVip = document.getElementById('count-vip');
+      const elClients = document.getElementById('count-clients');
+
+      if (elAdmin) elAdmin.textContent = counts.admin.toString();
+      if (elPoles) elPoles.textContent = counts.poles.toString();
+      if (elVip) elVip.textContent = counts.vip.toString();
+      if (elClients) elClients.textContent = counts.clients.toString();
+
+      const pAll = document.getElementById('pill-all-count');
+      const pAdmin = document.getElementById('pill-admin-count');
+      const pPoles = document.getElementById('pill-poles-count');
+      const pVip = document.getElementById('pill-vip-count');
+      const pClients = document.getElementById('pill-clients-count');
+
+      if (pAll) pAll.textContent = users.length.toString();
+      if (pAdmin) pAdmin.textContent = counts.admin.toString();
+      if (pPoles) pPoles.textContent = counts.poles.toString();
+      if (pVip) pVip.textContent = counts.vip.toString();
+      if (pClients) pClients.textContent = counts.clients.toString();
+    }
+
+    function updateDatalist(users: any[], dl: HTMLElement | null) {
+      if (!dl) return;
+      dl.innerHTML = '';
+      users.forEach(u => {
+        const opt = document.createElement('option');
+        opt.value = u.email;
+        opt.textContent = `${u.name ? u.name + ' - ' : ''}(Rôle actuel: ${u.role})`;
+        dl.appendChild(opt);
+      });
+    }
+
+    function renderUsersTable() {
+      const tbody = document.getElementById('users-roles-tbody');
+      if (!tbody) return;
+
+      const filtered = cachedUsers.filter(u => {
+        const matchesFilter = currentRoleFilter === 'all' || u.role === currentRoleFilter;
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch = !q || u.email.toLowerCase().includes(q) || (u.name && u.name.toLowerCase().includes(q));
+        return matchesFilter && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4" style="color: var(--ivory-muted);">Aucun utilisateur ne correspond aux filtres.</td></tr>`;
+        return;
+      }
+
+      const roleBadgeStyles: Record<string, { bg: string; border: string; text: string; icon: string; label: string }> = {
+        admin: { bg: 'rgba(212, 175, 55, 0.2)', border: '#d4af37', text: '#f6d365', icon: '👑', label: 'Admin' },
+        poles: { bg: 'rgba(0, 150, 255, 0.2)', border: '#0096ff', text: '#60a5fa', icon: '🏢', label: 'Pôle' },
+        vip: { bg: 'rgba(168, 85, 247, 0.2)', border: '#a855f7', text: '#c084fc', icon: '⭐', label: 'VIP' },
+        clients: { bg: 'rgba(16, 185, 129, 0.2)', border: '#10b981', text: '#34d399', icon: '👤', label: 'Client' }
+      };
+
+      const poleLabels: Record<string, string> = {
+        studio: '📸 Studio',
+        reparation: '⚡ Réparation',
+        boutique: '🛍️ Boutique',
+        bureautique: '🖨️ Bureautique',
+        'mobile-money': '📱 Mobile Money'
+      };
+
+      tbody.innerHTML = filtered.map(u => {
+        const isRoot = !!u.isHardcodedAdmin;
+
+        let polesHtml = '';
+        if (u.role === 'admin') {
+          polesHtml = '<span class="pole-pill-all">👑 Tous les pôles</span>';
+        } else if (u.role === 'poles') {
+          if (u.assignedPoles && u.assignedPoles.length > 0) {
+            polesHtml = u.assignedPoles.map((p: string) => `<span class="pole-pill">${poleLabels[p] || p}</span>`).join(' ');
+          } else {
+            polesHtml = '<span style="color: var(--ivory-muted);">Aucun pôle spécifié</span>';
+          }
+        } else {
+          polesHtml = '<span style="color: var(--ivory-muted);">-</span>';
+        }
+
+        const avatarHtml = u.imageUrl 
+          ? `<img src="${u.imageUrl}" alt="" class="user-row-avatar" />`
+          : `<span class="user-row-placeholder">${u.name ? u.name[0].toUpperCase() : u.email[0].toUpperCase()}</span>`;
+
+        const sourceLabel = isRoot 
+          ? '<span class="source-tag env">Env (Root)</span>' 
+          : u.source === 'database' 
+            ? '<span class="source-tag db">MongoDB</span>' 
+            : '<span class="source-tag clerk">Clerk</span>';
+
+        return `
+          <tr data-user-email="${u.email}">
+            <td>
+              <div class="user-row-cell">
+                ${avatarHtml}
+                <div class="user-row-texts">
+                  <strong>${u.name || u.email}</strong>
+                  <span class="user-row-email">${u.email}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="role-selector-wrap">
+                <select class="quick-role-select" data-email="${u.email}" ${isRoot ? 'disabled title="Super-admin racine défini en .env"' : ''}>
+                  <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>👑 Administrateur</option>
+                  <option value="poles" ${u.role === 'poles' ? 'selected' : ''}>🏢 Responsable Pôle</option>
+                  <option value="vip" ${u.role === 'vip' ? 'selected' : ''}>⭐ Client VIP</option>
+                  <option value="clients" ${u.role === 'clients' ? 'selected' : ''}>👤 Client Standard</option>
+                </select>
+              </div>
+            </td>
+            <td>
+              <div class="user-row-poles">
+                ${polesHtml}
+              </div>
+            </td>
+            <td>
+              <div class="user-row-notes">
+                <span class="note-text">${u.notes || '-'}</span>
+                ${sourceLabel}
+              </div>
+            </td>
+            <td class="text-right">
+              <div class="user-row-actions">
+                <button type="button" class="btn-user-action btn-edit-role" data-email="${u.email}" data-role="${u.role}" data-poles='${JSON.stringify(u.assignedPoles || [])}' data-notes="${u.notes || ''}" title="Éditer dans le formulaire">
+                  ✏️
+                </button>
+                ${!isRoot ? `
+                  <button type="button" class="btn-user-action btn-delete-role" data-email="${u.email}" title="Réinitialiser à Client Standard">
+                    🗑️
+                  </button>
+                ` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Bind quick change selects
+      tbody.querySelectorAll('.quick-role-select').forEach(sel => {
+        sel.addEventListener('change', async (e) => {
+          const target = e.target as HTMLSelectElement;
+          const email = target.getAttribute('data-email');
+          const newRole = target.value;
+          if (!email) return;
+
+          if (confirm(`Confirmez-vous le passage de "${email}" au rôle "${newRole}" ?`)) {
+            try {
+              const res = await fetch('/api/admin/roles', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, role: newRole })
+              });
+              const d = await res.json();
+              if (d.success) {
+                alert(`✅ Rôle mis à jour pour ${email} : ${newRole}`);
+                loadRolesAndUsers();
+              } else {
+                throw new Error(d.error);
+              }
+            } catch (err: any) {
+              alert(`Erreur: ${err.message}`);
+              loadRolesAndUsers();
+            }
+          } else {
+            loadRolesAndUsers();
+          }
+        });
+      });
+
+      // Bind edit button
+      tbody.querySelectorAll('.btn-edit-role').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const email = btn.getAttribute('data-email');
+          const role = btn.getAttribute('data-role');
+          const notes = btn.getAttribute('data-notes');
+          const polesStr = btn.getAttribute('data-poles');
+          let poles: string[] = [];
+          try { poles = JSON.parse(polesStr || '[]'); } catch(e){}
+
+          const emailInput = document.getElementById('assign-email') as HTMLInputElement;
+          const roleSel = document.getElementById('assign-role-select') as HTMLSelectElement;
+          const notesInput = document.getElementById('assign-notes') as HTMLInputElement;
+
+          if (emailInput && email) emailInput.value = email;
+          if (roleSel && role) {
+            roleSel.value = role;
+            roleSel.dispatchEvent(new Event('change'));
+          }
+          if (notesInput && notes) notesInput.value = notes;
+
+          document.querySelectorAll<HTMLInputElement>('input[name="assignedPoles"]').forEach(cb => {
+            cb.checked = poles.includes(cb.value);
+          });
+
+          document.getElementById('form-assign-role')?.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // Bind delete button
+      tbody.querySelectorAll('.btn-delete-role').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const email = btn.getAttribute('data-email');
+          if (!email) return;
+
+          if (confirm(`Voulez-vous supprimer les autorisations spécifiques de "${email}" (reviendra à Client Standard) ?`)) {
+            try {
+              const res = await fetch(`/api/admin/roles?email=${encodeURIComponent(email)}`, {
+                method: 'DELETE'
+              });
+              const d = await res.json();
+              if (d.success) {
+                alert(`✅ Permissions réinitialisées pour ${email}`);
+                loadRolesAndUsers();
+              } else {
+                throw new Error(d.error);
+              }
+            } catch (err: any) {
+              alert(`Erreur: ${err.message}`);
+            }
+          }
+        });
+      });
+    }
+
+    // Role form submit
+    const roleForm = document.getElementById('form-assign-role') as HTMLFormElement | null;
+    const feedbackMsg = document.getElementById('role-feedback-msg');
+
+    roleForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const val = pinInput?.value.trim() || '';
-      // Support master pin 1234, sococe, or bcps2026
-      if (val === '1234' || val === 'bcps2026' || val === 'sococe') {
-        sessionStorage.setItem('bcps_admin_unlocked', 'true');
-        if (authOverlay) authOverlay.style.display = 'none';
-      } else {
-        if (pinError) pinError.style.display = 'block';
-        if (pinInput) {
-          pinInput.value = '';
-          pinInput.focus();
+      const email = (document.getElementById('assign-email') as HTMLInputElement)?.value?.trim();
+      const role = (document.getElementById('assign-role-select') as HTMLSelectElement)?.value;
+      const notes = (document.getElementById('assign-notes') as HTMLInputElement)?.value?.trim();
+      const submitBtn = document.getElementById('btn-submit-role') as HTMLButtonElement | null;
+
+      const checkedPoles: string[] = [];
+      document.querySelectorAll<HTMLInputElement>('input[name="assignedPoles"]:checked').forEach(cb => {
+        checkedPoles.push(cb.value);
+      });
+
+      if (!email || !role) return;
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enregistrement...';
+      }
+
+      try {
+        const res = await fetch('/api/admin/roles', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email,
+            role,
+            assignedPoles: role === 'poles' ? checkedPoles : [],
+            notes
+          })
+        });
+
+        const d = await res.json();
+        if (d.success) {
+          if (feedbackMsg) {
+            feedbackMsg.style.display = 'block';
+            feedbackMsg.className = 'role-feedback-msg success';
+            feedbackMsg.innerHTML = `✅ <strong>${d.message}</strong>`;
+            setTimeout(() => { feedbackMsg.style.display = 'none'; }, 5000);
+          }
+          roleForm.reset();
+          loadRolesAndUsers();
+        } else {
+          throw new Error(d.error || 'Échec de la sauvegarde');
+        }
+      } catch (err: any) {
+        if (feedbackMsg) {
+          feedbackMsg.style.display = 'block';
+          feedbackMsg.className = 'role-feedback-msg error';
+          feedbackMsg.textContent = `⚠️ Erreur: ${err.message}`;
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = '💾 Enregistrer & Synchroniser le Rôle';
         }
       }
     });
+
+    // Search and filter pills
+    document.getElementById('users-search-input')?.addEventListener('input', (e) => {
+      searchQuery = (e.target as HTMLInputElement).value;
+      renderUsersTable();
+    });
+
+    document.querySelectorAll('#role-filter-pills .filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('#role-filter-pills .filter-pill').forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentRoleFilter = pill.getAttribute('data-role-filter') || 'all';
+        renderUsersTable();
+      });
+    });
+
+    document.getElementById('btn-refresh-roles')?.addEventListener('click', () => {
+      loadRolesAndUsers();
+    });
+
+    // Load roles on startup if sec-roles is present
+    if (document.getElementById('sec-roles')) {
+      loadRolesAndUsers();
+    }
 
     // Anchor & Fixed Alignment for Left Sidebar
     function alignAdminSidebar() {

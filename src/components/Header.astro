@@ -1,7 +1,34 @@
 ---
 import { defaultSiteData } from '../data/siteData';
 import { getAssetPath } from '../utils/assets';
+import { Show, SignInButton, UserButton } from '@clerk/astro/components';
+import { createClerkClient } from '@clerk/astro/server';
+import { getUserRole, canAccessAdmin, ROLE_DEFINITIONS } from '../utils/roles';
+
 const { business, announcement } = defaultSiteData;
+
+const auth = (Astro.locals as any).auth?.();
+const userId = auth?.userId;
+let userRole: any = null;
+let roleMeta: any = null;
+let isAdminOrPole = false;
+
+if (userId) {
+  try {
+    let email = '';
+    try {
+      const clerk = createClerkClient({ secretKey: ((typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.CLERK_SECRET_KEY) || process.env.CLERK_SECRET_KEY) });
+      const user = await clerk.users.getUser(userId);
+      email = (user.emailAddresses.find((e: any) => e.id === user.primaryEmailAddressId)?.emailAddress 
+        || user.emailAddresses[0]?.emailAddress || '').toLowerCase();
+    } catch (_) {}
+    
+    const roleInfo = await getUserRole(email, userId);
+    userRole = roleInfo.role;
+    roleMeta = ROLE_DEFINITIONS[userRole];
+    isAdminOrPole = canAccessAdmin(userRole);
+  } catch (e) {}
+}
 ---
 
 <header class="site-header" id="site-header">
@@ -20,13 +47,38 @@ const { business, announcement } = defaultSiteData;
             </svg>
             <span data-admin-bind="phoneFormatted">{business.phoneFormatted}</span>
           </a>
-          <a href={getAssetPath('/admin')} class="admin-gear-btn" title="Accéder à la console d'administration" aria-label="Console d'administration">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3"></circle>
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-            </svg>
-            <span>Admin</span>
-          </a>
+
+          <!-- Clerk Auth in Announcement Bar -->
+          <Show when="signed-out">
+            <SignInButton mode="modal" class="announcement-auth-link" aria-label="Connexion Espace Membre ou Admin">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>Connexion</span>
+            </SignInButton>
+          </Show>
+          <Show when="signed-in">
+            <div class="announcement-user-wrap" title="Mon Compte">
+              {roleMeta && (
+                <span class="header-role-badge" style={`background:${roleMeta.badgeBg}; border:1px solid ${roleMeta.badgeBorder}; color:${roleMeta.badgeText};`}>
+                  <span>{roleMeta.icon}</span>
+                  <span>{roleMeta.label}</span>
+                </span>
+              )}
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          </Show>
+
+          {isAdminOrPole && (
+            <a href={getAssetPath('/admin')} class="admin-gear-btn" title="Accéder à la console d'administration" aria-label="Console d'administration">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              <span>Admin</span>
+            </a>
+          )}
         </div>
       </div>
     </div>
@@ -109,6 +161,30 @@ const { business, announcement } = defaultSiteData;
           <span class="wave-btn-text">Paiement Wave</span>
         </button>
 
+        <!-- Clerk Authentication Button (Desktop) -->
+        <div class="header-auth-container">
+          <Show when="signed-out">
+            <SignInButton mode="modal" class="btn-header-auth" aria-label="Connexion Espace Membre ou Admin">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>Connexion</span>
+            </SignInButton>
+          </Show>
+          <Show when="signed-in">
+            <div class="header-user-badge" title="Mon Compte">
+              {roleMeta && (
+                <span class="header-role-badge" style={`background:${roleMeta.badgeBg}; border:1px solid ${roleMeta.badgeBorder}; color:${roleMeta.badgeText};`}>
+                  <span>{roleMeta.icon}</span>
+                  <span>{roleMeta.label}</span>
+                </span>
+              )}
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          </Show>
+        </div>
+
         <!-- WhatsApp Header CTA -->
         <a 
           href={`https://wa.me/225${business.whatsapp}?text=${encodeURIComponent(business.whatsappPreFilled)}`}
@@ -170,6 +246,33 @@ const { business, announcement } = defaultSiteData;
       </nav>
 
       <div class="mobile-drawer-footer">
+        <!-- Clerk Mobile Auth Button -->
+        <div class="mobile-clerk-auth-box">
+          <Show when="signed-out">
+            <SignInButton mode="modal" class="btn btn-navy-outline w-100 mobile-clerk-login-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>Connexion Sécurisée (Clerk)</span>
+            </SignInButton>
+          </Show>
+          <Show when="signed-in">
+            <div class="mobile-clerk-user-row">
+              <UserButton afterSignOutUrl="/" />
+              <div class="mobile-clerk-user-meta">
+                <span class="mobile-clerk-title">Compte Connecté</span>
+                {roleMeta && (
+                  <span class="header-role-badge" style={`background:${roleMeta.badgeBg}; border:1px solid ${roleMeta.badgeBorder}; color:${roleMeta.badgeText};`}>
+                    <span>{roleMeta.icon}</span>
+                    <span>{roleMeta.label}</span>
+                  </span>
+                )}
+              </div>
+            </div>
+          </Show>
+        </div>
+
         <!-- Cart Mobile CTA -->
         <button type="button" class="btn btn-gold w-100 mobile-header-cart-btn" id="mobile-header-cart-btn">
           <span>🛒 Accéder à mon Panier</span>
@@ -193,9 +296,11 @@ const { business, announcement } = defaultSiteData;
           Discuter sur WhatsApp
         </a>
 
-        <a href={getAssetPath('/admin')} class="btn btn-navy-outline w-100">
-          ⚙️ Espace Paramètres Admin
-        </a>
+        {isAdminOrPole && (
+          <a href={getAssetPath('/admin')} class="btn btn-navy-outline w-100">
+            ⚙️ Espace Paramètres Admin
+          </a>
+        )}
       </div>
     </div>
   </div>
@@ -277,6 +382,45 @@ const { business, announcement } = defaultSiteData;
 
   .announcement-phone:hover {
     color: #ffffff;
+  }
+
+  .announcement-auth-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--gold-400);
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+  }
+
+  .announcement-auth-link:hover {
+    background: var(--gold-500);
+    color: var(--navy-950);
+  }
+
+  .announcement-user-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .header-role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
   }
 
   .admin-gear-btn {
@@ -679,10 +823,107 @@ const { business, announcement } = defaultSiteData;
     font-weight: 700;
   }
 
+  /* Desktop Header Auth */
+  .header-auth-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-header-auth {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.95rem;
+    background: rgba(14, 32, 60, 0.75);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: var(--radius-full);
+    color: var(--gold-300);
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.25s ease;
+    font-family: inherit;
+  }
+
+  .btn-header-auth:hover {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+    border-color: #ffffff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+  }
+
+  .header-user-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 3px 6px 3px 3px;
+    border-radius: 999px;
+    background: rgba(14, 32, 60, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
   .mobile-drawer-footer {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+  }
+
+  /* Mobile Drawer Auth */
+  .mobile-clerk-auth-box {
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+
+  .mobile-clerk-login-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+    border-radius: 10px;
+    background: rgba(14, 32, 60, 0.85);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    color: var(--gold-300);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    width: 100%;
+    font-family: inherit;
+  }
+
+  .mobile-clerk-login-btn:hover {
+    background: var(--gold-gradient);
+    color: var(--navy-950);
+  }
+
+  .mobile-clerk-user-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.9rem;
+    background: rgba(14, 32, 60, 0.8);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 10px;
+  }
+
+  .mobile-clerk-user-meta {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mobile-clerk-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  .mobile-clerk-sub {
+    font-size: 0.72rem;
+    color: var(--gold-300);
   }
 
   .w-100 {

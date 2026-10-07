@@ -25,7 +25,27 @@ export const POST: APIRoute = async ({ request, url }) => {
       return new Response(JSON.stringify({ error: 'Numéro de téléphone requis' }), { status: 400 });
     }
 
-    const orderId = `BCPS-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
+    const auth = (locals as any)?.auth?.();
+    const callerId = auth?.userId;
+    let isVip = false;
+    let userRole = 'anonymous';
+    let authUserEmail = '';
+
+    if (callerId) {
+      try {
+        const { createClerkClient } = await import('@clerk/astro/server');
+        const { getUserRole } = await import('../../../utils/roles');
+        const clerk = createClerkClient({ secretKey: ((typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.CLERK_SECRET_KEY) || process.env.CLERK_SECRET_KEY) });
+        const user = await clerk.users.getUser(callerId);
+        authUserEmail = (user.emailAddresses.find((e: any) => e.id === user.primaryEmailAddressId)?.emailAddress 
+          || user.emailAddresses[0]?.emailAddress || '').toLowerCase();
+        const roleInfo = await getUserRole(authUserEmail, callerId);
+        userRole = roleInfo.role;
+        isVip = roleInfo.role === 'vip' || roleInfo.role === 'admin';
+      } catch (e) {}
+    }
+
+    const orderId = `BCPS-${isVip ? 'VIP-' : ''}${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
 
     // Store in MongoDB
     const db = await getDb();
@@ -37,10 +57,14 @@ export const POST: APIRoute = async ({ request, url }) => {
       items,
       customerName,
       customerPhone,
-      customerEmail,
+      customerEmail: customerEmail || authUserEmail,
       deliveryAddress,
       pickupType,
       metadata,
+      isVip,
+      userRole,
+      userId: callerId || null,
+      priority: isVip ? 'urgent-vip' : 'standard',
       status: 'pending_payment',
       paymentProvider: 'paydunya',
       createdAt: new Date(),

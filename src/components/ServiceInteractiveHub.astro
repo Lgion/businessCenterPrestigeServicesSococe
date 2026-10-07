@@ -5,8 +5,18 @@ import { getAssetPath } from '../utils/assets';
 const { business, yangoDelivery, services } = defaultSiteData;
 ---
 
-<section class="interactive-hub-section" id="service-hub">
-  <div class="container hub-container">
+<section class="interactive-hub-section" id="service-hub" data-active-theme="studio">
+  <!-- Dynamic Atmospheric Backdrop for the entire .interactive-hub-section (cross-fade on tab switch) -->
+  <div class="hub-dynamic-backdrop-container" aria-hidden="true">
+    <div class="hub-theme-bg bg-studio active"></div>
+    <div class="hub-theme-bg bg-reparation"></div>
+    <div class="hub-theme-bg bg-boutique"></div>
+    <div class="hub-theme-bg bg-bureautique"></div>
+    <div class="hub-theme-bg bg-mobile-money"></div>
+    <div class="hub-backdrop-overlay"></div>
+  </div>
+
+  <div class="container hub-container" id="hub-container">
     <!-- Header of the Interactive Hub -->
     <div class="hub-header text-center">
       <span class="section-tagline">Interaction Directe & Services Express</span>
@@ -63,17 +73,8 @@ const { business, yangoDelivery, services } = defaultSiteData;
       </div>
     </div>
 
-    <!-- The 5 Dynamic Interactive Panels with Dynamic Thematic Backgrounds -->
+    <!-- The 5 Dynamic Interactive Panels -->
     <div class="hub-panels-box prestige-card" id="hub-panels-box" data-active-theme="studio">
-      <!-- Background Ambient Layers (cross-fade on tab switch) -->
-      <div class="hub-dynamic-backdrop-container" aria-hidden="true">
-        <div class="hub-theme-bg bg-studio active"></div>
-        <div class="hub-theme-bg bg-reparation"></div>
-        <div class="hub-theme-bg bg-boutique"></div>
-        <div class="hub-theme-bg bg-bureautique"></div>
-        <div class="hub-theme-bg bg-mobilemoney"></div>
-        <div class="hub-backdrop-overlay"></div>
-      </div>
       
       <!-- ================= 1. PANNEAU STUDIO PHOTO ================= -->
       <div class="hub-panel active" id="panel-studio" data-panel-name="studio">
@@ -550,11 +551,94 @@ const { business, yangoDelivery, services } = defaultSiteData;
 </section>
 
 <style>
+  /* Hub Section with Dynamic Themed Atmosphere */
   .interactive-hub-section {
-    padding: 4.5rem 0 3.5rem 0;
-    background: linear-gradient(180deg, var(--navy-900) 0%, var(--navy-950) 100%);
+    padding: 5rem 0 4.5rem 0;
+    background: #050d1a;
     position: relative;
     z-index: 2;
+    overflow: hidden;
+  }
+
+  /* Dynamic Backdrop directly covering .interactive-hub-section */
+  .hub-dynamic-backdrop-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .hub-theme-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    filter: contrast(1.1) saturate(1.2);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s ease-out;
+    transform: scale(1.03);
+    will-change: opacity, transform;
+  }
+
+  .hub-theme-bg.active {
+    opacity: 0.68;
+    transform: scale(1);
+  }
+
+  .bg-studio {
+    background-image: 
+      radial-gradient(circle at 85% 20%, rgba(212, 175, 55, 0.25) 0%, transparent 55%),
+      url('/images/service-studio-photo.jpg');
+  }
+
+  .bg-reparation {
+    background-image: 
+      radial-gradient(circle at 85% 20%, rgba(0, 150, 255, 0.25) 0%, transparent 55%),
+      url('/images/service-tech-repair.jpg');
+  }
+
+  .bg-boutique {
+    background-image: 
+      radial-gradient(circle at 85% 20%, rgba(245, 158, 11, 0.25) 0%, transparent 55%),
+      url('/images/service-gaming-tech.jpg');
+  }
+
+  .bg-bureautique {
+    background-image: 
+      radial-gradient(circle at 85% 20%, rgba(16, 185, 129, 0.25) 0%, transparent 55%),
+      url('/images/service-bureautique-transferts.jpg');
+  }
+
+  .bg-mobile-money {
+    background-image: 
+      radial-gradient(circle at 85% 20%, rgba(0, 134, 229, 0.25) 0%, transparent 55%),
+      url('/images/service-mobile-money.jpg');
+  }
+
+  /* Seamless Integration Overlays */
+  .hub-backdrop-overlay {
+    position: absolute;
+    inset: 0;
+    background: 
+      linear-gradient(180deg, 
+        #050d1a 0%, 
+        rgba(5, 13, 26, 0.4) 14%, 
+        rgba(5, 13, 26, 0.2) 50%, 
+        rgba(5, 13, 26, 0.45) 86%, 
+        #050d1a 100%
+      ),
+      radial-gradient(ellipse at 50% 35%, rgba(5, 13, 26, 0.2) 0%, rgba(5, 13, 26, 0.6) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* .hub-container Layout */
+  .hub-container {
+    position: relative;
+    z-index: 2;
+    padding: 0 1rem;
   }
 
   .text-center {
@@ -562,8 +646,34 @@ const { business, yangoDelivery, services } = defaultSiteData;
   }
 
   .hub-header {
+    position: relative;
+    z-index: 2;
     max-width: 860px;
     margin: 0 auto 2.5rem auto;
+  }
+
+  .section-tagline {
+    display: inline-block;
+    color: var(--gold-300);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 0.6rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
+  }
+
+  .section-title {
+    color: #ffffff;
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.95);
+  }
+
+  .section-subtitle {
+    color: #e2e8f0;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.95);
+    margin-top: 0.5rem;
   }
 
   /* Hub Tabs : Grille Responsive Non-Défilante */
@@ -598,20 +708,22 @@ const { business, yangoDelivery, services } = defaultSiteData;
     gap: 0.65rem;
     padding: 0.85rem 1rem;
     border-radius: 14px;
-    background: rgba(14, 32, 60, 0.7);
-    border: 1px solid rgba(212, 175, 55, 0.25);
-    color: var(--ivory-muted);
+    background: rgba(10, 24, 48, 0.92);
+    border: 1px solid rgba(212, 175, 55, 0.32);
+    color: #ffffff;
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     text-align: left;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     width: 100%;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
   }
 
   .hub-tab-btn:hover {
     border-color: var(--gold-400);
     color: #ffffff;
-    background: rgba(20, 46, 84, 0.85);
+    background: rgba(22, 48, 86, 0.95);
     transform: translateY(-2px);
   }
 
@@ -621,7 +733,7 @@ const { business, yangoDelivery, services } = defaultSiteData;
     border-color: #ffffff;
     font-weight: 800;
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.45);
   }
 
   .tab-btn-icon {
@@ -642,15 +754,23 @@ const { business, yangoDelivery, services } = defaultSiteData;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  .hub-tab-btn.active .tab-btn-title {
+    color: var(--navy-950);
+    text-shadow: none;
   }
 
   .tab-btn-badge {
-    font-size: 0.66rem;
-    opacity: 0.85;
+    font-size: 0.68rem;
+    opacity: 0.9;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin-top: 0.15rem;
+    color: rgba(255, 255, 255, 0.8);
   }
 
   .hub-tab-btn.active .tab-btn-badge {
@@ -658,107 +778,40 @@ const { business, yangoDelivery, services } = defaultSiteData;
     font-weight: 800;
   }
 
-  /* Panels Box & Dynamic Ambient Backdrop */
+  /* Panels Box - High-Contrast Solid Glass Card */
   .hub-panels-box {
     position: relative;
+    z-index: 2;
     padding: 2.25rem;
     border-radius: var(--radius-xl);
-    border: 2px solid rgba(212, 175, 55, 0.45);
-    background: rgba(8, 20, 38, 0.72);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(212, 175, 55, 0.2);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    background: rgba(7, 18, 36, 0.94);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.08);
     overflow: hidden;
     transition: border-color 0.45s ease, box-shadow 0.45s ease;
   }
 
-  /* Distinct glow borders per theme */
-  .hub-panels-box[data-active-theme="studio"] {
-    border-color: rgba(246, 211, 101, 0.65);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(212, 175, 55, 0.35);
+  .interactive-hub-section[data-active-theme="studio"] .hub-panels-box {
+    border-color: rgba(246, 211, 101, 0.6);
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 40px rgba(212, 175, 55, 0.2);
   }
-  .hub-panels-box[data-active-theme="reparation"] {
-    border-color: rgba(0, 150, 255, 0.65);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(0, 134, 229, 0.35);
+  .interactive-hub-section[data-active-theme="reparation"] .hub-panels-box {
+    border-color: rgba(0, 150, 255, 0.6);
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 134, 229, 0.2);
   }
-  .hub-panels-box[data-active-theme="boutique"] {
-    border-color: rgba(245, 158, 11, 0.65);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(245, 158, 11, 0.35);
+  .interactive-hub-section[data-active-theme="boutique"] .hub-panels-box {
+    border-color: rgba(245, 158, 11, 0.6);
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 40px rgba(245, 158, 11, 0.2);
   }
-  .hub-panels-box[data-active-theme="bureautique"] {
-    border-color: rgba(16, 185, 129, 0.65);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(16, 185, 129, 0.35);
+  .interactive-hub-section[data-active-theme="bureautique"] .hub-panels-box {
+    border-color: rgba(16, 185, 129, 0.6);
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 40px rgba(16, 185, 129, 0.2);
   }
-  .hub-panels-box[data-active-theme="mobile-money"] {
-    border-color: rgba(249, 115, 22, 0.65);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(249, 115, 22, 0.35);
-  }
-
-  .hub-dynamic-backdrop-container {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-  }
-
-  .hub-theme-bg {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out, transform 0.6s ease-out;
-    transform: scale(1.05);
-  }
-
-  .hub-theme-bg.active {
-    opacity: 0.85;
-    transform: scale(1);
-  }
-
-  .bg-studio {
-    background: radial-gradient(circle at 85% 15%, rgba(212, 175, 55, 0.45) 0%, transparent 55%),
-                radial-gradient(circle at 15% 85%, rgba(246, 211, 101, 0.25) 0%, transparent 60%),
-                radial-gradient(circle at 50% 50%, rgba(13, 34, 63, 0.5) 0%, transparent 80%),
-                url('https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-    background-blend-mode: overlay;
-  }
-
-  .bg-reparation {
-    background: radial-gradient(circle at 80% 20%, rgba(0, 134, 229, 0.55) 0%, transparent 60%),
-                radial-gradient(circle at 20% 80%, rgba(239, 68, 68, 0.45) 0%, transparent 65%),
-                radial-gradient(circle at 50% 30%, rgba(14, 165, 233, 0.3) 0%, transparent 70%),
-                url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-    background-blend-mode: overlay;
-  }
-
-  .bg-boutique {
-    background: radial-gradient(circle at 50% 15%, rgba(245, 158, 11, 0.5) 0%, transparent 60%),
-                radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.45) 0%, transparent 65%),
-                radial-gradient(circle at 15% 65%, rgba(180, 83, 9, 0.35) 0%, transparent 70%),
-                url('https://images.unsplash.com/photo-1605901309584-818e25960b8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-    background-blend-mode: overlay;
-  }
-
-  .bg-bureautique {
-    background: radial-gradient(circle at 20% 25%, rgba(16, 185, 129, 0.5) 0%, transparent 60%),
-                radial-gradient(circle at 80% 75%, rgba(59, 130, 246, 0.45) 0%, transparent 65%),
-                radial-gradient(circle at 50% 85%, rgba(5, 150, 105, 0.3) 0%, transparent 70%),
-                url('https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-    background-blend-mode: overlay;
-  }
-
-  .bg-mobilemoney {
-    background: radial-gradient(circle at 85% 15%, rgba(0, 134, 229, 0.55) 0%, transparent 55%),
-                radial-gradient(circle at 15% 85%, rgba(249, 115, 22, 0.5) 0%, transparent 60%),
-                radial-gradient(circle at 50% 50%, rgba(234, 88, 12, 0.3) 0%, transparent 70%),
-                url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-    background-blend-mode: overlay;
-  }
-
-  .hub-backdrop-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(7, 18, 34, 0.4) 0%, rgba(5, 13, 26, 0.65) 100%);
-    pointer-events: none;
+  .interactive-hub-section[data-active-theme="mobile-money"] .hub-panels-box {
+    border-color: rgba(249, 115, 22, 0.6);
+    box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 40px rgba(249, 115, 22, 0.2);
   }
 
   /* Yango Dual Options & Interactive Map Styling */
@@ -1308,6 +1361,8 @@ const { business, yangoDelivery, services } = defaultSiteData;
     const tabBtns = document.querySelectorAll<HTMLButtonElement>('.hub-tab-btn, .arc-pill');
     const panels = document.querySelectorAll<HTMLElement>('.hub-panel');
     const themeBgs = document.querySelectorAll<HTMLElement>('.hub-theme-bg');
+    const serviceHub = document.getElementById('service-hub');
+    const hubContainer = document.getElementById('hub-container');
     const panelsBox = document.getElementById('hub-panels-box');
 
     tabBtns.forEach(btn => {
@@ -1327,12 +1382,18 @@ const { business, yangoDelivery, services } = defaultSiteData;
           pan.classList.toggle('active', pan.getAttribute('data-panel-name') === target);
         });
 
-        // Switch dynamic ambient backdrop
+        // Switch dynamic ambient backdrop on .interactive-hub-section
         themeBgs.forEach(bg => {
           bg.classList.toggle('active', bg.classList.contains(`bg-${target}`));
         });
 
-        // Set data attribute on panels box for any theme-specific styling
+        // Set data attribute on section, hubContainer & panels box for theme styling
+        if (serviceHub) {
+          serviceHub.setAttribute('data-active-theme', target);
+        }
+        if (hubContainer) {
+          hubContainer.setAttribute('data-active-theme', target);
+        }
         if (panelsBox) {
           panelsBox.setAttribute('data-active-theme', target);
         }
@@ -1872,5 +1933,10 @@ const { business, yangoDelivery, services } = defaultSiteData;
     });
   }
 
-  document.addEventListener('DOMContentLoaded', setupInteractiveHub);
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupInteractiveHub);
+  } else {
+    setupInteractiveHub();
+  }
+  document.addEventListener('astro:page-load', setupInteractiveHub);
 </script>
